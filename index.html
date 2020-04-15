@@ -1,4 +1,9 @@
 <!DOCTYPE HTML>
+<!--
+	Identity by HTML5 UP
+	html5up.net | @ajlkn
+	Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
+-->
 <html>
 
 <head>
@@ -15,7 +20,7 @@
 
 	<title>Otavio Augusto — Portfolio</title>
 	<meta charset="utf-8" />
-	<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+	<meta name="viewport" content="width=device-width, initial-scale=1, user-scal	able=no" />
 	<link rel="stylesheet" href="assets/css/main.css" />
 
 	<noscript>
@@ -30,48 +35,52 @@
 
 <body class="is-preload">
 	<div id="wrapper">
-		<div id="bg"></div>
-		<div id="overlay"></div>
-		<div id="main">
-			<!-- Header -->
-			<header id="header">
+
+		<section id="main">
+			<header>
+				<span class="avatar"><img src="images/avatar.jpg" alt="" /></span>
 				<h1>Otavio Augusto</h1>
-				<p>Software Developer &nbsp;&bull;&nbsp; Free Surfer</p>
-				<nav>
-					<ul>
-						<li><a target="_blank" class="icon brands fa-github" href="https://github.com/oaugusto256"><span class="label">Github</span></a></li>
-						<li><a target="_blank" class="icon brands fa-linkedin" href="https://www.linkedin.com/in/otavio-augusto/"><span class="label">Linkedin</span></a></li>
-						<li><a target="_blank" class="icon brands fa-instagram" href="https://www.instagram.com/tavioaugusto/"><span class="label">Instagram</span></a></li>
-						<li><a target="_blank" class="icon brands fa-facebook-f" href="https://www.facebook.com/oaugustosilva"><span class="label">Facebook</span></a></li>
-						<li><a target="_blank" class="icon brands fa-twitter" href="https://www.twitter.com/oaugusto256/"><span class="label">Twitter</span></a></li>
-					</ul>
-				</nav>
+				<p>Front-end Developer</p>
 			</header>
-			<!-- Footer -->
-			<footer id="footer">
-				<span class="copyright">&copy; Otavio Augusto. Design: <a href="http://html5up.net">HTML5 UP</a>.</span>
+			<footer>
+				<ul class="icons">
+					<li><a target="_blank" class="icon brands fa-github" href="https://github.com/oaugusto256"><span class="label">Github</span></a></li>
+					<li><a target="_blank" class="icon brands fa-twitter" href="https://www.twitter.com/oaugusto256/"><span class="label">Twitter</span></a></li>
+					<li><a target="_blank" class="icon brands fa-instagram" href="https://www.instagram.com/tavioaugusto/"><span class="label">Instagram</span></a></li>
+					<li><a target="_blank" class="icon brands fa-linkedin" href="https://www.linkedin.com/in/otavio-augusto/"><span class="label">Linkedin</span></a></li>
+				</ul>
 			</footer>
-		</div>
+		</section>
+
+		<footer id="footer">
+			<ul class="copyright">
+				<li>&copy; Otavio Augusto</li>
+				<li>Design: <a href="http://html5up.net">HTML5 UP</a></li>
+			</ul>
+		</footer>
 	</div>
+
+	<!-- Scripts -->
 	<script>
-		window.onload = function () { document.body.classList.remove('is-preload'); }
-		window.ontouchmove = function () { return false; }
-		window.onorientationchange = function () { document.body.scrollTop = 0; }
+		if ('addEventListener' in window) {
+			window.addEventListener('load', function () { document.body.className = document.body.className.replace(/\bis-preload\b/, ''); });
+			document.body.className += (navigator.userAgent.match(/(MSIE|rv:11\.0)/) ? ' is-ie' : '');
+		}
 	</script>
 	<script>
-			(function (i, s, o, g, r, a, m) {
-				i['GoogleAnalyticsObject'] = r;
-				(i[r] =
-					i[r] ||
-					function () {
-						(i[r].q = i[r].q || []).push(arguments);
-					}),
-					(i[r].l = 1 * new Date());
-				(a = s.createElement(o)), (m = s.getElementsByTagName(o)[0]);
-				a.async = 1;
-				a.src = g;
-				m.parentNode.insertBefore(a, m);
-			})(window, document, 'script', 'https://www.google-analytics.com/analytics.js', 'ga');
+		(function (i, s, o, g, r, a, m) {
+			i['GoogleAnalyticsObject'] = r;
+			(i[r] =
+				i[r] ||
+				function () {
+					(i[r].q = i[r].q || []).push(arguments);
+				}),
+				(i[r].l = 1 * new Date());
+			(a = s.createElement(o)), (m = s.getElementsByTagName(o)[0]);
+			a.async = 1;
+			a.src = g;
+			m.parentNode.insertBefore(a, m);
+		})(window, document, 'script', 'https://www.google-analytics.com/analytics.js', 'ga');
 		ga('create', 'UA-101846080-1', 'auto');
 		ga('send', 'pageview');
 	</script>
