@@ -10,11 +10,10 @@
 		cursor: default;
 		list-style: none;
 		padding-left: 0;
-		margin-top: -0.675em;
 
 		li {
 			display: inline-block;
-			padding: 0.675em 0.5em;
+			padding: 0.5em 0.5em;
 
 			a {
 				@include icon-alt(false, true);

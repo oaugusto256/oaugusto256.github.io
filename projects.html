@@ -1,0 +1,275 @@
+<!DOCTYPE HTML>
+<!--
+	Identity by HTML5 UP
+	html5up.net | @ajlkn
+	Free for personal and commercial use under the CCA 3.0 license (html5up.net/license)
+-->
+<html lang="en">
+
+<head>
+	<!-- Google Analytics GA4 -->
+	<script async src="https://www.googletagmanager.com/gtag/js?id=G-SYG8DZ0C96"></script>
+	<script>
+		window.dataLayer = window.dataLayer || [];
+		function gtag() { dataLayer.push(arguments); }
+		gtag('js', new Date());
+		gtag('config', 'G-SYG8DZ0C96');
+	</script>
+
+	<title>Projects – Otavio Silva</title>
+	<meta charset="utf-8" />
+	<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=no" />
+	<meta name="description" content="Projects by Otavio Silva – Senior Frontend Engineer. Professional work and open source projects on GitHub." />
+
+	<link rel="canonical" href="https://oaugusto256.github.io/projects.html" />
+
+	<link rel="stylesheet" href="assets/css/main.css" />
+	<link rel="stylesheet" href="assets/css/custom.css" />
+	<noscript>
+		<link rel="stylesheet" href="assets/css/noscript.css" />
+	</noscript>
+
+	<link rel="apple-touch-icon" sizes="180x180" href="assets/icons/apple-touch-icon.png">
+	<link rel="icon" type="image/png" sizes="32x32" href="assets/icons/favicon-32x32.png">
+	<link rel="icon" type="image/png" sizes="16x16" href="assets/icons/favicon-16x16.png">
+	<link rel="manifest" href="assets/icons/site.webmanifest">
+</head>
+
+<body class="is-preload">
+	<div id="wrapper">
+
+		<section id="main">
+			<div class="page-header">
+				<h1>Projects</h1>
+				<a class="nav-back" href="index.html">&larr; Back</a>
+			</div>
+
+			<h2 class="section-title">Professional</h2>
+			<div class="professional-grid">
+				<div class="featured-card">
+					<h3>Blockdaemon Portal</h3>
+					<p>
+						Institutional-grade interface to manage, monitor, and deploy blockchain infrastructure.
+						Serves as a central hub for node operations, staking rewards, API management, and asset security at scale.
+						Built with a focus on performance, accessibility, and a complex multi-team design system.
+					</p>
+					<div class="project-tags">
+						<span>React 19</span>
+						<span>TypeScript</span>
+						<span>Zustand</span>
+						<span>React Query</span>
+						<span>Mantine</span>
+						<span>Okta</span>
+						<span>OpenAPI</span>
+					</div>
+					<a class="project-link" href="https://app.blockdaemon.com" target="_blank" rel="noreferrer">Live &rarr;</a>
+				</div>
+
+				<div class="featured-card">
+					<h3>GeekHunter</h3>
+					<p>
+						Curated marketplace connecting companies with vetted software developers and tech professionals across Latin America.
+						Streamlines tech hiring through pre-selected candidates, advanced filtering, and direct communication tools.
+					</p>
+					<div class="project-tags">
+						<span>React</span>
+						<span>Angular</span>
+						<span>Ruby on Rails</span>
+						<span>AWS</span>
+						<span>SCSS</span>
+					</div>
+					<a class="project-link" href="https://www.geekhunter.com.br/" target="_blank" rel="noreferrer">Live &rarr;</a>
+				</div>
+			</div>
+
+			<h2 class="section-title">Open Source</h2>
+			<div class="repo-grid" id="repo-grid"></div>
+
+			<div class="github-cta">
+				<a class="view-github-link" href="https://github.com/oaugusto256" target="_blank" rel="noreferrer">
+					<span class="icon brands fa-github"></span> View all on Github
+				</a>
+			</div>
+		</section>
+
+		<footer id="footer">
+			<ul class="copyright">
+				<li>&copy; Otavio Silva</li>
+				<li>Design: <a href="http://html5up.net">HTML5 UP</a></li>
+			</ul>
+		</footer>
+	</div>
+
+	<!-- Scripts -->
+	<script>
+		if ('addEventListener' in window) {
+			window.addEventListener('load', function () { document.body.className = document.body.className.replace(/\bis-preload\b/, ''); });
+			document.body.className += (navigator.userAgent.match(/(MSIE|rv:11\.0)/) ? ' is-ie' : '');
+		}
+	</script>
+
+	<script>
+		const EXCLUDED = ['oaugusto256.github.io', 'oaugusto256'];
+
+		function scoreRepo(repo) {
+			const daysSincePush = (Date.now() - new Date(repo.pushed_at)) / (1000 * 60 * 60 * 24);
+			const recency = Math.max(0, 1 - daysSincePush / 365); // 0–1, decays over a year
+			const activity = repo.open_issues_count || 0;
+			return recency * 10 + repo.stargazers_count * 1 + activity * 0.3;
+		}
+
+		function renderSkeletons(count) {
+			return Array.from({ length: count }, () => `
+				<div class="skeleton-card">
+					<div class="skeleton-line" style="width:55%;height:0.85em;"></div>
+					<div class="skeleton-line" style="width:100%;height:0.7em;margin-top:0.25em;"></div>
+					<div class="skeleton-line" style="width:80%;height:0.7em;"></div>
+					<div class="skeleton-tags">
+						<div class="skeleton-tag"></div>
+						<div class="skeleton-tag"></div>
+						<div class="skeleton-tag"></div>
+					</div>
+					<div class="skeleton-line" style="width:28%;height:0.7em;margin-top:0.1em;"></div>
+				</div>
+			`).join('');
+		}
+
+		const TECH_MAP = {
+			'react': 'React',
+			'react-dom': 'React',
+			'next': 'Next.js',
+			'vue': 'Vue',
+			'nuxt': 'Nuxt',
+			'@angular/core': 'Angular',
+			'svelte': 'Svelte',
+			'typescript': 'TypeScript',
+			'vite': 'Vite',
+			'react-query': 'React Query',
+			'@tanstack/react-query': 'React Query',
+			'zustand': 'Zustand',
+			'redux': 'Redux',
+			'@reduxjs/toolkit': 'Redux',
+			'tailwindcss': 'Tailwind',
+			'styled-components': 'Styled Components',
+			'@emotion/react': 'Emotion',
+			'fastify': 'Fastify',
+			'express': 'Express',
+			'hono': 'Hono',
+			'prisma': 'Prisma',
+			'@prisma/client': 'Prisma',
+			'drizzle-orm': 'Drizzle',
+			'graphql': 'GraphQL',
+			'@apollo/client': 'Apollo',
+			'zod': 'Zod',
+			'jest': 'Jest',
+			'vitest': 'Vitest',
+			'playwright': 'Playwright',
+			'cypress': 'Cypress',
+			'gatsby': 'Gatsby',
+			'remix': 'Remix',
+			'@remix-run/react': 'Remix',
+		};
+
+		async function fetchTechTags(repoName) {
+			try {
+				const res = await fetch(`https://api.github.com/repos/oaugusto256/${repoName}/contents/package.json`);
+				if (!res.ok) return [];
+
+				const data = await res.json();
+				if (!data.content) return [];
+
+				const pkg = JSON.parse(atob(data.content.replace(/\s/g, '')));
+				if (!pkg || typeof pkg !== 'object') return [];
+
+				const allDeps = Object.keys({
+					...(pkg.dependencies || {}),
+					...(pkg.devDependencies || {}),
+					...(pkg.peerDependencies || {}),
+				});
+
+				const seen = new Set();
+				const tags = [];
+				for (const dep of allDeps) {
+					const label = TECH_MAP[dep];
+					if (label && !seen.has(label)) {
+						seen.add(label);
+						tags.push(label);
+					}
+				}
+				return tags;
+			} catch (e) {
+				return [];
+			}
+		}
+
+		async function loadRepos() {
+			const grid = document.getElementById('repo-grid');
+			grid.innerHTML = renderSkeletons(4);
+
+			try {
+				const res = await fetch('https://api.github.com/users/oaugusto256/repos?sort=pushed&per_page=30');
+				if (!res.ok) throw new Error('GitHub API error');
+
+				const repos = await res.json();
+				const filtered = repos
+					.filter(r => !r.fork && !EXCLUDED.includes(r.name))
+					.sort((a, b) => scoreRepo(b) - scoreRepo(a))
+					.slice(0, 10);
+
+				if (filtered.length === 0) {
+					grid.innerHTML = '<p class="repo-error">No repositories found.</p>';
+					return;
+				}
+
+				const techResults = await Promise.allSettled(
+					filtered.map(r => fetchTechTags(r.name))
+				);
+
+				grid.innerHTML = filtered.map((repo, i) => {
+					const tags = techResults[i].status === 'fulfilled' ? techResults[i].value : [];
+					const tagsHtml = tags.length > 0
+						? `<div class="project-tags">${tags.map(t => `<span>${escapeHtml(t)}</span>`).join('')}</div>`
+						: (repo.language ? `<div class="project-tags"><span>${escapeHtml(repo.language)}</span></div>` : '');
+
+					return `
+						<div class="repo-card" style="animation-delay:${i * 0.06}s">
+							<div class="repo-card-header">
+								<h3>${escapeHtml(repo.name)}</h3>
+								${repo.stargazers_count > 0
+									? `<span class="star-count"><span class="icon solid fa-star"></span> ${repo.stargazers_count}</span>`
+									: ''}
+							</div>
+							<p>${escapeHtml(repo.description || 'No description provided.')}</p>
+							${tagsHtml}
+							<div class="repo-card-footer">
+								<div class="repo-links">
+									<a class="project-link" href="${repo.html_url}" target="_blank" rel="noreferrer">Github &rarr;</a>
+									${repo.homepage ? `<a class="project-link" href="${repo.homepage}" target="_blank" rel="noreferrer">Live &rarr;</a>` : ''}
+								</div>
+							</div>
+						</div>
+					`;
+				}).join('');
+
+			} catch (e) {
+				grid.innerHTML = `
+					<p class="repo-error">
+						Could not load repositories.
+						<a href="https://github.com/oaugusto256" target="_blank" rel="noreferrer">View on Github &rarr;</a>
+					</p>`;
+			}
+		}
+
+		function escapeHtml(str) {
+			return str
+				.replace(/&/g, '&amp;')
+				.replace(/</g, '&lt;')
+				.replace(/>/g, '&gt;')
+				.replace(/"/g, '&quot;');
+		}
+
+		loadRepos();
+	</script>
+</body>
+
+</html>

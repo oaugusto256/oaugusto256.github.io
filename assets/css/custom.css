@@ -1,0 +1,387 @@
+/* Custom overrides for portfolio layout */
+
+#main {
+	width: 52em;
+}
+
+.bio {
+	margin: 1.5em 0 1.5em;
+	color: #616f77;
+	font-size: 0.975em;
+	line-height: 1.6;
+	letter-spacing: normal;
+	text-align: center;
+	text-transform: none;
+}
+
+.section-title {
+	font-size: 0.7em;
+	font-weight: 600;
+	letter-spacing: 0.2em;
+	text-transform: uppercase;
+	color: #414f57;
+	margin-bottom: 1.5em;
+	border-bottom: 1px solid #c8cccf;
+	padding-bottom: 0.75em;
+}
+
+.projects-grid {
+	display: grid;
+	grid-template-columns: repeat(3, 1fr);
+	gap: 1.25em;
+	margin-bottom: 2.5em;
+	text-align: left;
+}
+
+.project-card {
+	border: 1px solid #c8cccf;
+	border-radius: 4px;
+	padding: 1.25em;
+	display: flex;
+	flex-direction: column;
+	gap: 0.5em;
+}
+
+.project-card h3 {
+	font-size: 1em;
+	font-weight: 600;
+	color: #313f47;
+	margin: 0;
+}
+
+.project-card p {
+	font-size: 0.88em;
+	color: #616f77;
+	line-height: 1.6;
+	margin: 0;
+	flex: 1;
+}
+
+.project-tags {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 0.4em;
+	margin-top: 0.25em;
+}
+
+.project-tags span {
+	font-size: 0.68em;
+	background: #e1dfe8;
+	color: #414f57;
+	border-radius: 3px;
+	padding: 0.2em 0.5em;
+	font-weight: 600;
+	letter-spacing: 0.03em;
+}
+
+.project-link {
+	font-size: 0.75em;
+	font-weight: 600;
+	color: #ff7496;
+	text-decoration: none;
+	letter-spacing: normal;
+}
+
+.project-link:hover {
+	color: #ff4d73;
+}
+
+.contact-list {
+	list-style: none;
+	padding: 0;
+	margin: 1em 0;
+	display: flex;
+	justify-content: center;
+	gap: 2em;
+	flex-wrap: wrap;
+}
+
+.contact-list li a {
+	font-size: 0.85em;
+	color: #414f57;
+	text-decoration: none;
+	display: flex;
+	align-items: center;
+	gap: 0.5em;
+}
+
+.contact-list li a:hover {
+	color: #ff7496;
+}
+
+.contact-list li a .icon {
+	font-size: 1.1em;
+}
+
+/* Projects page */
+
+.page-header {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	margin-bottom: 1.75em;
+}
+
+.page-header h1 {
+	margin: 0;
+}
+
+.nav-back {
+	display: inline-flex;
+	align-items: center;
+	gap: 0.4em;
+	font-size: 0.72em;
+	font-weight: 600;
+	letter-spacing: 0.15em;
+	text-transform: uppercase;
+	color: #616f77;
+	text-decoration: none;
+}
+
+.nav-back:hover {
+	color: #ff7496;
+}
+
+.view-projects-link {
+	display: inline-block;
+	font-size: 0.72em;
+	font-weight: 600;
+	letter-spacing: 0.15em;
+	text-transform: uppercase;
+	color: #ff7496;
+	text-decoration: none;
+	border: 1px solid #ff7496;
+	border-radius: 4px;
+	padding: 0.6em 1.4em;
+	margin-bottom: 2.5em;
+}
+
+.view-projects-link:hover {
+	background: #ff7496;
+	color: #fff;
+}
+
+.professional-grid {
+	display: grid;
+	grid-template-columns: repeat(2, 1fr);
+	gap: 1.25em;
+	margin-bottom: 2.5em;
+}
+
+.featured-card {
+	border: 1px solid #c8cccf;
+	border-radius: 4px;
+	padding: 1.1em;
+	text-align: left;
+	display: flex;
+	flex-direction: column;
+	gap: 0.35em;
+}
+
+.featured-card .featured-badge {
+	font-size: 0.65em;
+	font-weight: 700;
+	letter-spacing: 0.15em;
+	text-transform: uppercase;
+	color: #ff7496;
+}
+
+.featured-card h3 {
+	font-size: 1em;
+	font-weight: 600;
+	color: #313f47;
+	margin: 0;
+	text-transform: none;
+	letter-spacing: 0.1em;
+}
+
+.featured-card p {
+	font-size: 0.8em;
+	color: #616f77;
+	line-height: 1.7;
+	letter-spacing: normal;
+	margin: 0;
+	text-transform: none;
+}
+
+.repo-grid {
+	display: grid;
+	grid-template-columns: repeat(2, 1fr);
+	gap: 1.25em;
+	margin-bottom: 2.5em;
+	text-align: left;
+}
+
+@keyframes fadeInUp {
+	from { opacity: 0; transform: translateY(8px); }
+	to   { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes shimmer {
+	0%   { background-position: -200% 0; }
+	100% { background-position:  200% 0; }
+}
+
+.repo-card {
+	border: 1px solid #c8cccf;
+	border-radius: 4px;
+	padding: 1em;
+	display: flex;
+	flex-direction: column;
+	gap: 0.3em;
+	animation: fadeInUp 0.35s ease both;
+}
+
+.skeleton-card {
+	border: 1px solid #c8cccf;
+	border-radius: 4px;
+	padding: 1em;
+	display: flex;
+	flex-direction: column;
+	gap: 0.5em;
+}
+
+.skeleton-line,
+.skeleton-tag {
+	border-radius: 3px;
+	background: linear-gradient(90deg, #e8e6f0 25%, #f5f4f8 50%, #e8e6f0 75%);
+	background-size: 200% 100%;
+	animation: shimmer 1.4s ease-in-out infinite;
+}
+
+.skeleton-tags {
+	display: flex;
+	gap: 0.4em;
+}
+
+.skeleton-tag {
+	width: 3.5em;
+	height: 1.4em;
+}
+
+.repo-card-header {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 0.5em;
+}
+
+.repo-card h3 {
+	font-size: 0.82em;
+	font-weight: 600;
+	color: #313f47;
+	margin: 0;
+	word-break: break-word;
+	letter-spacing: 0.1em;
+}
+
+.repo-card p {
+	font-size: 0.86em;
+	color: #616f77;
+	line-height: 1.4;
+	letter-spacing: normal;
+	margin: 0;
+	flex: 1;
+	text-transform: none;
+}
+
+.repo-card-footer {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	margin-top: 0.25em;
+	flex-wrap: wrap;
+	gap: 0.5em;
+}
+
+.repo-links {
+	display: flex;
+	gap: 0.75em;
+}
+
+.star-count {
+	font-size: 0.7em;
+	color: #616f77;
+	display: flex;
+	align-items: center;
+	gap: 0.25em;
+}
+
+.lang-badge {
+	font-size: 0.68em;
+	background: #e1dfe8;
+	color: #414f57;
+	border-radius: 3px;
+	padding: 0.2em 0.5em;
+	font-weight: 600;
+	letter-spacing: 0.03em;
+}
+
+.github-cta {
+	text-align: center;
+	margin-bottom: 2em;
+}
+
+.view-github-link {
+	display: inline-flex;
+	align-items: center;
+	gap: 0.5em;
+	font-size: 0.72em;
+	font-weight: 600;
+	letter-spacing: 0.15em;
+	text-transform: uppercase;
+	color: #ff7496;
+	text-decoration: none;
+	border: 1px solid #ff7496;
+	border-radius: 4px;
+	padding: 0.6em 1.4em;
+}
+
+.view-github-link:hover {
+	background: #ff7496;
+	color: #fff;
+}
+
+.repo-loading,
+.repo-error {
+	grid-column: 1 / -1;
+	text-align: center;
+	font-size: 0.8em;
+	color: #616f77;
+	text-transform: none;
+	padding: 2em 0;
+}
+
+.icons {
+	margin-bottom: 0 !important;
+}
+
+/* Responsive */
+
+@media screen and (max-width: 640px) {
+	#main {
+		width: 100%;
+	}
+
+	.projects-grid,
+	.professional-grid,
+	.repo-grid {
+		grid-template-columns: 1fr;
+	}
+
+	.contact-list {
+		flex-direction: column;
+		align-items: center;
+		gap: 1em;
+	}
+}
+
+@media screen and (min-width: 641px) and (max-width: 860px) {
+	#main {
+		width: 90%;
+	}
+
+	.projects-grid {
+		grid-template-columns: repeat(2, 1fr);
+	}
+}
