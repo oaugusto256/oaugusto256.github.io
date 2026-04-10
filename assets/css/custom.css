@@ -171,36 +171,28 @@
 .featured-card {
 	border: 1px solid #c8cccf;
 	border-radius: 4px;
-	padding: 1.1em;
+	padding: 1em;
 	text-align: left;
 	display: flex;
 	flex-direction: column;
-	gap: 0.35em;
-}
-
-.featured-card .featured-badge {
-	font-size: 0.65em;
-	font-weight: 700;
-	letter-spacing: 0.15em;
-	text-transform: uppercase;
-	color: #ff7496;
+	gap: 0.3em;
 }
 
 .featured-card h3 {
-	font-size: 1em;
+	font-size: 0.82em;
 	font-weight: 600;
 	color: #313f47;
 	margin: 0;
-	text-transform: none;
 	letter-spacing: 0.1em;
 }
 
 .featured-card p {
-	font-size: 0.8em;
+	font-size: 0.86em;
 	color: #616f77;
-	line-height: 1.7;
+	line-height: 1.4;
 	letter-spacing: normal;
 	margin: 0;
+	flex: 1;
 	text-transform: none;
 }
 
