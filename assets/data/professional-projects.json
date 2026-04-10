@@ -1,0 +1,26 @@
+[
+  {
+    "title": "Blockdaemon Portal",
+    "description": "Institutional-grade interface to manage, monitor, and deploy blockchain infrastructure. Serves as a central hub for node operations, staking rewards, API management, and asset security at scale. Includes Stripe checkout, wallet integrations (WalletConnect, MetaMask), KYB via Sumsub, feature toggles, and an admin dashboard.",
+    "tags": ["React 19", "TypeScript", "Okta", "React Query", "Mantine", "Context API", "Stripe", "WalletConnect"],
+    "url": "https://app.blockdaemon.com"
+  },
+  {
+    "title": "Blockdaemon Design System",
+    "description": "Internal design system built on Mantine 8 with a brand-new visual identity delivered by a third-party design agency. Covers theming, component overrides, design tokens, dark/light theme implementation, and documentation — used across all Blockdaemon web products.",
+    "tags": ["React", "TypeScript", "Mantine 8", "Design Tokens", "Dark/Light Theme", "Storybook"],
+    "note": "Internal · Not open source"
+  },
+  {
+    "title": "Mercado Envios – Mercury WMS",
+    "description": "UI for Mercury, Mercado Libre's proprietary warehouse management system powering fulfillment centers, cross-docking hubs, and last-mile logistics across Latin America. Built interfaces for logistics managers covering inbound/outbound operations, inventory management, route optimization, and real-time stock synchronization — handling millions of transactions during peak events like Black Friday.",
+    "tags": ["React", "TypeScript", "Internal Design System"],
+    "note": "Internal · Not open source"
+  },
+  {
+    "title": "GeekHunter",
+    "description": "Curated marketplace connecting companies with vetted software developers and tech professionals across Latin America. Streamlines tech hiring through pre-selected candidates, advanced filtering, and direct communication tools.",
+    "tags": ["React", "Angular", "Ruby on Rails", "AWS", "SCSS", "PostgreSQL"],
+    "url": "https://www.geekhunter.com.br/"
+  }
+]

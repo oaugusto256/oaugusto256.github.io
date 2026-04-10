@@ -86,6 +86,14 @@
 	color: #ff4d73;
 }
 
+.project-note {
+	font-size: 0.75em;
+	color: #9aa4ac;
+	font-style: italic;
+	letter-spacing: normal;
+	text-transform: none;
+}
+
 .contact-list {
 	list-style: none;
 	padding: 0;
