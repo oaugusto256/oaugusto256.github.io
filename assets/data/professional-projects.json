@@ -1,5 +1,11 @@
 [
   {
+    "title": "Terral Floripa",
+    "description": "Web app that helps Florianópolis surfers pick the best beach to surf right now or in the next few days — given current swell direction, wind, and tide. Productizes the local judgment surfers do manually every morning by cross-referencing forecast tools.",
+    "tags": ["React 18", "TypeScript", "Vite", "MapLibre GL JS", "TanStack Query", "Zustand", "Tailwind CSS v4", "Docker", "GitHub Actions"],
+    "url": "https://terral.surf"
+  },
+  {
     "title": "Blockdaemon Portal",
     "description": "Institutional-grade interface to manage, monitor, and deploy blockchain infrastructure. Serves as a central hub for node operations, staking rewards, API management, and asset security at scale. Includes Stripe checkout, wallet integrations (WalletConnect, MetaMask), KYB via Sumsub, feature toggles, and an admin dashboard.",
     "tags": ["React 19", "TypeScript", "Okta", "React Query", "Mantine", "Context API", "Stripe", "WalletConnect"],
