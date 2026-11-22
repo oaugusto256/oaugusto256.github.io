@@ -3,6 +3,8 @@ import { defineConfig } from 'astro/config';
 
 import mdx from '@astrojs/mdx';
 
+import sitemap from '@astrojs/sitemap';
+
 export default defineConfig({
   site: 'https://oaugusto256.github.io',
   trailingSlash: 'ignore',
@@ -15,5 +17,5 @@ export default defineConfig({
   },
 
   redirects: { '/': '/en/' },
-  integrations: [mdx()],
+  integrations: [mdx(), sitemap({ i18n: { defaultLocale: 'en', locales: { en: 'en', pt: 'pt-BR' } } })],
 });

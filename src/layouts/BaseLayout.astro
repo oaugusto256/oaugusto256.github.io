@@ -16,7 +16,7 @@ interface Props {
   ogImage?: string;
 }
 
-const { locale, title, description, alternate, ogImage } = Astro.props;
+const { locale, title, description, alternate, ogImage = '/og/default.png' } = Astro.props;
 const site = Astro.site ?? new URL('https://oaugusto256.github.io');
 const canonical = new URL(Astro.url.pathname.replace(/\/?$/, '/'), site).href;
 const other = otherLocale(locale);
@@ -24,7 +24,7 @@ const alternateHref = alternate ? new URL(alternate, site).href : undefined;
 const enHref = locale === 'en' ? canonical : alternateHref;
 const ptHref = locale === 'pt' ? canonical : alternateHref;
 const t = useT(locale);
-const ogImageHref = ogImage ? new URL(ogImage, site).href : undefined;
+const ogImageHref = new URL(ogImage, site).href;
 ---
 
 <!doctype html>
@@ -47,8 +47,10 @@ const ogImageHref = ogImage ? new URL(ogImage, site).href : undefined;
     <meta property="og:url" content={canonical} />
     <meta property="og:locale" content={locale === 'pt' ? 'pt_BR' : 'en_US'} />
     <meta property="og:locale:alternate" content={other === 'pt' ? 'pt_BR' : 'en_US'} />
-    {ogImageHref && <meta property="og:image" content={ogImageHref} />}
-    <meta name="twitter:card" content={ogImageHref ? 'summary_large_image' : 'summary'} />
+    <meta property="og:image" content={ogImageHref} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content={title} />
     <meta name="twitter:description" content={description} />
     <link rel="icon" href="/favicon.ico" sizes="any" />

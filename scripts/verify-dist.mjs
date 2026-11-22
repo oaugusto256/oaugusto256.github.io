@@ -135,6 +135,26 @@ for (const loc of ['en', 'pt']) {
   }
 }
 
+// Task 12: SEO + a11y basics
+{
+  assert(exists('sitemap-index.xml'), 'sitemap-index.xml exists');
+  assert(read('robots.txt').includes('https://oaugusto256.github.io/sitemap-index.xml'), 'robots.txt references sitemap');
+  assert(exists('og/default.png'), 'og/default.png exists');
+  const pages = allFiles()
+    .filter((f) => f.endsWith('.html'))
+    .map((f) => f.slice(DIST.length + 1))
+    .filter((f) => f !== 'index.html'); // root is a redirect stub
+  for (const page of pages) {
+    const html = read(page);
+    assert((html.match(/<h1[\s>]/g) || []).length === 1, `${page}: exactly one <h1>`);
+    assert(html.includes('rel="canonical"'), `${page}: canonical`);
+    assert(html.includes('property="og:title"'), `${page}: og:title`);
+    assert(/property="og:image" content="https:\/\/oaugusto256\.github\.io\//.test(html), `${page}: absolute og:image`);
+    const imgs = [...html.matchAll(/<img\b[^>]*>/g)].map((m) => m[0]);
+    assert(imgs.every((tag) => /\salt="/.test(tag)), `${page}: every <img> has alt`);
+  }
+}
+
 if (failures.length) {
   console.error(`verify-dist: ${failures.length} failure(s)`);
   for (const f of failures) console.error(`  ✗ ${f}`);
