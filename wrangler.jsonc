@@ -1,0 +1,13 @@
+// Cloudflare Workers static-assets config for the redesign preview.
+// Production (GitHub Pages) does not use this file.
+{
+  "$schema": "./node_modules/wrangler/config-schema.json",
+  "name": "oaugusto256-portfolio",
+  "compatibility_date": "2026-11-01",
+  "assets": {
+    "directory": "./dist",
+    // /pt/work/terral → /pt/work/terral/ (directory-format build)
+    "html_handling": "auto-trailing-slash",
+    "not_found_handling": "none"
+  }
+}
