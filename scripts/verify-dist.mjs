@@ -80,6 +80,19 @@ function allFiles(dir = DIST, out = []) {
   const allCss = css + [...html.matchAll(/<style[^>]*>([\s\S]*?)<\/style>/g)].map((m) => m[1]).join('\n');
   assert(allCss.includes('prefers-reduced-motion'), 'built CSS handles prefers-reduced-motion');
   assert(allCss.includes('--color-accent'), 'built CSS defines design tokens');
+  // Hero diagram: lines draw in and nodes light up, only when motion is allowed.
+  assert(/@keyframes\s+draw\b[^}]*stroke-dashoffset/.test(allCss), 'hero edge draw-in keyframes animate stroke-dashoffset');
+  assert(/@keyframes\s+light-5\b/.test(allCss), 'hero nodes light-up keyframes exist (6 nodes)');
+  // Every rule that animates the hero must sit inside a no-preference media block.
+  const motionRanges = [...allCss.matchAll(/@media[^{]*prefers-reduced-motion:\s*no-preference[^{]*\{/g)].map((m) => {
+    let depth = 1;
+    let i = m.index + m[0].length;
+    for (; i < allCss.length && depth > 0; i++) depth += allCss[i] === '{' ? 1 : allCss[i] === '}' ? -1 : 0;
+    return [m.index, i];
+  });
+  const animDecls = [...allCss.matchAll(/animation(?:-name)?:[^;}]*\b(draw|light-\d)\b/g)];
+  const unguarded = animDecls.filter((m) => !motionRanges.some(([a, b]) => m.index > a && m.index < b));
+  assert(animDecls.length >= 7 && unguarded.length === 0, 'hero animations (edge + 6 nodes) only under prefers-reduced-motion: no-preference');
   // .reveal may only be hidden (opacity:0 / visibility:hidden) under html.js
   const revealRules = [...allCss.matchAll(/([^{}]*\.reveal[^{}]*)\{([^}]*)\}/g)];
   const badReveal = revealRules.filter(([, sel, body]) => /opacity:\s*0|visibility:\s*hidden/.test(body) && !/\.js/.test(sel));

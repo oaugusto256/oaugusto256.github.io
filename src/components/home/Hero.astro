@@ -31,10 +31,10 @@ const nodes = [
       </div>
     </div>
     <svg class="map" viewBox="0 0 540 240" role="img" aria-label={t.mapLabel}>
-      <path class="edge" d="M60 40 H 200 V 120 H 340 V 200 H 480"></path>
+      <path class="edge" d="M60 40 H 200 V 120 H 340 V 200 H 480" pathLength="100"></path>
       {
         nodes.map((n, i) => (
-          <g class:list={['node', { on: n.on }]}>
+          <g class:list={['node', `n${i}`, { on: n.on }]}>
             <rect x={n.x} y={n.y} width="108" height="32" rx="4" />
             <text x={n.x + 12} y={n.y + 20}>
               {t.map[i]}
@@ -123,19 +123,167 @@ const nodes = [
     cx: 60px;
     cy: 40px;
   }
+  /*
+   * One 8s loop: the edge draws in behind the travelling dot (0–70%), each
+   * node lights up as the dot reaches it, all hold lit (70–88%), then fade
+   * out (88–96%) and the loop restarts. Dot arrival = 70% × cumulative edge
+   * length / 580 → 0, 16.9, 26.6, 43.4, 53.1, 70%. Without motion the
+   * diagram stays static as styled above.
+   */
+  @property --lit {
+    syntax: '<number>';
+    inherits: true;
+    initial-value: 0;
+  }
   @media (prefers-reduced-motion: no-preference) {
+    .edge {
+      stroke-dasharray: 100;
+      stroke-dashoffset: 100;
+      animation: draw 8s linear infinite;
+    }
+    .map .node rect {
+      stroke: color-mix(in srgb, var(--color-accent-dark) calc(var(--lit) * 100%), var(--color-line-dark));
+    }
+    .map .node text {
+      fill: color-mix(in srgb, var(--color-on-dark) calc(var(--lit) * 100%), var(--color-muted-dark));
+    }
+    .n0 {
+      animation: light-0 8s linear infinite;
+    }
+    .n1 {
+      animation: light-1 8s linear infinite;
+    }
+    .n2 {
+      animation: light-2 8s linear infinite;
+    }
+    .n3 {
+      animation: light-3 8s linear infinite;
+    }
+    .n4 {
+      animation: light-4 8s linear infinite;
+    }
+    .n5 {
+      animation: light-5 8s linear infinite;
+    }
     .pulse {
       cx: 0;
       cy: 0;
       offset-path: path('M60 40 H 200 V 120 H 340 V 200 H 480');
-      animation: travel 6s linear infinite;
+      animation: travel 8s linear infinite;
+    }
+    @keyframes draw {
+      0% {
+        stroke-dashoffset: 100;
+        opacity: 1;
+      }
+      70% {
+        stroke-dashoffset: 0;
+      }
+      88% {
+        opacity: 1;
+      }
+      96%,
+      100% {
+        stroke-dashoffset: 0;
+        opacity: 0;
+      }
     }
     @keyframes travel {
-      from {
+      0% {
         offset-distance: 0%;
+        opacity: 1;
       }
-      to {
+      70% {
         offset-distance: 100%;
+        opacity: 1;
+      }
+      76%,
+      100% {
+        offset-distance: 100%;
+        opacity: 0;
+      }
+    }
+    @keyframes light-0 {
+      0% {
+        --lit: 0;
+      }
+      2%,
+      88% {
+        --lit: 1;
+      }
+      96%,
+      100% {
+        --lit: 0;
+      }
+    }
+    @keyframes light-1 {
+      0%,
+      15.9% {
+        --lit: 0;
+      }
+      16.9%,
+      88% {
+        --lit: 1;
+      }
+      96%,
+      100% {
+        --lit: 0;
+      }
+    }
+    @keyframes light-2 {
+      0%,
+      25.6% {
+        --lit: 0;
+      }
+      26.6%,
+      88% {
+        --lit: 1;
+      }
+      96%,
+      100% {
+        --lit: 0;
+      }
+    }
+    @keyframes light-3 {
+      0%,
+      42.4% {
+        --lit: 0;
+      }
+      43.4%,
+      88% {
+        --lit: 1;
+      }
+      96%,
+      100% {
+        --lit: 0;
+      }
+    }
+    @keyframes light-4 {
+      0%,
+      52.1% {
+        --lit: 0;
+      }
+      53.1%,
+      88% {
+        --lit: 1;
+      }
+      96%,
+      100% {
+        --lit: 0;
+      }
+    }
+    @keyframes light-5 {
+      0%,
+      69% {
+        --lit: 0;
+      }
+      70%,
+      88% {
+        --lit: 1;
+      }
+      96%,
+      100% {
+        --lit: 0;
       }
     }
   }
