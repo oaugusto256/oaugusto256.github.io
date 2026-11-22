@@ -58,3 +58,4 @@ Usage analytics (visitors, sessions, top beaches, returning share): **not collec
 2. Start date: repo history begins 2026-10-14. Did work start earlier (e.g. another repo)?
 3. OK to mention Stormglass, Open-Meteo, NOAA, MapTiler by name?
 4. Want any of the commit/phase/version numbers (rows 8–10) on the page, or leave them out?
+5. The live onboarding says "50+ praias"; the beach model has 56 entries, 42 of them ranked (parents split into peaks, 4 hidden). Which number should the case study use?
