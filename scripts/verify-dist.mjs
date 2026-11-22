@@ -120,6 +120,21 @@ for (const loc of ['en', 'pt']) {
   }
 }
 
+// Task 10: analytics — loads only when PUBLIC_POSTHOG_KEY is set at build time
+{
+  const htmlFiles = allFiles().filter((f) => f.endsWith('.html'));
+  const jsFiles = allFiles().filter((f) => f.endsWith('.js'));
+  const htmlMentions = htmlFiles.filter((f) => /posthog/i.test(readFileSync(f, 'utf8')));
+  if (process.env.PUBLIC_POSTHOG_KEY) {
+    const home = read('en/index.html');
+    assert(htmlMentions.length === htmlFiles.length - 1, 'with key: every page (except / redirect) loads analytics');
+    assert(/persistence:\s*["'`]memory["'`]/.test(jsFiles.map((f) => readFileSync(f, 'utf8')).join('\n') + home), 'with key: memory persistence');
+  } else {
+    assert(htmlMentions.length === 0, `without key: no HTML references posthog (found in ${htmlMentions.length})`);
+    assert(!jsFiles.some((f) => /posthog/i.test(readFileSync(f, 'utf8'))), 'without key: no JS bundle contains posthog');
+  }
+}
+
 if (failures.length) {
   console.error(`verify-dist: ${failures.length} failure(s)`);
   for (const f of failures) console.error(`  ✗ ${f}`);

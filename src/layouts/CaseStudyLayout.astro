@@ -3,7 +3,7 @@ import { Image } from 'astro:assets';
 import BaseLayout from './BaseLayout.astro';
 import Icon from '../components/ui/Icon.astro';
 import { localePath, useT, type Locale } from '../i18n/utils';
-import type { WorkEntry } from '../content/work';
+import { slugOf, type WorkEntry } from '../content/work';
 
 interface Props {
   locale: Locale;
@@ -14,10 +14,11 @@ interface Props {
 const { locale, entry, alternate } = Astro.props;
 const { title, summary, role, period, stack, links, cover, coverAlt } = entry.data;
 const t = useT(locale);
+const slug = slugOf(entry);
 ---
 
 <BaseLayout locale={locale} title={`${title} — ${t.work.caseStudy} · Otavio Silva`} description={summary} alternate={alternate}>
-  <article class="case">
+  <article class="case" data-case-study={slug} data-locale={locale}>
     <header class="case-head on-dark">
       <div class="container head-grid">
         <div class="intro">

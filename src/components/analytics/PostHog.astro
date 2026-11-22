@@ -1,0 +1,41 @@
+---
+// Privacy-first analytics. Everything below is compiled away when PUBLIC_POSTHOG_KEY is unset
+// (local dev, CI, previews without the env var), so no request is made and nothing is bundled.
+// IP addresses are discarded by the PostHog project setting, not here.
+---
+
+<script>
+  const key = import.meta.env.PUBLIC_POSTHOG_KEY;
+  if (key) {
+    import('posthog-js').then(({ default: posthog }) => {
+      posthog.init(key, {
+        api_host: import.meta.env.PUBLIC_POSTHOG_HOST || 'https://us.i.posthog.com',
+        persistence: 'memory',
+        person_profiles: 'never',
+        autocapture: false,
+        capture_pageview: true,
+        disable_session_recording: true,
+        disable_surveys: true,
+        advanced_disable_flags: true,
+        disable_external_dependency_loading: true,
+      });
+
+      const caseStudy = document.querySelector<HTMLElement>('[data-case-study]');
+      if (caseStudy) {
+        posthog.capture('case_study_view', {
+          project: caseStudy.dataset.caseStudy,
+          locale: caseStudy.dataset.locale,
+        });
+      }
+
+      // One delegated listener: any element with data-event="<name>" sends that event,
+      // with its other data-* attributes as properties.
+      document.addEventListener('click', (e) => {
+        const el = (e.target as Element | null)?.closest<HTMLElement>('[data-event]');
+        if (!el) return;
+        const { event, ...props } = el.dataset;
+        if (event) posthog.capture(event, props);
+      });
+    });
+  }
+</script>

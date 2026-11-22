@@ -20,6 +20,7 @@
     "@astrojs/markdown-satteri": "^0.4.10",
     "@astrojs/mdx": "^8.1.6",
     "astro": "^7.4.13",
+    "posthog-js": "^1.453.2",
     "typescript": "^6.0.3"
   },
   "devDependencies": {
