@@ -8,7 +8,7 @@
         "/en/work/terral/index.html",
         "/pt/work/terral/index.html"
       ],
-      "numberOfRuns": 1
+      "numberOfRuns": 3
     },
     "assert": {
       "assertions": {
