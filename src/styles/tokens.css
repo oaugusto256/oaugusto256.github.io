@@ -1,0 +1,52 @@
+/* Design tokens — Concept C "System map". Values and contrast ratios: spec §5.7. */
+:root {
+  /* Color */
+  --color-bg: #edeeea;
+  --color-text: #17181a;
+  --color-muted: #55585e;
+  --color-border: #cfd1cc;
+  --color-accent: #2447a8;
+  --color-surface: #ffffff;
+  --color-surface-dark: #202226;
+  --color-on-dark: #e9eae6;
+  --color-muted-dark: #a2a6ad;
+  --color-accent-dark: #8fa9f0;
+  --color-line-dark: #4a4e56;
+
+  /* Spacing: --space-n = n × 4px */
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-5: 1.25rem;
+  --space-6: 1.5rem;
+  --space-8: 2rem;
+  --space-10: 2.5rem;
+  --space-12: 3rem;
+  --space-16: 4rem;
+  --space-20: 5rem;
+  --space-24: 6rem;
+
+  /* Type */
+  --font-sans: 'Geist', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-mono: 'Geist Mono', ui-monospace, 'SFMono-Regular', Menlo, monospace;
+  --step--1: 0.8125rem;
+  --step-0: 1.0625rem;
+  --step-1: clamp(1.125rem, 1.05rem + 0.3vw, 1.25rem);
+  --step-2: clamp(1.25rem, 1.1rem + 0.6vw, 1.5rem);
+  --step-3: clamp(1.5rem, 1.2rem + 1.2vw, 2rem);
+  --step-4: clamp(1.75rem, 1.3rem + 1.9vw, 2.5rem);
+  --step-5: clamp(2rem, 1.3rem + 3vw, 3.25rem);
+  --step-6: clamp(2.25rem, 1.2rem + 4.4vw, 4.25rem);
+
+  /* Layout */
+  --max-width: 1240px;
+  --gutter: 1rem;
+  --radius: 6px;
+  --radius-media: 10px;
+
+  /* Motion */
+  --ease-out: cubic-bezier(0.2, 0.7, 0.2, 1);
+  --dur-fast: 150ms;
+  --dur-base: 300ms;
+}

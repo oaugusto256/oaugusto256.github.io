@@ -1,5 +1,5 @@
 // Dependency-free post-build assertions over dist/. Exits 1 listing all failures.
-import { readFileSync, existsSync } from 'node:fs';
+import { readFileSync, existsSync, readdirSync } from 'node:fs';
 import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -59,6 +59,34 @@ function hasLink(html, attrs) {
   }
   assert(!pages.en.includes('resume-pt.pdf'), 'en home: no PT résumé link');
   assert(!pages.pt.includes('resume-en.pdf'), 'pt home: no EN résumé link');
+}
+
+// Task 6: tokens, fonts, global styles
+function allFiles(dir = DIST, out = []) {
+  if (!existsSync(dir)) return out;
+  for (const e of readdirSync(dir, { withFileTypes: true })) {
+    const full = join(dir, e.name);
+    if (e.isDirectory()) allFiles(full, out);
+    else out.push(full);
+  }
+  return out;
+}
+{
+  const css = allFiles()
+    .filter((f) => f.endsWith('.css'))
+    .map((f) => readFileSync(f, 'utf8'))
+    .join('\n');
+  const html = read('en/index.html');
+  const allCss = css + [...html.matchAll(/<style[^>]*>([\s\S]*?)<\/style>/g)].map((m) => m[1]).join('\n');
+  assert(allCss.includes('prefers-reduced-motion'), 'built CSS handles prefers-reduced-motion');
+  assert(allCss.includes('--color-accent'), 'built CSS defines design tokens');
+  // .reveal may only be hidden (opacity:0 / visibility:hidden) under html.js
+  const revealRules = [...allCss.matchAll(/([^{}]*\.reveal[^{}]*)\{([^}]*)\}/g)];
+  const badReveal = revealRules.filter(([, sel, body]) => /opacity:\s*0|visibility:\s*hidden/.test(body) && !/\.js/.test(sel));
+  assert(badReveal.length === 0, 'no rule hides .reveal outside html.js');
+  assert(exists('fonts/geist-latin-wght-normal.woff2'), 'Geist woff2 self-hosted');
+  assert(exists('fonts/geist-mono-latin-wght-normal.woff2'), 'Geist Mono woff2 self-hosted');
+  assert(/<link[^>]+rel="preload"[^>]+geist-latin-wght-normal\.woff2/.test(html), 'primary font preloaded');
 }
 
 if (failures.length) {
