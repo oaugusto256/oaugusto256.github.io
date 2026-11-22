@@ -1,0 +1,53 @@
+---
+import { useT, type Locale } from '../../i18n/utils';
+import { person } from '../../data/site';
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+const t = useT(locale);
+const year = new Date().getFullYear();
+---
+
+<footer class="site-footer">
+  <div class="container footer-inner">
+    <p>© {year} {person.name} · {t.footer.location}</p>
+    <ul>
+      <li><a href={`mailto:${person.email}`} data-event="contact_click" data-channel="email">{t.footer.email}</a></li>
+      <li><a href={person.github} data-event="contact_click" data-channel="github">GitHub</a></li>
+      <li><a href={person.linkedin} data-event="contact_click" data-channel="linkedin">LinkedIn</a></li>
+    </ul>
+  </div>
+</footer>
+
+<style>
+  .site-footer {
+    border-top: 1px solid var(--color-border, #ddd);
+    margin-top: 4rem;
+  }
+  .footer-inner {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+    padding-block: 2rem;
+  }
+  .footer-inner p {
+    margin: 0;
+  }
+  ul {
+    display: flex;
+    gap: 1.25rem;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  a {
+    color: inherit;
+    display: inline-block;
+    min-height: 1.5rem;
+  }
+</style>

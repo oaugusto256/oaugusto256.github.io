@@ -1,0 +1,28 @@
+---
+import { localePath, otherLocale, useT, type Locale } from '../../i18n/utils';
+
+interface Props {
+  locale: Locale;
+  /** Path of the current page in the other locale; when absent, link to that locale's home. */
+  alternate?: string;
+}
+
+const { locale, alternate } = Astro.props;
+const target = otherLocale(locale);
+const tt = useT(target);
+const href = alternate ?? localePath(target, '/');
+---
+
+<a
+  class="lang-switch mono"
+  href={href}
+  hreflang={target}
+  lang={target === 'pt' ? 'pt-BR' : 'en'}
+  aria-label={tt.nav.switchLabel}
+  data-event="language_switch"
+  data-from={locale}
+  data-to={target}
+>
+  {target.toUpperCase()}
+  {!alternate && <span class="lang-note">{tt.nav.notTranslated}</span>}
+</a>

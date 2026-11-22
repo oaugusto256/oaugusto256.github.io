@@ -1,4 +1,21 @@
 export const en = {
+  a11y: {
+    skip: 'Skip to content',
+  },
+  nav: {
+    label: 'Main',
+    work: 'Work',
+    contact: 'Contact',
+    resume: 'Résumé',
+    open: 'Open menu',
+    close: 'Close menu',
+    switchLabel: 'Read in English',
+    notTranslated: '(home — this page is not in English)',
+  },
+  footer: {
+    location: 'Florianópolis, Brazil',
+    email: 'Email',
+  },
   meta: {
     title: 'Otavio Silva — Product Engineer',
     description:

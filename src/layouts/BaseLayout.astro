@@ -1,5 +1,7 @@
 ---
-import { htmlLang, otherLocale, type Locale } from '../i18n/utils';
+import { htmlLang, otherLocale, useT, type Locale } from '../i18n/utils';
+import Header from '../components/navigation/Header.astro';
+import Footer from '../components/layout/Footer.astro';
 
 interface Props {
   locale: Locale;
@@ -17,14 +19,16 @@ const other = otherLocale(locale);
 const alternateHref = alternate ? new URL(alternate, site).href : undefined;
 const enHref = locale === 'en' ? canonical : alternateHref;
 const ptHref = locale === 'pt' ? canonical : alternateHref;
+const t = useT(locale);
 const ogImageHref = ogImage ? new URL(ogImage, site).href : undefined;
 ---
 
 <!doctype html>
-<html lang={htmlLang(locale)}>
+<html lang={htmlLang(locale)} class="no-js">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <script is:inline>document.documentElement.classList.replace('no-js', 'js');</script>
     <title>{title}</title>
     <meta name="description" content={description} />
     <link rel="canonical" href={canonical} />
@@ -47,6 +51,26 @@ const ogImageHref = ogImage ? new URL(ogImage, site).href : undefined;
     <link rel="manifest" href="/icons/site.webmanifest" />
   </head>
   <body>
-    <slot />
+    <a class="skip-link" href="#main">{t.a11y.skip}</a>
+    <Header locale={locale} alternate={alternate} />
+    <main id="main">
+      <slot />
+    </main>
+    <Footer locale={locale} />
   </body>
 </html>
+
+<style is:global>
+  .container {
+    width: min(100% - 2rem, 1280px);
+    margin-inline: auto;
+  }
+  .skip-link {
+    position: absolute;
+    left: 1rem;
+    top: -3rem;
+  }
+  .skip-link:focus {
+    top: 1rem;
+  }
+</style>

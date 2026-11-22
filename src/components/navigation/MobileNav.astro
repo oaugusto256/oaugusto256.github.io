@@ -1,0 +1,68 @@
+---
+import Icon from '../ui/Icon.astro';
+
+interface Props {
+  controls: string;
+  openLabel: string;
+  closeLabel: string;
+}
+
+const { controls, openLabel, closeLabel } = Astro.props;
+---
+
+<button
+  type="button"
+  class="nav-toggle"
+  aria-expanded="false"
+  aria-controls={controls}
+  data-open-label={openLabel}
+  data-close-label={closeLabel}
+  aria-label={openLabel}
+>
+  <span class="when-closed"><Icon name="menu" size={22} /></span>
+  <span class="when-open"><Icon name="x" size={22} /></span>
+</button>
+
+<script is:inline>
+  (() => {
+    const b = document.currentScript.previousElementSibling;
+    const set = (open) => {
+      b.setAttribute('aria-expanded', String(open));
+      b.setAttribute('aria-label', open ? b.dataset.closeLabel : b.dataset.openLabel);
+      document.getElementById(b.getAttribute('aria-controls')).dataset.open = String(open);
+    };
+    b.addEventListener('click', () => set(b.getAttribute('aria-expanded') !== 'true'));
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && b.getAttribute('aria-expanded') === 'true') { set(false); b.focus(); }
+    });
+    document.getElementById(b.getAttribute('aria-controls')).addEventListener('click', (e) => {
+      if (e.target.closest('a')) set(false);
+    });
+  })();
+</script>
+
+<style>
+  .nav-toggle {
+    display: none;
+  }
+  @media (max-width: 47.99rem) {
+    :global(html.js) .nav-toggle {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 2.75rem;
+      height: 2.75rem;
+      background: none;
+      border: 0;
+      color: inherit;
+      cursor: pointer;
+    }
+  }
+  .when-open,
+  .nav-toggle[aria-expanded='true'] .when-closed {
+    display: none;
+  }
+  .nav-toggle[aria-expanded='true'] .when-open {
+    display: inline-flex;
+  }
+</style>
