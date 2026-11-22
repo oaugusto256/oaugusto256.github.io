@@ -1,0 +1,26 @@
+---
+import { render } from 'astro:content';
+import CaseStudyLayout from '../../../layouts/CaseStudyLayout.astro';
+import { getCollection } from 'astro:content';
+import { hasTwin, slugOf } from '../../../content/work';
+import { localePath, otherLocale, type Locale } from '../../../i18n/utils';
+
+export async function getStaticPaths() {
+  const entries = await getCollection('work');
+  return entries.map((entry) => ({
+    params: { locale: entry.data.locale, slug: slugOf(entry) },
+    props: { entry },
+  }));
+}
+
+const { entry } = Astro.props;
+const locale = Astro.params.locale as Locale;
+const slug = slugOf(entry);
+const other = otherLocale(locale);
+const alternate = (await hasTwin(slug, other)) ? localePath(other, `/work/${slug}/`) : undefined;
+const { Content } = await render(entry);
+---
+
+<CaseStudyLayout locale={locale} entry={entry} alternate={alternate}>
+  <Content />
+</CaseStudyLayout>

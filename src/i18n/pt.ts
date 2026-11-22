@@ -18,6 +18,14 @@ export const pt = {
     location: 'Florianópolis, Brasil',
     email: 'E-mail',
   },
+  work: {
+    caseStudy: 'Estudo de caso',
+    back: 'Voltar aos trabalhos',
+    role: 'Papel',
+    period: 'Período',
+    stack: 'Stack',
+    links: 'Links',
+  },
   meta: {
     title: 'Otavio Silva — Product Engineer',
     description:

@@ -1,0 +1,15 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { localePath, locales, otherLocale, useT, type Locale } from '../../i18n/utils';
+
+export function getStaticPaths() {
+  return locales.map((locale) => ({ params: { locale } }));
+}
+
+const locale = Astro.params.locale as Locale;
+const t = useT(locale);
+---
+
+<BaseLayout locale={locale} title={t.meta.title} description={t.meta.description} alternate={localePath(otherLocale(locale), '/')}>
+  <h1>Otavio Silva</h1>
+</BaseLayout>

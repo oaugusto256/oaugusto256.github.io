@@ -89,6 +89,18 @@ function allFiles(dir = DIST, out = []) {
   assert(/<link[^>]+rel="preload"[^>]+geist-latin-wght-normal\.woff2/.test(html), 'primary font preloaded');
 }
 
+// Task 7: work collection + case study layout
+{
+  const en = read('en/work/terral/index.html');
+  const pt = read('pt/work/terral/index.html');
+  assert(exists('en/work/terral/index.html'), 'en/work/terral/index.html exists');
+  assert(exists('pt/work/terral/index.html'), 'pt/work/terral/index.html exists');
+  assert(hasLink(en, ['href="/pt/work/terral/"', 'hreflang="pt"']), 'en terral: language switcher → /pt/work/terral/');
+  assert(hasLink(pt, ['href="/en/work/terral/"', 'hreflang="en"']), 'pt terral: language switcher → /en/work/terral/');
+  assert(en.includes('<html lang="en"') && pt.includes('<html lang="pt-BR"'), 'terral pages have correct html lang');
+  assert(/<link rel="alternate" hreflang="pt" href="https:\/\/oaugusto256\.github\.io\/pt\/work\/terral\/"/.test(en), 'en terral: hreflang pt alternate');
+}
+
 if (failures.length) {
   console.error(`verify-dist: ${failures.length} failure(s)`);
   for (const f of failures) console.error(`  ✗ ${f}`);
