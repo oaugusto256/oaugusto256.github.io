@@ -124,7 +124,8 @@ for (const loc of ['en', 'pt']) {
 {
   const htmlFiles = allFiles().filter((f) => f.endsWith('.html'));
   const jsFiles = allFiles().filter((f) => f.endsWith('.js'));
-  const htmlMentions = htmlFiles.filter((f) => /posthog/i.test(readFileSync(f, 'utf8')));
+  // Match the loader script, not the word (case studies may name PostHog in prose).
+  const htmlMentions = htmlFiles.filter((f) => /PostHog\.astro_astro_type_script|posthog-js|i\.posthog\.com/i.test(readFileSync(f, 'utf8')));
   if (process.env.PUBLIC_POSTHOG_KEY) {
     const home = read('en/index.html');
     assert(htmlMentions.length === htmlFiles.length - 1, 'with key: every page (except / redirect) loads analytics');
@@ -162,6 +163,22 @@ for (const loc of ['en', 'pt']) {
   assert(imgs.length >= 4, `${loc} terral: at least 4 images (cover + desktop detail + 2 mobile), found ${imgs.length}`);
   assert(imgs.some((t) => /mobile/i.test(t)), `${loc} terral: includes a mobile screenshot`);
   assert(!html.includes('screenshot pending'), `${loc} terral: placeholder cover removed`);
+}
+
+// Task 9: every number in the Terral case study source must appear in the approved evidence file
+{
+  const root = join(DIST, '..');
+  const evidence = readFileSync(join(root, 'docs/superpowers/evidence/terral.md'), 'utf8');
+  for (const loc of ['en', 'pt']) {
+    const src = readFileSync(join(root, `src/content/work/terral/${loc}.mdx`), 'utf8');
+    const prose = src
+      .replace(/^cover:.*$/m, '') // asset path, not a claim
+      .replace(/^import .*$/gm, '') // MDX imports
+      .replace(/<[^>]+>/g, ' '); // JSX/HTML tags and their attributes (image widths etc.)
+    const numbers = [...new Set(prose.match(/\d[\d.,]*%?\+?/g) || [])].map((n) => n.replace(/[.,]$/, ''));
+    const missing = numbers.filter((n) => !evidence.includes(n));
+    assert(missing.length === 0, `${loc} terral: numbers not in evidence/terral.md: ${missing.join(', ')}`);
+  }
 }
 
 if (failures.length) {

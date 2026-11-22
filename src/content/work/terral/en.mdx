@@ -1,8 +1,8 @@
 ---
 title: Terral.surf
 summary: 'Surf forecast for Florianópolis that ranks every beach against live swell, wind and tide, and shows why.'
-role: 'Independent product — product, design and engineering'
-period: '2026 – present'
+role: 'Solo — product, design and engineering'
+period: 'April 2026 – present'
 stack: ['React', 'TypeScript', 'Vite', 'MapLibre GL JS', 'TanStack Query', 'Zustand', 'Hono', 'Node.js', 'SQLite', 'Docker', 'GitHub Actions']
 links:
   - label: terral.surf
@@ -14,13 +14,29 @@ locale: en
 ---
 
 import { Image } from 'astro:assets';
+import architecture from '../../../assets/work/terral/architecture.svg';
 import beachDetail from '../../../assets/work/terral/beach-detail.jpg';
 import mobileConditions from '../../../assets/work/terral/mobile-conditions.jpg';
 import mobileMap from '../../../assets/work/terral/mobile-map.jpg';
 
-Draft. Case study text lands after the evidence is approved.
+## Problem & context
 
-## Screens
+Every morning, surfers in Florianópolis do the same exercise: open Surfguru, open Windy, remember which way each beach faces, and guess where the wind is blowing offshore. The island has 50+ surf spots pointing in almost every direction, so the right answer changes with every swell and every wind shift.
+
+Terral turns that local judgment into a product. It answers one question: given today's swell, wind and tide, where should I go?
+
+## Role
+
+A solo project, started in April 2026. I own all of it: product definition, design, the web app, the API, the scoring engine, deployment and analytics.
+
+## Product & technical decisions
+
+- **The answer first.** The app opens on the best beach right now and why, not on a chart. The map and the full ranking are one tap away.
+- **Show the reasoning.** Every beach gets a score from 0 to 100, and every factor behind it is on screen. Surfers trust a recommendation they can check against what they know.
+- **Terral, maral, cruzado.** Wind is classified per beach as offshore, onshore or cross, based on the beach's orientation. It is the signal local surfers care about most, so it gets its own badge and map layer.
+- **Plan ahead.** A time slider over the next 72 hours, forecast charts per beach, and a best-window finder that scans every beach and daylight hour (05:30–18:30) and surfaces the top 3 beach-and-time combinations.
+- **Personal without an account.** Skill level, preferred break types, home neighborhood and favorites stay on the device and shape the ranking.
+- **Portuguese and English** from day one.
 
 <figure>
   <Image src={beachDetail} alt="Terral beach detail on desktop: a compass rose comparing the current swell and wind with the beach's ideal directions, next to the score and the reasons behind it" widths={[720, 1080, 1440]} sizes="(min-width: 768px) 44rem, 100vw" />
@@ -32,3 +48,38 @@ Draft. Case study text lands after the evidence is approved.
   <Image src={mobileMap} alt="Terral on a phone: map of Florianópolis island with every surf beach marked" widths={[390, 780]} sizes="(min-width: 768px) 21rem, 50vw" />
   <figcaption>On a phone: the answer first, the map one tap away.</figcaption>
 </figure>
+
+## Architecture & implementation
+
+<figure>
+  <Image src={architecture} alt="Architecture diagram: the browser PWA calls an API on a VPS behind a TLS reverse proxy; the API reads wave, wind, weather and airport data from external sources and stores archives and caches in SQLite; a shared scoring package is used by both the web app and the API; GitHub Actions tests, builds and deploys to the VPS" />
+  <figcaption>The web app and the API share one scoring engine.</figcaption>
+</figure>
+
+- **One scoring engine, two consumers.** A pnpm monorepo with three workspaces. Scoring lives in a framework-agnostic package, `@terral/core`, used by both the web app and the API. The ranking a surfer sees and the score behind a push alert come from the same code.
+- **Beach data as a spreadsheet.** The beach model is written as CSV and generated into typed TypeScript, so adding or tuning a beach is a data change, not a code change.
+- **Web.** React 19, Vite and strict TypeScript; TanStack Query for server state; Zustand for preferences; MapLibre GL with MapTiler terrain; Tailwind CSS v4. It installs as a PWA and keeps the last forecast in IndexedDB, so it still opens with weak signal at the beach.
+- **API.** Hono on Node 20 with SQLite. One forecast endpoint returns wave hours, island weather and wind per beach, validated with zod at the boundary. Paid API keys never reach the browser.
+- **Data.** Stormglass for waves, falling back to Open-Meteo Marine automatically; Open-Meteo for wind and weather; NOAA WaveWatch III spectra; live METAR from Florianópolis airport; tides from a bundled offline predictor.
+- **Delivery.** Docker Compose on a VPS. GitHub Actions runs tests, typecheck and lint, publishes images and deploys over SSH. Sentry for errors, PostHog for product analytics.
+
+## Challenges & trade-offs
+
+- **Quota against freshness.** The Stormglass free tier is small, so calls are rate-guarded and cached, and Open-Meteo Marine takes over when the quota runs out. Slightly less precise data beats no data.
+- **No wind, no score.** When a beach has no wind data for an hour, it shows "no wind data" instead of a guessed score. An honest gap is better than a confident wrong answer.
+- **One forecast, many coastlines.** A single island-wide forecast is wrong for half the island. Scoring each beach against its own orientation and exposure is what makes the ranking useful, and it is why the beach model is curated by hand.
+- **Phone first.** On a phone the answer comes first and the map is a tab away; desktop gets three columns.
+
+## Results & evidence
+
+Terral is live in beta at terral.surf. Over the 90 days to 22 November 2026, PostHog counted 383 unique visitors and 1,330 sessions, with sessions lasting about 4 minutes on average. The most selected beaches were Campeche Palanque, Praia do Matadeiro and Morro das Pedras.
+
+## Learnings
+
+- **Explaining the score mattered more than the score.** Surfers already have instincts; showing the factors lets them agree or disagree with the app instead of ignoring it.
+- **Keep the domain logic pure.** Because scoring had no I/O and no framework, adding server-side push alerts meant reusing it, not rewriting it.
+- **Specs before code, agents for the typing.** Every feature starts as a written spec and a task-by-task plan in the repo. AI agents implement against them; I review and own the judgment calls.
+
+## Links
+
+- [terral.surf](https://terral.surf)

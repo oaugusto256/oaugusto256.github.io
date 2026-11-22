@@ -1,8 +1,8 @@
 ---
 title: Terral.surf
 summary: 'Previsão de surf para Florianópolis que ranqueia cada praia conforme ondulação, vento e maré ao vivo, e mostra o porquê.'
-role: 'Produto independente — produto, design e engenharia'
-period: '2026 – atual'
+role: 'Solo — produto, design e engenharia'
+period: 'abril de 2026 – atual'
 stack: ['React', 'TypeScript', 'Vite', 'MapLibre GL JS', 'TanStack Query', 'Zustand', 'Hono', 'Node.js', 'SQLite', 'Docker', 'GitHub Actions']
 links:
   - label: terral.surf
@@ -14,13 +14,29 @@ locale: pt
 ---
 
 import { Image } from 'astro:assets';
+import architecture from '../../../assets/work/terral/architecture.svg';
 import beachDetail from '../../../assets/work/terral/beach-detail.jpg';
 import mobileConditions from '../../../assets/work/terral/mobile-conditions.jpg';
 import mobileMap from '../../../assets/work/terral/mobile-map.jpg';
 
-Rascunho. O texto do estudo de caso entra após a aprovação das evidências.
+## Problema e contexto
 
-## Telas
+Toda manhã, quem surfa em Florianópolis faz o mesmo exercício: abre o Surfguru, abre o Windy, lembra para onde cada praia está virada e tenta adivinhar onde o vento está terral. A ilha tem 50+ picos de surf virados para quase todas as direções, então a resposta certa muda a cada ondulação e a cada virada de vento.
+
+O Terral transforma esse julgamento local em produto. Ele responde uma pergunta: com a ondulação, o vento e a maré de hoje, onde eu vou?
+
+## Papel
+
+Projeto solo, iniciado em abril de 2026. Cuido de tudo: definição de produto, design, app web, API, motor de pontuação, deploy e analytics.
+
+## Decisões de produto e técnicas
+
+- **A resposta primeiro.** O app abre na melhor praia agora e no porquê, não num gráfico. O mapa e o ranking completo ficam a um toque.
+- **Mostrar o raciocínio.** Cada praia recebe uma nota de 0 a 100, e cada fator por trás dela aparece na tela. Surfista confia numa recomendação que consegue conferir com o que já sabe.
+- **Terral, maral, cruzado.** O vento é classificado por praia, conforme a orientação dela. É o sinal que o surfista local mais olha, então ganhou selo e camada própria no mapa.
+- **Planejar com antecedência.** Uma linha do tempo com as próximas 72 horas, gráficos de previsão por praia e um buscador de janelas que varre todas as praias e horas de luz (05:30–18:30) e mostra as 3 melhores combinações de praia e horário.
+- **Pessoal sem conta.** Nível, tipos de fundo preferidos, bairro e favoritas ficam no aparelho e ajustam o ranking.
+- **Português e inglês** desde o começo.
 
 <figure>
   <Image src={beachDetail} alt="Detalhe de praia no Terral, no desktop: rosa dos ventos comparando ondulação e vento atuais com as direções ideais da praia, ao lado da nota e dos motivos" widths={[720, 1080, 1440]} sizes="(min-width: 768px) 44rem, 100vw" />
@@ -32,3 +48,38 @@ Rascunho. O texto do estudo de caso entra após a aprovação das evidências.
   <Image src={mobileMap} alt="Terral no celular: mapa da ilha de Florianópolis com todas as praias de surf marcadas" widths={[390, 780]} sizes="(min-width: 768px) 21rem, 50vw" />
   <figcaption>No celular: a resposta primeiro, o mapa a um toque.</figcaption>
 </figure>
+
+## Arquitetura e implementação
+
+<figure>
+  <Image src={architecture} alt="Diagrama de arquitetura: o PWA no navegador chama uma API numa VPS atrás de um proxy reverso com TLS; a API busca dados de ondas, vento, clima e aeroporto em fontes externas e guarda arquivos e caches em SQLite; um pacote de pontuação compartilhado é usado pelo app web e pela API; o GitHub Actions testa, gera e publica na VPS" />
+  <figcaption>O app web e a API compartilham um único motor de pontuação.</figcaption>
+</figure>
+
+- **Um motor de pontuação, dois consumidores.** Monorepo pnpm com três workspaces. A pontuação vive num pacote independente de framework, o `@terral/core`, usado pelo app web e pela API. O ranking que o surfista vê e a nota por trás de um alerta push saem do mesmo código.
+- **Dados das praias como planilha.** O modelo de praias é escrito em CSV e gerado em TypeScript tipado, então incluir ou ajustar uma praia é mudança de dado, não de código.
+- **Web.** React 19, Vite e TypeScript estrito; TanStack Query para estado do servidor; Zustand para preferências; MapLibre GL com relevo do MapTiler; Tailwind CSS v4. Instala como PWA e guarda a última previsão no IndexedDB, então abre mesmo com sinal fraco na praia.
+- **API.** Hono em Node 20 com SQLite. Um único endpoint de previsão devolve as horas de onda, o clima da ilha e o vento por praia, validados com zod na borda. Chaves de API pagas nunca chegam ao navegador.
+- **Dados.** Stormglass para ondas, com troca automática para o Open-Meteo Marine; Open-Meteo para vento e clima; espectros do NOAA WaveWatch III; METAR ao vivo do aeroporto de Florianópolis; marés de um preditor offline embutido.
+- **Entrega.** Docker Compose numa VPS. O GitHub Actions roda testes, checagem de tipos e lint, publica as imagens e faz o deploy via SSH. Sentry para erros, PostHog para analytics de produto.
+
+## Desafios e trade-offs
+
+- **Cota contra atualização.** O plano gratuito do Stormglass é pequeno, então as chamadas têm limite e cache, e o Open-Meteo Marine assume quando a cota acaba. Dado um pouco menos preciso é melhor que nenhum dado.
+- **Sem vento, sem nota.** Quando falta vento para uma praia numa hora, ela mostra "sem dados de vento" em vez de uma nota chutada. Uma lacuna honesta é melhor que uma resposta errada com confiança.
+- **Uma previsão, muitas orlas.** Uma previsão única para a ilha erra metade das praias. Pontuar cada praia pela própria orientação e exposição é o que torna o ranking útil, e é por isso que o modelo de praias é curado à mão.
+- **Celular primeiro.** No celular a resposta vem primeiro e o mapa fica numa aba; no desktop são três colunas.
+
+## Resultados e evidências
+
+O Terral está no ar em beta em terral.surf. Nos 90 dias até 22 de novembro de 2026, o PostHog contou 383 visitantes únicos e 1.330 sessões, com duração média de cerca de 4 minutos. As praias mais selecionadas foram Campeche Palanque, Praia do Matadeiro e Morro das Pedras.
+
+## Aprendizados
+
+- **Explicar a nota importou mais que a nota.** Surfista já tem intuição; mostrar os fatores deixa a pessoa concordar ou discordar do app em vez de ignorá-lo.
+- **Manter a lógica de domínio pura.** Como a pontuação não tinha I/O nem framework, criar alertas push no servidor foi reaproveitar, não reescrever.
+- **Spec antes do código, agentes para digitar.** Cada funcionalidade começa como uma spec escrita e um plano tarefa a tarefa no repositório. Agentes de IA implementam a partir deles; eu reviso e fico com as decisões.
+
+## Links
+
+- [terral.surf](https://terral.surf)

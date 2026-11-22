@@ -1,6 +1,6 @@
 # Terral.surf — evidence
 
-**Status:** DRAFT — awaiting owner approval. Nothing here goes into page copy until the owner approves it.
+**Status:** APPROVED by owner 2026-11-22 (answers to open questions below; rows 8–10 excluded at owner's request; row 1 replaced by the landing-page figure).
 **Collected:** 2026-11-22 by Claude, read-only, from the `terral-app` repository (local clone, `main` @ `10a6a0d`, last commit 2026-11-17), the public site https://terral.surf, and PostHog (US project 403079).
 
 Rule: every number on the Terral case study must appear in the "Approved numbers" table below. `scripts/verify-dist.mjs` enforces it.
@@ -9,30 +9,30 @@ Rule: every number on the Terral case study must appear in the "Approved numbers
 
 | # | Value | Claim | Source | Approved |
 |---|---|---|---|---|
-| 1 | 42 | beaches and peaks ranked on every forecast hour | `packages/core/src/data/beaches.ts`: 56 entries − 10 parent beaches (split into peaks) − 4 hidden (`HIDDEN_BEACH_IDS`); same filter as `useRankedBeaches` | ☐ |
-| 2 | 72 | hours of forecast (time slider, per-beach charts, best-window finder) | `README.md` "What it does today" | ☐ |
-| 3 | 0–100 | score range per beach, with a visible breakdown of each factor | `README.md`; `docs/architecture.md` ("Every factor returned by `scoreBeach` is shown in the UI") | ☐ |
-| 4 | 3 | top beach + time windows surfaced by the best-window finder | `README.md` | ☐ |
-| 5 | 05:30–18:30 | daylight hours scanned by the best-window finder | `README.md` | ☐ |
-| 6 | 2 | languages (EN, PT-BR) | `README.md`, `docs/i18n.md` | ☐ |
-| 7 | 3 | workspaces in the monorepo (`apps/web`, `apps/api`, `packages/core`) | `README.md` | ☐ |
-| 8 | 306 | commits on `main` | `git rev-list --count HEAD` @ `10a6a0d` | ☐ |
-| 9 | 16 | product phases shipped before launch hardening (Phase 17) | `README.md`, `PLAN.md` | ☐ |
-| 10 | 1.32.0 | current web app version (Release Please) | `apps/web/package.json` | ☐ |
-| 11 | 6 | cron schedulers in the API | `docs/architecture/diagrams.md` (L2) | ☐ |
+| 1 | ~~42~~ → **50+** | surf spots on the island (owner: use the terral.surf landing figure, "50+ praias") | terral.surf onboarding ("FLORIPA · 50+ PRAIAS · TEMPO REAL"); model has 56 entries, 42 ranked | ☑ |
+| 2 | 72 | hours of forecast (time slider, per-beach charts, best-window finder) | `README.md` "What it does today" | ☑ |
+| 3 | 0–100 | score range per beach, with a visible breakdown of each factor | `README.md`; `docs/architecture.md` ("Every factor returned by `scoreBeach` is shown in the UI") | ☑ |
+| 4 | 3 | top beach + time windows surfaced by the best-window finder | `README.md` | ☑ |
+| 5 | 05:30–18:30 | daylight hours scanned by the best-window finder | `README.md` | ☑ |
+| 6 | 2 | languages (EN, PT-BR) | `README.md`, `docs/i18n.md` | ☑ |
+| 7 | 3 | workspaces in the monorepo (`apps/web`, `apps/api`, `packages/core`) | `README.md` | ☑ |
+| 8 | 306 | commits on `main` | `git rev-list --count HEAD` @ `10a6a0d` | ✗ excluded |
+| 9 | 16 | product phases shipped before launch hardening (Phase 17) | `README.md`, `PLAN.md` | ✗ excluded |
+| 10 | 1.32.0 | current web app version (Release Please) | `apps/web/package.json` | ✗ excluded |
+| 11 | 6 | cron schedulers in the API | `docs/architecture/diagrams.md` (L2) | ☑ |
 
 ### Usage analytics (PostHog US project 403079, queried read-only 2026-11-22, window 2026-08-24 → 2026-11-22, last 90 days)
 
 | # | Value | Claim | Source | Approved |
 |---|---|---|---|---|
-| 12 | 383 | unique visitors | `query-web-overview`, filterTestAccounts on | ☐ |
-| 13 | 1,330 | sessions | same | ☐ |
-| 14 | 1,939 | pageviews | same | ☐ |
-| 15 | ~4 min (251 s) | average session duration | same | ☐ |
-| 16 | 22.9% | bounce rate | same | ☐ |
-| 17 | 23.7% (90 of 379) | visitors with pageviews on 2+ different days | `execute-sql` on `$pageview` grouped by person; **noncanonical**, test accounts not filtered | ☐ |
-| 18 | 750 | beach selections (`beach_selected`) | `query-trends`, filterTestAccounts on | ☐ |
-| 19 | Campeche Palanque 111 · Praia do Matadeiro 100 · Morro das Pedras Centro 57 · Joaquina Costão 50 · Lomba 49 | most selected beaches | same, breakdown `beach_name` | ☐ |
+| 12 | 383 | unique visitors | `query-web-overview`, filterTestAccounts on | ☑ |
+| 13 | 1,330 (pt-BR: 1.330) | sessions | same | ☑ |
+| 14 | 1,939 | pageviews | same | ☑ |
+| 15 | ~4 min (251 s) | average session duration | same | ☑ |
+| 16 | 22.9% | bounce rate | same | ☑ |
+| 17 | 23.7% (90 of 379) | visitors with pageviews on 2+ different days | `execute-sql` on `$pageview` grouped by person; **noncanonical**, test accounts not filtered | ☑ |
+| 18 | 750 | beach selections (`beach_selected`) | `query-trends`, filterTestAccounts on | ☑ |
+| 19 | Campeche Palanque 111 · Praia do Matadeiro 100 · Morro das Pedras Centro 57 · Joaquina Costão 50 · Lomba 49 | most selected beaches | same, breakdown `beach_name` | ☑ |
 
 Caveats: `persistence` / cookie behaviour on terral.surf means one person on two devices counts twice; small numbers, beta traffic. Lomba includes 1 selection made by Claude on 2026-11-22 while taking the beach-detail screenshot.
 
@@ -65,7 +65,15 @@ Caveats: `persistence` / cookie behaviour on terral.surf means one person on two
 
 **Process.** Spec → plan → agent-executed implementation, with specs/plans in `docs/superpowers/` and repo-level agent rules (`CLAUDE.md`). (`CLAUDE.md`)
 
-## Open questions for the owner
+## Owner answers (2026-11-22)
+
+1. Role: solo; no one else involved.
+2. Start: mid-April 2026.
+3. Naming Stormglass, Open-Meteo, NOAA, MapTiler: yes.
+4. Commit/phase/version numbers: leave out.
+5. Beach count: use the landing page figure (50+).
+
+## Original open questions
 
 1. Role wording: "Independent product — product, design and engineering". Accurate? Anyone else involved?
 2. Start date: repo history begins 2026-10-14. Did work start earlier (e.g. another repo)?
