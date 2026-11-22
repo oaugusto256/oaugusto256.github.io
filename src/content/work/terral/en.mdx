@@ -7,10 +7,28 @@ stack: ['React', 'TypeScript', 'Vite', 'MapLibre GL JS', 'TanStack Query', 'Zust
 links:
   - label: terral.surf
     url: https://terral.surf
-cover: ../../../assets/work/terral/cover.svg
-coverAlt: 'Terral.surf placeholder cover'
+cover: ../../../assets/work/terral/desktop-overview.jpg
+coverAlt: 'Terral on desktop: conditions and the best beach right now on the left, a map of Florianópolis with every surf beach on the right'
 order: 1
 locale: en
 ---
 
-Draft. Case study content lands in Task 9 after the evidence is approved.
+import { Image } from 'astro:assets';
+import beachDetail from '../../../assets/work/terral/beach-detail.jpg';
+import mobileConditions from '../../../assets/work/terral/mobile-conditions.jpg';
+import mobileMap from '../../../assets/work/terral/mobile-map.jpg';
+
+Draft. Case study text lands after the evidence is approved.
+
+## Screens
+
+<figure>
+  <Image src={beachDetail} alt="Terral beach detail on desktop: a compass rose comparing the current swell and wind with the beach's ideal directions, next to the score and the reasons behind it" widths={[720, 1080, 1440]} sizes="(min-width: 768px) 44rem, 100vw" />
+  <figcaption>Beach detail: current swell and wind against the beach's ideal window, with the reasons behind the score.</figcaption>
+</figure>
+
+<figure class="shots">
+  <Image src={mobileConditions} alt="Terral on a phone: today's conditions, the best beach to surf right now and the ranking of other beaches" widths={[390, 780]} sizes="(min-width: 768px) 21rem, 50vw" />
+  <Image src={mobileMap} alt="Terral on a phone: map of Florianópolis island with every surf beach marked" widths={[390, 780]} sizes="(min-width: 768px) 21rem, 50vw" />
+  <figcaption>On a phone: the answer first, the map one tap away.</figcaption>
+</figure>

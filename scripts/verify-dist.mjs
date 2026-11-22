@@ -155,6 +155,15 @@ for (const loc of ['en', 'pt']) {
   }
 }
 
+// Task 9: Terral screenshots (desktop + mobile) on both case study pages
+for (const loc of ['en', 'pt']) {
+  const html = read(`${loc}/work/terral/index.html`);
+  const imgs = [...html.matchAll(/<img\b[^>]*>/g)].map((m) => m[0]);
+  assert(imgs.length >= 4, `${loc} terral: at least 4 images (cover + desktop detail + 2 mobile), found ${imgs.length}`);
+  assert(imgs.some((t) => /mobile/i.test(t)), `${loc} terral: includes a mobile screenshot`);
+  assert(!html.includes('screenshot pending'), `${loc} terral: placeholder cover removed`);
+}
+
 if (failures.length) {
   console.error(`verify-dist: ${failures.length} failure(s)`);
   for (const f of failures) console.error(`  ✗ ${f}`);

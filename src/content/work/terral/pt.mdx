@@ -7,10 +7,28 @@ stack: ['React', 'TypeScript', 'Vite', 'MapLibre GL JS', 'TanStack Query', 'Zust
 links:
   - label: terral.surf
     url: https://terral.surf
-cover: ../../../assets/work/terral/cover.svg
-coverAlt: 'Capa provisória do Terral.surf'
+cover: ../../../assets/work/terral/desktop-overview.jpg
+coverAlt: 'Terral no desktop: condições e a melhor praia agora à esquerda, mapa de Florianópolis com todas as praias de surf à direita'
 order: 1
 locale: pt
 ---
 
-Rascunho. O conteúdo do estudo de caso entra na Task 9, após a aprovação das evidências.
+import { Image } from 'astro:assets';
+import beachDetail from '../../../assets/work/terral/beach-detail.jpg';
+import mobileConditions from '../../../assets/work/terral/mobile-conditions.jpg';
+import mobileMap from '../../../assets/work/terral/mobile-map.jpg';
+
+Rascunho. O texto do estudo de caso entra após a aprovação das evidências.
+
+## Telas
+
+<figure>
+  <Image src={beachDetail} alt="Detalhe de praia no Terral, no desktop: rosa dos ventos comparando ondulação e vento atuais com as direções ideais da praia, ao lado da nota e dos motivos" widths={[720, 1080, 1440]} sizes="(min-width: 768px) 44rem, 100vw" />
+  <figcaption>Detalhe da praia: ondulação e vento atuais contra a janela ideal da praia, com os motivos da nota.</figcaption>
+</figure>
+
+<figure class="shots">
+  <Image src={mobileConditions} alt="Terral no celular: condições de hoje, a melhor praia para surfar agora e o ranking das outras praias" widths={[390, 780]} sizes="(min-width: 768px) 21rem, 50vw" />
+  <Image src={mobileMap} alt="Terral no celular: mapa da ilha de Florianópolis com todas as praias de surf marcadas" widths={[390, 780]} sizes="(min-width: 768px) 21rem, 50vw" />
+  <figcaption>No celular: a resposta primeiro, o mapa a um toque.</figcaption>
+</figure>

@@ -136,6 +136,20 @@ const slug = slugOf(entry);
   .prose :global(figure) {
     margin: var(--space-10) 0;
   }
+  .prose :global(figure img) {
+    width: 100%;
+    height: auto;
+    border-radius: var(--radius-media);
+    border: 1px solid var(--color-border);
+  }
+  .prose :global(figure.shots) {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-4);
+  }
+  .prose :global(figure.shots figcaption) {
+    grid-column: 1 / -1;
+  }
   .prose :global(figcaption) {
     margin-top: var(--space-2);
     font-size: var(--step--1);
