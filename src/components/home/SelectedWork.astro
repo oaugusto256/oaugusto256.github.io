@@ -1,0 +1,65 @@
+---
+import { featured } from '../../content/featured';
+import { getWork, slugOf } from '../../content/work';
+import { localePath, useT, type Locale } from '../../i18n/utils';
+import ProjectCard from './ProjectCard.astro';
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+const t = useT(locale).home;
+const entries = await getWork(locale);
+const bySlug = new Map(entries.map((e) => [slugOf(e), e]));
+
+const cards = featured.map(({ slug, emphasis }) => {
+  const entry = bySlug.get(slug);
+  if (entry) {
+    return {
+      slug,
+      emphasis,
+      title: entry.data.title,
+      summary: entry.data.summary,
+      role: entry.data.role,
+      tags: entry.data.stack.slice(0, 5),
+      href: localePath(locale, `/work/${slug}/`),
+      image: entry.data.cover,
+      imageAlt: entry.data.coverAlt,
+    };
+  }
+  const p = t.projects[slug as keyof typeof t.projects];
+  return { slug, emphasis, ...p };
+});
+const [primary, ...rest] = cards;
+---
+
+<section id="work" class="section" aria-labelledby="work-title">
+  <div class="container">
+    <h2 id="work-title">{t.workTitle}</h2>
+    {primary && <ProjectCard {...primary} linkLabel={primary.href ? t.readCase : t.caseSoon} />}
+    <div class="rest">
+      {rest.map((c) => <ProjectCard {...c} linkLabel={c.href ? t.readCase : t.caseSoon} />)}
+    </div>
+  </div>
+</section>
+
+<style>
+  .section {
+    padding-block: var(--space-20) var(--space-16);
+  }
+  h2 {
+    margin-bottom: var(--space-10);
+  }
+  .rest {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-10);
+    margin-top: var(--space-16);
+  }
+  @media (max-width: 47.99rem) {
+    .rest {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

@@ -11,7 +11,7 @@ const t = useT(locale);
 const year = new Date().getFullYear();
 ---
 
-<footer class="site-footer">
+<footer class="site-footer on-dark">
   <div class="container footer-inner">
     <p>© {year} {person.name} · {t.footer.location}</p>
     <ul>
@@ -24,8 +24,7 @@ const year = new Date().getFullYear();
 
 <style>
   .site-footer {
-    border-top: 1px solid var(--color-border);
-    margin-top: 4rem;
+    border-top: 1px solid var(--color-line-dark);
   }
   .footer-inner {
     display: flex;

@@ -1,0 +1,126 @@
+---
+import type { ImageMetadata } from 'astro';
+import { Image } from 'astro:assets';
+
+interface Props {
+  slug: string;
+  title: string;
+  summary: string;
+  role: string;
+  tags: string[];
+  href?: string;
+  linkLabel: string;
+  image?: ImageMetadata;
+  imageAlt?: string;
+  emphasis: 'primary' | 'secondary';
+}
+
+const { slug, title, summary, role, tags, href, linkLabel, image, imageAlt, emphasis } = Astro.props;
+---
+
+<article class:list={['card', emphasis]}>
+  <div class="body">
+    <h3>
+      {
+        href ? (
+          <a href={href} data-event="project_card_click" data-project={slug}>
+            {title}
+          </a>
+        ) : (
+          title
+        )
+      }
+    </h3>
+    <p class="role mono">{role}</p>
+    <p class="summary">{summary}</p>
+    <ul class="tags mono">
+      {tags.map((tag) => <li>{tag}</li>)}
+    </ul>
+    <p class="more mono" aria-hidden={href ? 'true' : undefined}>{linkLabel}</p>
+  </div>
+  {
+    image && (
+      <div class="media">
+        <Image src={image} alt={imageAlt ?? ''} widths={[480, 800, 1200]} sizes="(min-width: 768px) 58vw, 100vw" />
+      </div>
+    )
+  }
+</article>
+
+<style>
+  .card {
+    position: relative;
+    display: grid;
+    gap: var(--space-6);
+  }
+  .primary {
+    grid-template-columns: 5fr 7fr;
+    gap: var(--space-10);
+    align-items: start;
+  }
+  .secondary {
+    border-top: 1px solid var(--color-border);
+    padding-top: var(--space-6);
+  }
+  h3 {
+    font-size: var(--step-4);
+    margin-bottom: var(--space-2);
+  }
+  .secondary h3 {
+    font-size: var(--step-3);
+  }
+  h3 a {
+    text-decoration: none;
+  }
+  /* Whole card is clickable via the heading link; focus ring stays on the link. */
+  h3 a::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+  }
+  .card:has(a):hover h3 a {
+    text-decoration: underline;
+    text-decoration-thickness: 2px;
+  }
+  .role {
+    color: var(--color-muted);
+    margin-bottom: var(--space-4);
+  }
+  .summary {
+    color: var(--color-muted);
+    max-width: 34em;
+    margin-bottom: var(--space-4);
+  }
+  .tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-1) var(--space-4);
+    list-style: none;
+    margin: 0 0 var(--space-4);
+    padding: 0;
+  }
+  .more {
+    color: var(--color-accent);
+  }
+  .secondary .more {
+    color: var(--color-muted);
+  }
+  .media :global(img) {
+    width: 100%;
+    height: auto;
+    border-radius: var(--radius-media);
+    border: 1px solid var(--color-border);
+  }
+  .card:has(a):hover .media :global(img) {
+    border-color: var(--color-accent);
+  }
+  @media (max-width: 47.99rem) {
+    .primary {
+      grid-template-columns: 1fr;
+      gap: var(--space-6);
+    }
+    .primary .media {
+      order: -1;
+    }
+  }
+</style>

@@ -101,6 +101,25 @@ function allFiles(dir = DIST, out = []) {
   assert(/<link rel="alternate" hreflang="pt" href="https:\/\/oaugusto256\.github\.io\/pt\/work\/terral\/"/.test(en), 'en terral: hreflang pt alternate');
 }
 
+// Task 8: home sections
+for (const loc of ['en', 'pt']) {
+  const html = read(`${loc}/index.html`);
+  assert(html.includes('Product Engineer'), `${loc} home: "Product Engineer"`);
+  assert(html.includes('Florianópolis'), `${loc} home: "Florianópolis"`);
+  for (const id of ['work', 'philosophy', 'focus', 'contact']) {
+    assert(html.includes(`id="${id}"`), `${loc} home: section #${id}`);
+  }
+  assert(
+    hasLink(html, [`href="/${loc}/work/terral/"`, 'data-event="project_card_click"', 'data-project="terral"']),
+    `${loc} home: Terral card → /${loc}/work/terral/ with data-event`,
+  );
+  assert(hasLink(html, ['href="mailto:tavioalves@gmail.com"']), `${loc} home: mailto link`);
+  assert(html.includes('Blockdaemon') && html.includes('Mercado'), `${loc} home: Blockdaemon and Mercado Envios cards`);
+  for (const banned of ['82%', '13.4', '807', 'Senior Frontend Engineer', 'wa.me', 'gitlab.com', 'stackoverflow.com']) {
+    assert(!html.includes(banned), `${loc} home: must not contain "${banned}"`);
+  }
+}
+
 if (failures.length) {
   console.error(`verify-dist: ${failures.length} failure(s)`);
   for (const f of failures) console.error(`  ✗ ${f}`);

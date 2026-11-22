@@ -1,0 +1,151 @@
+---
+import { useT, type Locale } from '../../i18n/utils';
+import { resumePath } from '../../data/site';
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+const t = useT(locale).home;
+// Node boxes laid out along a stepped path (see spec §5.7, Concept C).
+const nodes = [
+  { x: 6, y: 24 },
+  { x: 146, y: 24 },
+  { x: 146, y: 104, on: true },
+  { x: 286, y: 104 },
+  { x: 286, y: 184 },
+  { x: 426, y: 184 },
+];
+---
+
+<section class="hero on-dark" aria-labelledby="hero-title">
+  <div class="container hero-grid">
+    <div class="copy">
+      <p class="who mono">{t.role}, {t.location}</p>
+      <h1 id="hero-title">{t.headline}</h1>
+      <p class="lede">{t.lede}</p>
+      <div class="cta">
+        <a class="btn" href="#work">{t.ctaWork}</a>
+        <a class="link" href={resumePath(locale)} data-event="resume_download" data-locale={locale}>{t.ctaResume}</a>
+      </div>
+    </div>
+    <svg class="map" viewBox="0 0 540 240" role="img" aria-label={t.mapLabel}>
+      <path class="edge" d="M60 40 H 200 V 120 H 340 V 200 H 480"></path>
+      {
+        nodes.map((n, i) => (
+          <g class:list={['node', { on: n.on }]}>
+            <rect x={n.x} y={n.y} width="108" height="32" rx="4" />
+            <text x={n.x + 12} y={n.y + 20}>
+              {t.map[i]}
+            </text>
+          </g>
+        ))
+      }
+      <circle class="pulse" r="4"></circle>
+    </svg>
+  </div>
+</section>
+
+<style>
+  .hero {
+    padding-block: var(--space-12) var(--space-24);
+  }
+  .hero-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-12);
+    align-items: center;
+  }
+  .who {
+    margin-bottom: var(--space-4);
+  }
+  h1 {
+    margin-bottom: var(--space-6);
+  }
+  .lede {
+    font-size: var(--step-1);
+    color: var(--color-muted-dark);
+    max-width: 34em;
+    margin-bottom: var(--space-8);
+  }
+  .cta {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-3) var(--space-6);
+  }
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    min-height: 2.75rem;
+    padding: 0 var(--space-5);
+    border-radius: var(--radius);
+    background: var(--color-on-dark);
+    color: var(--color-surface-dark);
+    font-weight: 500;
+    text-decoration: none;
+    transition: background var(--dur-fast) var(--ease-out);
+  }
+  .btn:hover {
+    background: #ffffff;
+  }
+  .link {
+    display: inline-flex;
+    align-items: center;
+    min-height: 2.75rem;
+  }
+  .map {
+    width: 100%;
+    height: auto;
+  }
+  .map text {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    fill: var(--color-muted-dark);
+  }
+  .map rect {
+    fill: var(--color-surface-dark);
+    stroke: var(--color-line-dark);
+  }
+  .map .on rect {
+    stroke: var(--color-accent-dark);
+  }
+  .map .on text {
+    fill: var(--color-on-dark);
+  }
+  .edge {
+    fill: none;
+    stroke: var(--color-line-dark);
+  }
+  .pulse {
+    fill: var(--color-accent-dark);
+    cx: 60px;
+    cy: 40px;
+  }
+  @media (prefers-reduced-motion: no-preference) {
+    .pulse {
+      cx: 0;
+      cy: 0;
+      offset-path: path('M60 40 H 200 V 120 H 340 V 200 H 480');
+      animation: travel 6s linear infinite;
+    }
+    @keyframes travel {
+      from {
+        offset-distance: 0%;
+      }
+      to {
+        offset-distance: 100%;
+      }
+    }
+  }
+  @media (max-width: 47.99rem) {
+    .hero {
+      padding-block: var(--space-8) var(--space-16);
+    }
+    .hero-grid {
+      grid-template-columns: 1fr;
+      gap: var(--space-10);
+    }
+  }
+</style>

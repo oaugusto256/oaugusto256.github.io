@@ -1,5 +1,10 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
+import Hero from '../../components/home/Hero.astro';
+import SelectedWork from '../../components/home/SelectedWork.astro';
+import Pillars from '../../components/home/Pillars.astro';
+import CurrentFocus from '../../components/home/CurrentFocus.astro';
+import ContactBlock from '../../components/home/ContactBlock.astro';
 import { localePath, locales, otherLocale, useT, type Locale } from '../../i18n/utils';
 
 export function getStaticPaths() {
@@ -11,5 +16,9 @@ const t = useT(locale);
 ---
 
 <BaseLayout locale={locale} title={t.meta.title} description={t.meta.description} alternate={localePath(otherLocale(locale), '/')}>
-  <h1>Otavio Silva</h1>
+  <Hero locale={locale} />
+  <SelectedWork locale={locale} />
+  <Pillars locale={locale} />
+  <CurrentFocus locale={locale} />
+  <ContactBlock locale={locale} />
 </BaseLayout>

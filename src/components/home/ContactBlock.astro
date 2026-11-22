@@ -1,0 +1,106 @@
+---
+import { useT, type Locale } from '../../i18n/utils';
+import { person, resumePath } from '../../data/site';
+import Icon from '../ui/Icon.astro';
+
+interface Props {
+  locale: Locale;
+}
+
+const { locale } = Astro.props;
+const t = useT(locale);
+---
+
+<section id="contact" class="section on-dark" aria-labelledby="contact-title">
+  <div class="container grid">
+    <div>
+      <h2 id="contact-title">{t.home.contactTitle}</h2>
+      <p class="body">{t.home.contactBody}</p>
+      <a class="btn" href={`mailto:${person.email}`} data-event="contact_click" data-channel="email">
+        <Icon name="mail" size={18} />{t.home.contactEmail}
+      </a>
+    </div>
+    <ul class="links">
+      <li>
+        <a href={`mailto:${person.email}`} data-event="contact_click" data-channel="email">
+          <Icon name="mail" /><span>{person.email}</span>
+        </a>
+      </li>
+      <li>
+        <a href={person.linkedin} data-event="contact_click" data-channel="linkedin">
+          <Icon name="linkedin" /><span>linkedin.com/in/oaugusto256</span>
+        </a>
+      </li>
+      <li>
+        <a href={person.github} data-event="contact_click" data-channel="github">
+          <Icon name="github" /><span>github.com/oaugusto256</span>
+        </a>
+      </li>
+      <li>
+        <a href={resumePath(locale)} data-event="resume_download" data-locale={locale}>
+          <Icon name="file-text" /><span>{t.nav.resume} (PDF)</span>
+        </a>
+      </li>
+    </ul>
+  </div>
+</section>
+
+<style>
+  .section {
+    padding-block: var(--space-20);
+  }
+  .grid {
+    display: grid;
+    grid-template-columns: 7fr 5fr;
+    gap: var(--space-12);
+    align-items: end;
+  }
+  h2 {
+    font-size: var(--step-5);
+    margin-bottom: var(--space-4);
+  }
+  .body {
+    font-size: var(--step-1);
+    color: var(--color-muted-dark);
+    max-width: 32em;
+    margin-bottom: var(--space-8);
+  }
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-2);
+    min-height: 2.75rem;
+    padding: 0 var(--space-5);
+    border-radius: var(--radius);
+    background: var(--color-on-dark);
+    color: var(--color-surface-dark);
+    font-weight: 500;
+    text-decoration: none;
+  }
+  .links {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  .links li + li {
+    border-top: 1px solid var(--color-line-dark);
+  }
+  .links a {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    min-height: 3rem;
+    text-decoration: none;
+    font-family: var(--font-mono);
+    font-size: var(--step--1);
+    overflow-wrap: anywhere;
+  }
+  .links a:hover span {
+    text-decoration: underline;
+  }
+  @media (max-width: 47.99rem) {
+    .grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

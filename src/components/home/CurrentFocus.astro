@@ -1,0 +1,54 @@
+---
+import { useT, type Locale } from '../../i18n/utils';
+
+interface Props {
+  locale: Locale;
+}
+
+const t = useT(Astro.props.locale).home;
+---
+
+<section id="focus" class="section" aria-labelledby="focus-title">
+  <div class="container grid">
+    <div>
+      <h2 id="focus-title">{t.focusTitle}</h2>
+      <p class="muted">{t.focusIntro}</p>
+    </div>
+    <ul>
+      {t.focus.map((item) => <li>{item}</li>)}
+    </ul>
+  </div>
+</section>
+
+<style>
+  .section {
+    padding-block: var(--space-16);
+    border-top: 1px solid var(--color-border);
+  }
+  .grid {
+    display: grid;
+    grid-template-columns: 5fr 7fr;
+    gap: var(--space-10);
+  }
+  h2 {
+    margin-bottom: var(--space-3);
+  }
+  ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    font-size: var(--step-2);
+  }
+  li {
+    padding-block: var(--space-2);
+  }
+  li + li {
+    border-top: 1px dashed var(--color-border);
+  }
+  @media (max-width: 47.99rem) {
+    .grid {
+      grid-template-columns: 1fr;
+      gap: var(--space-6);
+    }
+  }
+</style>

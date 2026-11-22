@@ -35,8 +35,8 @@ const { controls, openLabel, closeLabel } = Astro.props;
     document.addEventListener('keydown', (e) => {
       if (e.key === 'Escape' && b.getAttribute('aria-expanded') === 'true') { set(false); b.focus(); }
     });
-    document.getElementById(b.getAttribute('aria-controls')).addEventListener('click', (e) => {
-      if (e.target.closest('a')) set(false);
+    document.addEventListener('click', (e) => {
+      if (e.target.closest('#' + b.getAttribute('aria-controls') + ' a')) set(false);
     });
   })();
 </script>
