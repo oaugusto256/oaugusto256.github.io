@@ -97,6 +97,26 @@ Pages not yet built are not linked from nav (no placeholder pages). *My call:* L
 - No existing mockups. Claude produces 2–3 homepage concepts (browser mockups) within spec §5 direction; owner picks one. Open visual calls resolved there: warm off-white vs neutral mono, accent (muted green vs deep blue), hero typographic vs photo, typeface pair.
 - Light editorial base, selected charcoal surfaces, 4px spacing scale, max width ~1200–1320px, `prefers-reduced-motion` respected.
 
+**Chosen: Concept C — "System map"** (owner, 2026-11-22). Charcoal hero band with an animated system diagram (problem → users → decision → build → ship → measure); light neutral body below; deep blue accent; typographic hero (no photo).
+
+| Token | Hex | Contrast |
+|---|---|---|
+| `--color-bg` | `#EDEEEA` | — |
+| `--color-text` | `#17181A` | 15.2:1 on bg |
+| `--color-muted` | `#55585E` | 6.1:1 on bg |
+| `--color-border` | `#CFD1CC` | decorative |
+| `--color-accent` | `#2447A8` | 7.1:1 on bg |
+| `--color-surface-dark` | `#202226` | — |
+| `--color-on-dark` | `#E9EAE6` | 13.2:1 on surface |
+| `--color-muted-dark` | `#A2A6AD` | 6.5:1 on surface |
+| `--color-accent-dark` | `#8FA9F0` | 6.9:1 on surface |
+| `--color-line-dark` | `#4A4E56` | decorative (diagram strokes) |
+
+- Type: **Geist** (sans; 400, 500, 600) + **Geist Mono** (400, 500), both SIL OFL, self-hosted woff2, Latin + Latin-1 subsets.
+- Scale: fluid, ~1.25 ratio; h1 `clamp(2.25rem, 5vw, 4.25rem)`, weight 500, tracking −0.035em; body 1.0625rem/1.6.
+- Max width 1240px; radius 6px (buttons), 10px (media).
+- Motion: one moment only — a dot travelling the diagram path; disabled under `prefers-reduced-motion`.
+
 ## 6. Quality targets
 
 Lighthouse ≥ 90 perf, ≥ 95 a11y/best-practices/SEO on Home and Terral (mobile + desktop); exceptions documented. Semantic HTML, keyboard nav, visible focus, alt text, sitemap, robots, OG tags, canonical URLs.
