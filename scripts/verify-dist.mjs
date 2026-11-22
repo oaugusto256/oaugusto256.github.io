@@ -1,5 +1,5 @@
 // Dependency-free post-build assertions over dist/. Exits 1 listing all failures.
-import { readFileSync, existsSync, readdirSync } from 'node:fs';
+import { readFileSync, existsSync, readdirSync, statSync } from 'node:fs';
 import { join, dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -59,6 +59,14 @@ function hasLink(html, attrs) {
   }
   assert(!pages.en.includes('resume-pt.pdf'), 'en home: no PT résumé link');
   assert(!pages.pt.includes('resume-en.pdf'), 'pt home: no EN résumé link');
+}
+
+// Task 11: bilingual résumé PDFs
+for (const loc of ['en', 'pt']) {
+  const pdf = `resume/otavio-silva-resume-${loc}.pdf`;
+  const size = exists(pdf) ? statSync(join(DIST, pdf)).size : 0;
+  assert(size > 10 * 1024, `${pdf} exists and is > 10 KB (got ${size} bytes)`);
+  if (size) assert(read(pdf).startsWith('%PDF-'), `${pdf} is a PDF`);
 }
 
 // Task 6: tokens, fonts, global styles
