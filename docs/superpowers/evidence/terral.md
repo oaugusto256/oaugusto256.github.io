@@ -1,7 +1,7 @@
 # Terral.surf — evidence
 
 **Status:** DRAFT — awaiting owner approval. Nothing here goes into page copy until the owner approves it.
-**Collected:** 2026-11-22 by Claude, read-only, from the `terral-app` repository (local clone, `main` @ `10a6a0d`, last commit 2026-11-17) and the public site https://terral.surf.
+**Collected:** 2026-11-22 by Claude, read-only, from the `terral-app` repository (local clone, `main` @ `10a6a0d`, last commit 2026-11-17), the public site https://terral.surf, and PostHog (US project 403079).
 
 Rule: every number on the Terral case study must appear in the "Approved numbers" table below. `scripts/verify-dist.mjs` enforces it.
 
@@ -21,7 +21,20 @@ Rule: every number on the Terral case study must appear in the "Approved numbers
 | 10 | 1.32.0 | current web app version (Release Please) | `apps/web/package.json` | ☐ |
 | 11 | 6 | cron schedulers in the API | `docs/architecture/diagrams.md` (L2) | ☐ |
 
-Usage analytics (visitors, sessions, top beaches, returning share): **not collected yet.** Terral's PostHog is US Cloud project 403079 (`docs/superpowers/specs/2026-11-16-onboarding-v2-design.md`); the PostHog MCP in this session is connected to a different EU organization and cannot reach it. Section stays empty until access is granted and the owner approves the figures.
+### Usage analytics (PostHog US project 403079, queried read-only 2026-11-22, window 2026-08-24 → 2026-11-22, last 90 days)
+
+| # | Value | Claim | Source | Approved |
+|---|---|---|---|---|
+| 12 | 383 | unique visitors | `query-web-overview`, filterTestAccounts on | ☐ |
+| 13 | 1,330 | sessions | same | ☐ |
+| 14 | 1,939 | pageviews | same | ☐ |
+| 15 | ~4 min (251 s) | average session duration | same | ☐ |
+| 16 | 22.9% | bounce rate | same | ☐ |
+| 17 | 23.7% (90 of 379) | visitors with pageviews on 2+ different days | `execute-sql` on `$pageview` grouped by person; **noncanonical**, test accounts not filtered | ☐ |
+| 18 | 750 | beach selections (`beach_selected`) | `query-trends`, filterTestAccounts on | ☐ |
+| 19 | Campeche Palanque 111 · Praia do Matadeiro 100 · Morro das Pedras Centro 57 · Joaquina Costão 50 · Lomba 49 | most selected beaches | same, breakdown `beach_name` | ☐ |
+
+Caveats: `persistence` / cookie behaviour on terral.surf means one person on two devices counts twice; small numbers, beta traffic. Lomba includes 1 selection made by Claude on 2026-11-22 while taking the beach-detail screenshot.
 
 ## Facts (non-numeric)
 
