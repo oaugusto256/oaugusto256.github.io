@@ -21,6 +21,21 @@ function assert(cond, msg) {
 assert(exists('en/index.html'), 'dist/en/index.html exists');
 assert(read('en/index.html').includes('<html'), 'dist/en/index.html is an HTML document');
 
+// Task 3: i18n routing + BaseLayout
+{
+  const en = read('en/index.html');
+  const pt = read('pt/index.html');
+  assert(en.includes('<html lang="en"'), 'en/index.html has <html lang="en">');
+  assert(pt.includes('<html lang="pt-BR"'), 'pt/index.html has <html lang="pt-BR">');
+  for (const [name, html] of [['en', en], ['pt', pt]]) {
+    for (const h of ['en', 'pt', 'x-default']) {
+      assert(html.includes(`hreflang="${h}"`), `${name}/index.html has hreflang="${h}"`);
+    }
+    assert(html.includes('rel="canonical"'), `${name}/index.html has canonical link`);
+  }
+  assert(read('index.html').includes('url=/en/'), 'index.html redirects to /en/');
+}
+
 if (failures.length) {
   console.error(`verify-dist: ${failures.length} failure(s)`);
   for (const f of failures) console.error(`  ✗ ${f}`);

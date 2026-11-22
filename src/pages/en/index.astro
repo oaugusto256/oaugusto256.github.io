@@ -1,16 +1,12 @@
 ---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { localePath, useT } from '../../i18n/utils';
+
+const t = useT('en');
 ---
 
-<html lang="en">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Otavio Silva — Product Engineer</title>
-    <meta name="description" content="Otavio Silva, Product Engineer based in Florianópolis, Brazil." />
-  </head>
-  <body>
-    <main>
-      <h1>Otavio Silva</h1>
-    </main>
-  </body>
-</html>
+<BaseLayout locale="en" title={t.meta.title} description={t.meta.description} alternate={localePath('pt', '/')}>
+  <main>
+    <h1>Otavio Silva</h1>
+  </main>
+</BaseLayout>

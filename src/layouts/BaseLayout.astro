@@ -1,0 +1,52 @@
+---
+import { htmlLang, otherLocale, type Locale } from '../i18n/utils';
+
+interface Props {
+  locale: Locale;
+  title: string;
+  description: string;
+  /** Path of this page in the other locale. Omit when no twin exists. */
+  alternate?: string;
+  ogImage?: string;
+}
+
+const { locale, title, description, alternate, ogImage } = Astro.props;
+const site = Astro.site ?? new URL('https://oaugusto256.github.io');
+const canonical = new URL(Astro.url.pathname.replace(/\/?$/, '/'), site).href;
+const other = otherLocale(locale);
+const alternateHref = alternate ? new URL(alternate, site).href : undefined;
+const enHref = locale === 'en' ? canonical : alternateHref;
+const ptHref = locale === 'pt' ? canonical : alternateHref;
+const ogImageHref = ogImage ? new URL(ogImage, site).href : undefined;
+---
+
+<!doctype html>
+<html lang={htmlLang(locale)}>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    {enHref && <link rel="alternate" hreflang="en" href={enHref} />}
+    {ptHref && <link rel="alternate" hreflang="pt" href={ptHref} />}
+    {enHref && <link rel="alternate" hreflang="x-default" href={enHref} />}
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:locale" content={locale === 'pt' ? 'pt_BR' : 'en_US'} />
+    <meta property="og:locale:alternate" content={other === 'pt' ? 'pt_BR' : 'en_US'} />
+    {ogImageHref && <meta property="og:image" content={ogImageHref} />}
+    <meta name="twitter:card" content={ogImageHref ? 'summary_large_image' : 'summary'} />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <link rel="icon" href="/favicon.ico" sizes="any" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/icons/favicon-32x32.png" />
+    <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png" />
+    <link rel="manifest" href="/icons/site.webmanifest" />
+  </head>
+  <body>
+    <slot />
+  </body>
+</html>

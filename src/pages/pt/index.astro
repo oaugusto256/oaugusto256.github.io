@@ -1,0 +1,12 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { localePath, useT } from '../../i18n/utils';
+
+const t = useT('pt');
+---
+
+<BaseLayout locale="pt" title={t.meta.title} description={t.meta.description} alternate={localePath('en', '/')}>
+  <main>
+    <h1>Otavio Silva</h1>
+  </main>
+</BaseLayout>
