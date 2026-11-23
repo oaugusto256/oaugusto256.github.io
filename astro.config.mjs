@@ -16,6 +16,10 @@ export default defineConfig({
     routing: { prefixDefaultLocale: true, redirectToDefaultLocale: false },
   },
 
-  redirects: { '/': '/en/' },
-  integrations: [mdx(), sitemap({ i18n: { defaultLocale: 'en', locales: { en: 'en', pt: 'pt-BR' } } })],
+  // `/` is src/pages/index.astro: a static redirect stub that redirects before first paint.
+  integrations: [mdx(), sitemap({
+      // `/` is only a redirect stub to /en/.
+      filter: (page) => page !== 'https://oaugusto256.github.io/',
+      i18n: { defaultLocale: 'en', locales: { en: 'en', pt: 'pt-BR' } },
+    })],
 });

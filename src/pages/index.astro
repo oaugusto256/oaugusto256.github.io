@@ -1,0 +1,23 @@
+---
+// `/` → `/en/`. GitHub Pages can't send an HTTP redirect, so this static page does it:
+// the inline script runs in <head>, before anything paints; meta refresh covers no-JS.
+// The background matches the hero so there is no white flash. No language sniffing (spec §5.4).
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <script is:inline>location.replace('/en/' + location.search + location.hash);</script>
+    <meta http-equiv="refresh" content="0; url=/en/" />
+    <meta name="robots" content="noindex" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#202226" />
+    <link rel="canonical" href="https://oaugusto256.github.io/en/" />
+    <title>Otavio Silva — Product Engineer</title>
+    <style>html,body{margin:0;min-height:100%;background:#202226;color:#e9eae6;font-family:system-ui,sans-serif}a{color:#8fa9f0}</style>
+  </head>
+  <body>
+    <noscript><p style="padding:1rem">Continue to <a href="/en/">the English site</a> · <a href="/pt/">site em português</a></p></noscript>
+  </body>
+</html>
