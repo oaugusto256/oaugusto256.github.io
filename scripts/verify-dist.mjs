@@ -1,6 +1,7 @@
 // Dependency-free post-build assertions over dist/. Exits 1 listing all failures.
 import { readFileSync, existsSync, readdirSync, statSync } from 'node:fs';
 import { join, dirname } from 'node:path';
+import { execSync } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
 
 const DIST = join(dirname(fileURLToPath(import.meta.url)), '..', 'dist');
@@ -193,7 +194,10 @@ for (const loc of ['en', 'pt']) {
 // Every number in page sources must be a whole token in an owner-approved evidence file.
 const ROOT = join(DIST, '..');
 function mdxProse(src) {
-  return src
+  // alt text is read by people (and screen readers): its numbers are claims. Other attributes
+  // (widths, sizes, src) are layout and asset data.
+  const alts = [...src.matchAll(/\salt="([^"]*)"/g)].map((m) => m[1]).join(' ');
+  return alts + ' ' + src
     .replace(/^cover:.*$/m, '') // asset path, not a claim
     .replace(/^import .*$/gm, '') // MDX imports
     .replace(/<[^>]+>/g, ' '); // JSX/HTML tags and their attributes (image widths etc.)
@@ -220,6 +224,20 @@ const EVIDENCE_MAP = [
   { label: 'about strings', sources: ['src/i18n/en.ts', 'src/i18n/pt.ts'], evidence: 'docs/superpowers/evidence/about.md', extract: aboutBlock },
   { label: 'ui strings', sources: ['src/i18n/en.ts', 'src/i18n/pt.ts'], evidence: 'docs/superpowers/evidence/home.md', extract: (src) => src.replace(aboutBlock(src), '') },
 ];
+/**
+ * The approved content of an evidence file: drops struck-through values, table rows marked
+ * excluded (✗) or unapproved (☐), the table's leading "#" cell, list markers and Q-numbers,
+ * so row/question numbering can't approve a number by accident.
+ */
+function evidenceText(evidenceFile) {
+  return readFileSync(join(ROOT, evidenceFile), 'utf8')
+    .replace(/~~[^~]*~~/g, ' ')
+    .split('\n')
+    .filter((line) => !(line.startsWith('|') && /✗|☐/.test(line)))
+    .map((line) => (line.startsWith('|') ? line.replace(/^\|[^|]*\|/, '|') : line))
+    .map((line) => line.replace(/^\s*\d+\.\s/, '').replace(/\bQ\d+\b/g, ''))
+    .join('\n');
+}
 function checkNumbers(label, sources, evidenceFile, extract = (src) => src) {
   const evPath = join(ROOT, evidenceFile);
   const present = sources.filter((s) => existsSync(join(ROOT, s)));
@@ -228,7 +246,7 @@ function checkNumbers(label, sources, evidenceFile, extract = (src) => src) {
     return;
   }
   assert(present.length === sources.length, `${label}: missing sources ${sources.filter((s) => !present.includes(s)).join(', ')}`);
-  const evidence = readFileSync(evPath, 'utf8');
+  const evidence = evidenceText(evidenceFile);
   for (const s of present) {
     const raw = extract(readFileSync(join(ROOT, s), 'utf8'));
     const text = s.endsWith('.mdx') ? mdxProse(raw) : s.endsWith('.ts') ? tsStrings(raw) : raw;
@@ -237,6 +255,13 @@ function checkNumbers(label, sources, evidenceFile, extract = (src) => src) {
   }
 }
 for (const { label, sources, evidence, extract } of EVIDENCE_MAP) checkNumbers(label, sources, evidence, extract);
+// The evidence rule must hold on its own terms (final review, 2026-11-23):
+// table row numbers, list/Q numbers and excluded rows are not approved values,
+assert(JSON.stringify(missingNumbers('12 engineers', evidenceText('docs/superpowers/evidence/about.md'))) === '["12"]', 'evidence: a table row number (#12) is not an approved value');
+assert(JSON.stringify(missingNumbers('306 commits', evidenceText('docs/superpowers/evidence/terral.md'))) === '["306"]', 'evidence: an excluded (✗) row is not an approved value');
+// and numbers in MDX alt text are claims too.
+assert(JSON.stringify(numberTokens(mdxProse('<Image src={x} alt="went from 3 MB to 9 KB" widths={[720, 1080]} sizes="(min-width: 768px) 44rem" />'))) === '["3","9"]', 'mdx: numbers in alt text are checked; widths/sizes are not');
+
 
 // Language switcher link points at the given path (the twin page, not the other home).
 function switchesTo(html, href) {
@@ -350,6 +375,9 @@ assert(aboutBlock(readFileSync(join(ROOT, 'src/i18n/en.ts'), 'utf8')) !== '', 's
   const css = allFiles().filter((f) => f.endsWith('.css')).map((f) => readFileSync(f, 'utf8')).join('\n') + read('en/index.html');
   assert(/\.media[^{]*img[^{]*\{[^}]*aspect-ratio:\s*16\s*\/\s*9[^}]*\}/.test(css) && /\.media[^{]*img[^{]*\{[^}]*object-fit:\s*cover/.test(css), 'project card images: 16/9 frame with object-fit: cover');
 }
+
+// Repo hygiene: local Worker runtime state must never be committed (it would reach master at cutover).
+assert(execSync('git ls-files .wrangler', { cwd: ROOT }).toString().trim() === '', 'no tracked files under .wrangler/');
 
 // Site-wide: retired claims and channels must not appear on any page, in either locale.
 {
