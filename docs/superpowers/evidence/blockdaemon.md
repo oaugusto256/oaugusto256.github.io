@@ -1,6 +1,6 @@
 # Blockdaemon — evidence
 
-**Status:** DRAFT — awaiting owner approval (rows ☐ until ticked).
+**Status:** APPROVED by owner 2026-11-23 (numbers and EN/PT copy, after two feedback rounds).
 **Collected:** 2026-11-23 by Claude from the owner's résumé (Google Doc "otavio-resume", Blockdaemon sections), the old site's `assets/data/professional-projects.json` (on `master`), the owner's interview answers below, and two screenshots captured by Claude from app.blockdaemon.com in the owner's own workspace (owner request, 2026-11-23).
 
 Rule: every number on the Blockdaemon case study must appear in the "Approved numbers" table below. `scripts/verify-dist.mjs` enforces it. Bundle wording: "more than 80%" (PT "mais de 80%") only — never the exact before/after sizes.
@@ -9,13 +9,13 @@ Rule: every number on the Blockdaemon case study must appear in the "Approved nu
 
 | # | Value | Claim | Source | Approved |
 |---|---|---|---|---|
-| 1 | more than 80% (PT: mais de 80%) | cut the JavaScript entry bundle | Résumé (Senior): "cut the JavaScript entry bundle by more than 80% through route-level code splitting, dynamic imports, and prefetch strategies" | ☐ |
-| 2 | 6, 8 | design system upgrade from Mantine v6 to v8 | Résumé (Senior): "design system upgrade from Mantine v6 to v8"; old JSON "built on Mantine 8" | ☐ |
-| 3 | two months → under one month (written in words) | Mantine upgrade estimated at about two months, delivered in under a month, before AI coding tools were part of the workflow | Owner interview Q3 (2026-11-23) | ☐ |
-| 4 | 17, 19 | React 17 to 19 migration | Résumé (Senior): "frontend modernization from React 17 to 19" | ☐ |
-| 5 | three + three (written in words) | team of about three front-end and three back-end engineers | Owner interview Q2 | ☐ |
-| 6 | 2021, 2026 | tenure July 2021 – April 2026 | Résumé: Front-end Engineer July 2021 – March 2024; Senior Front-end Engineer March 2024 – April 2026 | ☐ |
-| 7 | 2024 | promotion to Senior Front-end Engineer (March 2024) | Résumé | ☐ |
+| 1 | more than 80% (PT: mais de 80%) | cut the JavaScript entry bundle | Résumé (Senior): "cut the JavaScript entry bundle by more than 80% through route-level code splitting, dynamic imports, and prefetch strategies" | ☑ |
+| 2 | 6, 8 | design system upgrade from Mantine v6 to v8 | Résumé (Senior): "design system upgrade from Mantine v6 to v8"; old JSON "built on Mantine 8" | ☑ |
+| 3 | two months → under one month (written in words) | Mantine upgrade estimated at about two months, delivered in under a month, before AI coding tools were part of the workflow | Owner interview Q3 (2026-11-23) | ☑ |
+| 4 | 17, 19 | React 17 to 19 migration | Résumé (Senior): "frontend modernization from React 17 to 19" | ☑ |
+| 5 | three + three (written in words) | team of about three front-end and three back-end engineers | Owner interview Q2 | ☑ |
+| 6 | 2021, 2026 | tenure July 2021 – April 2026 | Résumé: Front-end Engineer July 2021 – March 2024; Senior Front-end Engineer March 2024 – April 2026 | ☑ |
+| 7 | 2024 | promotion to Senior Front-end Engineer (March 2024) | Résumé | ☑ |
 
 Numbers visible inside the screenshots (plan prices, quotas, dates in the owner's workspace) are Blockdaemon's public UI, not claims in the copy.
 

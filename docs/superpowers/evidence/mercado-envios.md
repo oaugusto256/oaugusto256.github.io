@@ -1,6 +1,6 @@
 # Mercado Envios — evidence
 
-**Status:** DRAFT — awaiting owner approval (rows ☐ until ticked).
+**Status:** APPROVED by owner 2026-11-23 (numbers and EN/PT copy, after two feedback rounds).
 **Collected:** 2026-11-23 by Claude from the owner's résumé (Google Doc "otavio-resume", Mercado Livre Brasil section), the old site's `assets/data/professional-projects.json` (on `master`, product context only) and the owner's interview answers below.
 
 Rule: every number on the Mercado Envios case study must appear in the "Approved numbers" table below. `scripts/verify-dist.mjs` enforces it. No company-wide outcomes. "Millions of transactions" (old JSON) is not evidence and must not appear.
@@ -9,9 +9,9 @@ Rule: every number on the Mercado Envios case study must appear in the "Approved
 
 | # | Value | Claim | Source | Approved |
 |---|---|---|---|---|
-| 1 | 450+ (PT: mais de 450) | contributed to production releases across micro-frontend applications | Résumé: "contributing to 450+ production releases across high-availability micro-frontend applications" | ☐ |
-| 2 | 2020, 2021 | tenure September 2020 – July 2021 | Résumé: Mercado Livre Brasil, September 2020 – July 2021 | ☐ |
-| 3 | three + one + one (written in words) | team of three engineers, a tech lead and a manager | Owner interview Q5 (2026-11-23) | ☐ |
+| 1 | 450+ (PT: mais de 450) | contributed to production releases across micro-frontend applications | Résumé: "contributing to 450+ production releases across high-availability micro-frontend applications" | ☑ |
+| 2 | 2020, 2021 | tenure September 2020 – July 2021 | Résumé: Mercado Livre Brasil, September 2020 – July 2021 | ☑ |
+| 3 | three + one + one (written in words) | team of three engineers, a tech lead and a manager | Owner interview Q5 (2026-11-23) | ☑ |
 
 ## Facts (non-numeric)
 

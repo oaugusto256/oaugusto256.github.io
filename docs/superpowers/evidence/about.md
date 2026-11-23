@@ -1,6 +1,6 @@
 # About page — evidence
 
-**Status:** Numbers APPROVED by owner 2026-11-23 (interview reply: "All good"; Fugro title stays "Senior Software Engineer"). Copy (EN/PT) awaiting owner review.
+**Status:** Numbers APPROVED by owner 2026-11-23 (interview reply: "All good"; Fugro title stays "Senior Software Engineer"). Copy (EN/PT) APPROVED by owner 2026-11-23 (Design System block removed at owner request).
 **Source:** the owner's résumé (Google Doc "otavio-resume", read 2026-11-23) and, for the Design System block, the old site's `assets/data/professional-projects.json` (on `master`).
 
 Rule: every number in `src/data/experience.ts` and in the `about` block of `src/i18n/{en,pt}.ts` must appear in the table below. `scripts/verify-dist.mjs` enforces it.
