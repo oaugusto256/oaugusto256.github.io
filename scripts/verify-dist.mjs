@@ -39,7 +39,7 @@ assert(read('en/index.html').includes('<html'), 'dist/en/index.html is an HTML d
   assert(en.includes('<html lang="en"'), 'en/index.html has <html lang="en">');
   assert(pt.includes('<html lang="pt-BR"'), 'pt/index.html has <html lang="pt-BR">');
   for (const [name, html] of [['en', en], ['pt', pt]]) {
-    for (const h of ['en', 'pt', 'x-default']) {
+    for (const h of ['en', 'pt-BR', 'x-default']) {
       assert(html.includes(`hreflang="${h}"`), `${name}/index.html has hreflang="${h}"`);
     }
     assert(html.includes('rel="canonical"'), `${name}/index.html has canonical link`);
@@ -54,7 +54,7 @@ function hasLink(html, attrs) {
 }
 {
   const pages = { en: read('en/index.html'), pt: read('pt/index.html') };
-  assert(hasLink(pages.en, ['href="/pt/"', 'hreflang="pt"']), 'en home: language switcher → /pt/ with hreflang="pt"');
+  assert(hasLink(pages.en, ['href="/pt/"', 'hreflang="pt-BR"']), 'en home: language switcher → /pt/ with hreflang="pt-BR"');
   assert(hasLink(pages.pt, ['href="/en/"', 'hreflang="en"']), 'pt home: language switcher → /en/ with hreflang="en"');
   for (const [loc, html] of Object.entries(pages)) {
     assert(hasLink(html, [`href="/${loc}/contact/"`]), `${loc} home: nav link /${loc}/contact/`);
@@ -122,10 +122,10 @@ function allFiles(dir = DIST, out = []) {
   const pt = read('pt/work/terral/index.html');
   assert(exists('en/work/terral/index.html'), 'en/work/terral/index.html exists');
   assert(exists('pt/work/terral/index.html'), 'pt/work/terral/index.html exists');
-  assert(hasLink(en, ['href="/pt/work/terral/"', 'hreflang="pt"']), 'en terral: language switcher → /pt/work/terral/');
+  assert(hasLink(en, ['href="/pt/work/terral/"', 'hreflang="pt-BR"']), 'en terral: language switcher → /pt/work/terral/');
   assert(hasLink(pt, ['href="/en/work/terral/"', 'hreflang="en"']), 'pt terral: language switcher → /en/work/terral/');
   assert(en.includes('<html lang="en"') && pt.includes('<html lang="pt-BR"'), 'terral pages have correct html lang');
-  assert(/<link rel="alternate" hreflang="pt" href="https:\/\/oaugusto256\.github\.io\/pt\/work\/terral\/"/.test(en), 'en terral: hreflang pt alternate');
+  assert(/<link rel="alternate" hreflang="pt-BR" href="https:\/\/oaugusto256\.github\.io\/pt\/work\/terral\/"/.test(en), 'en terral: hreflang pt alternate');
 }
 
 // Task 8: home sections
@@ -322,6 +322,24 @@ assert(aboutBlock(readFileSync(join(ROOT, 'src/i18n/en.ts'), 'utf8')) !== '', 's
   assert(/<meta name="robots" content="noindex/.test(legacy), 'projects.html is noindex');
   const sitemaps = allFiles().filter((f) => /sitemap-\d+\.xml$/.test(f)).map((f) => readFileSync(f, 'utf8')).join('');
   assert(sitemaps.includes('<loc>') && !/404|projects\.html/.test(sitemaps), 'sitemap lists pages but not 404 or projects.html');
+}
+
+// S2 Task 8: S1 deferred minors
+{
+  const pages = allFiles().filter((f) => f.endsWith('.html')).map((f) => f.slice(DIST.length + 1)).filter((f) => !REDIRECT_STUBS.includes(f));
+  for (const page of pages) {
+    const html = read(page);
+    const switchers = [...html.matchAll(/<a\b[^>]*lang-switch[^>]*>/g)].map((m) => m[0]);
+    assert(switchers.every((tag) => !/aria-label=/.test(tag)), `${page}: language switcher has no aria-label (WCAG 2.5.3)`);
+    assert(!/hreflang="pt"/.test(html), `${page}: no hreflang="pt" (use pt-BR)`);
+    const hasTwin = /<link rel="alternate" hreflang="(en|pt-BR)"/.test(html) && /hreflang="x-default"/.test(html);
+    assert(hasTwin === html.includes('og:locale:alternate'), `${page}: og:locale:alternate only when a twin exists`);
+    if (page !== '404.html') assert(html.includes('hreflang="pt-BR"'), `${page}: hreflang="pt-BR" alternate`);
+    const isCase = /^(en|pt)\/work\/[^/]+\/index\.html$/.test(page);
+    assert(html.includes(`property="og:type" content="${isCase ? 'article' : 'website'}"`) || page === '404.html', `${page}: og:type ${isCase ? 'article' : 'website'}`);
+  }
+  const css = allFiles().filter((f) => f.endsWith('.css')).map((f) => readFileSync(f, 'utf8')).join('\n') + read('en/index.html');
+  assert(/@media[^{]*prefers-reduced-motion:\s*reduce[^{]*\{[^@]*\.pulse[^{]*\{[^}]*display:\s*none/.test(css), 'CSS hides .pulse under prefers-reduced-motion: reduce');
 }
 
 // Site-wide: retired claims and channels must not appear on any page, in either locale.

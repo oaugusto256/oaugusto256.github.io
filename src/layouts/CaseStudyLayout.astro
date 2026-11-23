@@ -19,7 +19,7 @@ const slug = slugOf(entry);
 const coverSizing = cover.format === 'svg' ? {} : { widths: [640, 960, 1280, 1600], sizes: '(min-width: 1240px) 1240px, 100vw' };
 ---
 
-<BaseLayout locale={locale} title={`${title} — ${t.work.caseStudy} · Otavio Silva`} description={summary} alternate={alternate}>
+<BaseLayout locale={locale} title={`${title} — ${t.work.caseStudy} · Otavio Silva`} description={summary} alternate={alternate} ogType="article">
   <article class="case" data-case-study={slug} data-locale={locale}>
     <header class="case-head on-dark">
       <div class="container head-grid">
