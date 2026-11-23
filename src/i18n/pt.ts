@@ -32,6 +32,10 @@ export const pt = {
     metaTitle: 'Projetos — Otavio Silva',
     metaDescription: 'Estudos de caso de Otavio Silva, Product Engineer: decisões de produto e engenharia, abordagem e resultados.',
   },
+  contactPage: {
+    metaTitle: 'Contato — Otavio Silva',
+    metaDescription: 'Fale com Otavio Silva, Product Engineer em Florianópolis, Brasil: e-mail, LinkedIn, GitHub e currículo.',
+  },
   home: {
     role: 'Product Engineer',
     location: 'Florianópolis, Brasil',

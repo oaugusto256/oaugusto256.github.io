@@ -55,7 +55,7 @@ function hasLink(html, attrs) {
   assert(hasLink(pages.en, ['href="/pt/"', 'hreflang="pt"']), 'en home: language switcher → /pt/ with hreflang="pt"');
   assert(hasLink(pages.pt, ['href="/en/"', 'hreflang="en"']), 'pt home: language switcher → /en/ with hreflang="en"');
   for (const [loc, html] of Object.entries(pages)) {
-    assert(hasLink(html, [`href="/${loc}/#contact"`]), `${loc} home: nav link /${loc}/#contact`);
+    assert(hasLink(html, [`href="/${loc}/contact/"`]), `${loc} home: nav link /${loc}/contact/`);
     assert(hasLink(html, ['href="https://github.com/oaugusto256"']), `${loc} home: GitHub link`);
     assert(hasLink(html, ['href="https://www.linkedin.com/in/oaugusto256"']), `${loc} home: LinkedIn link`);
     assert(
@@ -235,6 +235,19 @@ for (const [loc, other] of [['en', 'pt'], ['pt', 'en']]) {
   assert(switchesTo(html, `/${other}/work/`), `${page}: switcher → /${other}/work/`);
   assert(hasLink(read(`${loc}/index.html`), [`href="/${loc}/work/"`]), `${loc} home: nav link /${loc}/work/`);
   assert(hasLink(read(`${loc}/work/terral/index.html`), ['class="back', `href="/${loc}/work/"`]), `${loc} terral: back link → /${loc}/work/`);
+}
+
+// S2 Task 3: contact page
+for (const [loc, other] of [['en', 'pt'], ['pt', 'en']]) {
+  const page = `${loc}/contact/index.html`;
+  const html = read(page);
+  assert(exists(page), `${page} exists`);
+  assert((html.match(/<h1[\s>]/g) || []).length === 1, `${page}: one <h1>`);
+  assert(hasLink(html, ['href="mailto:tavioalves@gmail.com"', 'data-event="contact_click"']), `${page}: mailto link with data-event`);
+  assert(hasLink(html, ['href="https://www.linkedin.com/in/oaugusto256"', 'data-event="contact_click"']), `${page}: LinkedIn link with data-event`);
+  assert(hasLink(html, ['href="https://github.com/oaugusto256"', 'data-event="contact_click"']), `${page}: GitHub link with data-event`);
+  assert(hasLink(html, [`href="/resume/otavio-silva-resume-${loc}.pdf"`, 'data-event="resume_download"']), `${page}: résumé link with data-event`);
+  assert(switchesTo(html, `/${other}/contact/`), `${page}: switcher → /${other}/contact/`);
 }
 
 // Site-wide: retired claims and channels must not appear on any page, in either locale.

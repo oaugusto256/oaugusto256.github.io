@@ -5,16 +5,19 @@ import Icon from '../ui/Icon.astro';
 
 interface Props {
   locale: Locale;
+  /** 2 on the home page (section under the hero h1), 1 on the standalone contact page. */
+  headingLevel?: 1 | 2;
 }
 
-const { locale } = Astro.props;
+const { locale, headingLevel = 2 } = Astro.props;
+const Heading = headingLevel === 1 ? 'h1' : 'h2';
 const t = useT(locale);
 ---
 
 <section id="contact" class="section on-dark" aria-labelledby="contact-title">
   <div class="container grid">
     <div>
-      <h2 id="contact-title">{t.home.contactTitle}</h2>
+      <Heading id="contact-title" class="title">{t.home.contactTitle}</Heading>
       <p class="body">{t.home.contactBody}</p>
       <a class="btn" href={`mailto:${person.email}`} data-event="contact_click" data-channel="email">
         <Icon name="mail" size={18} />{t.home.contactEmail}
@@ -55,7 +58,7 @@ const t = useT(locale);
     gap: var(--space-12);
     align-items: end;
   }
-  h2 {
+  .title {
     font-size: var(--step-5);
     margin-bottom: var(--space-4);
   }

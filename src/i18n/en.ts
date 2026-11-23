@@ -30,6 +30,10 @@ export const en = {
     metaTitle: 'Work — Otavio Silva',
     metaDescription: 'Case studies by Otavio Silva, Product Engineer: product and engineering decisions, approach and results.',
   },
+  contactPage: {
+    metaTitle: 'Contact — Otavio Silva',
+    metaDescription: 'Get in touch with Otavio Silva, Product Engineer in Florianópolis, Brazil: email, LinkedIn, GitHub and résumé.',
+  },
   home: {
     role: 'Product Engineer',
     location: 'Florianópolis, Brazil',
