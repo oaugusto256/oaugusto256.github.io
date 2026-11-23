@@ -201,6 +201,7 @@ function tsStrings(src) {
 const EVIDENCE_MAP = [
   { label: 'terral', sources: ['src/content/work/terral/en.mdx', 'src/content/work/terral/pt.mdx'], evidence: 'docs/superpowers/evidence/terral.md' },
   { label: 'blockdaemon', sources: ['src/content/work/blockdaemon/en.mdx', 'src/content/work/blockdaemon/pt.mdx'], evidence: 'docs/superpowers/evidence/blockdaemon.md' },
+  { label: 'mercado-envios', sources: ['src/content/work/mercado-envios/en.mdx', 'src/content/work/mercado-envios/pt.mdx'], evidence: 'docs/superpowers/evidence/mercado-envios.md' },
   { label: 'ui strings', sources: ['src/i18n/en.ts', 'src/i18n/pt.ts'], evidence: 'docs/superpowers/evidence/home.md' },
 ];
 function checkNumbers(label, sources, evidenceFile) {
@@ -261,6 +262,22 @@ for (const [loc, other, bundle] of [['en', 'pt', 'more than 80%'], ['pt', 'en', 
   const imgs = [...html.matchAll(/<img\b[^>]*>/g)].map((m) => m[0]);
   assert(imgs.filter((t) => /checkout|api-keys/.test(t)).length >= 2, `${page}: checkout + API keys screenshots`);
   assert(hasLink(read(`${loc}/work/index.html`), [`href="/${loc}/work/blockdaemon/"`]), `${loc} work index: links blockdaemon`);
+}
+
+// S2 Task 5: Mercado Envios case study; home cards come from the collection only
+for (const [loc, other] of [['en', 'pt'], ['pt', 'en']]) {
+  const page = `${loc}/work/mercado-envios/index.html`;
+  const html = read(page);
+  assert(exists(page), `${page} exists`);
+  assert(switchesTo(html, `/${other}/work/mercado-envios/`), `${page}: switcher → /${other}/work/mercado-envios/`);
+  assert(!/million|milh(ões|ao|ão)/i.test(html), `${page}: no "million"/"milhões" claims`);
+  const home = read(`${loc}/index.html`);
+  for (const slug of ['terral', 'blockdaemon', 'mercado-envios']) {
+    assert(hasLink(home, [`href="/${loc}/work/${slug}/"`, 'data-event="project_card_click"', `data-project="${slug}"`]), `${loc} home: ${slug} card → /${loc}/work/${slug}/`);
+  }
+  for (const soon of ['Case study coming soon', 'Estudo de caso em breve']) {
+    assert(!home.includes(soon), `${loc} home: no "${soon}" placeholder`);
+  }
 }
 
 // Site-wide: retired claims and channels must not appear on any page, in either locale.

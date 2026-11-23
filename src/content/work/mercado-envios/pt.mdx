@@ -1,0 +1,48 @@
+---
+title: Mercado Envios
+summary: 'A tela que os operadores de armazém usam para separar os pacotes que chegam no Mercury, o sistema de gestão de armazéns do Mercado Livre, e o BFF por trás dela.'
+role: 'Engenheiro Front-end'
+period: 'setembro de 2020 – julho de 2021'
+stack: ['React', 'TypeScript', 'BFF', 'Micro-frontends', 'RFCs', 'Design system interno']
+links: []
+cover: ../../../assets/work/mercado-envios/cover.svg
+coverAlt: 'Diagrama: os pacotes que chegam ao armazém passam pela tela de separação e saem por rota; por trás da tela, um micro-frontend conversa com um BFF, que conversa com os serviços do WMS Mercury'
+order: 3
+locale: pt
+---
+
+## Problema e contexto
+
+O Mercado Envios é a operação de logística do Mercado Livre. Os armazéns rodam no Mercury, o sistema de gestão de armazéns (WMS) próprio do Mercado Livre, em centros de fulfillment, hubs de cross-docking e operações de última milha na América Latina. Os operadores trabalham pelas telas do Mercury: entrada e saída, estoque e cada etapa que um pacote percorre no meio do caminho.
+
+Quando os pacotes chegam a um armazém, alguém precisa separá-los antes que sigam adiante. Essa etapa precisa de uma tela rápida e clara para quem a usa o turno inteiro, em todos os países onde o Mercury opera.
+
+## Papel
+
+Engenheiro Front-end de setembro de 2020 a julho de 2021, em um time de três engenheiros, um tech lead e um gerente.
+
+## O que construí
+
+- **A página de separação de pacotes recebidos.** Construí a página do Mercury que os operadores usam para separar os pacotes que chegam, usada na América Latina.
+- **O BFF por trás dela.** Ajudei a criar o backend-for-frontend que serve essa página: uma API pensada para o que a tela precisa, para que o front-end não tenha que juntar chamadas a vários serviços do armazém.
+- **A RFC dela.** Documentei o fluxo de dados da página em uma RFC, para que o time e os serviços envolvidos pudessem concordar com o contrato por escrito.
+
+## Abordagem
+
+O front-end do Mercury é um conjunto de aplicações micro-frontend de alta disponibilidade, cada uma publicada de forma independente. No meu tempo no time, contribuí para mais de 450 releases em produção nessas aplicações, que precisam ficar de pé enquanto os armazéns operam.
+
+## Desafios e trade-offs
+
+- **Um BFF é mais um serviço para manter.** Vale a pena quando o que a tela precisa é diferente do formato dos serviços: a página recebe exatamente os dados que usa, e mudanças nos serviços ficam atrás de uma única fronteira.
+- **Escrever antes.** Uma RFC atrasa um pouco o começo e economiza tempo depois, porque a discussão acontece no documento e não no code review.
+
+## Resultados e evidências
+
+- A página de separação de pacotes recebidos, usada no Mercury na América Latina.
+- O BFF dela e uma RFC documentando o fluxo de dados.
+- Contribuição para mais de 450 releases em produção nos micro-frontends do Mercury.
+
+## Aprendizados
+
+- **Projetar para quem está no chão do armazém.** Os operadores usam a mesma tela o turno inteiro. Pequenos atrasos e estados confusos custam mais ali do que em qualquer outro lugar.
+- **Contrato antes do código.** Concordar sobre o fluxo de dados por escrito fez de construir a página e o BFF a parte fácil.

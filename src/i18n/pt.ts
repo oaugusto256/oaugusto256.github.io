@@ -47,23 +47,6 @@ export const pt = {
     map: ['problema', 'usuários', 'decisão', 'construir', 'entregar', 'medir'],
     workTitle: 'Trabalhos selecionados',
     readCase: 'Ler o estudo de caso',
-    caseSoon: 'Estudo de caso em breve',
-    projects: {
-      blockdaemon: {
-        title: 'Blockdaemon',
-        summary:
-          'Plataforma de infraestrutura blockchain para instituições. Construí fluxos de checkout e assinatura e dashboards de staking, liderei a atualização do design system e a migração do React 17 para o 19, e liderei uma iniciativa de performance que reduziu o bundle JavaScript de entrada em mais de 80%.',
-        role: 'Front-end, depois Senior Front-end Engineer · 2021–2026',
-        tags: ['React', 'TypeScript', 'Design systems', 'Performance web', 'Checkout'],
-      },
-      'mercado-envios': {
-        title: 'Mercado Envios',
-        summary:
-          'Ferramentas internas de armazém para a operação logística do Mercado Livre. Projetei serviços BFF, documentei fluxos de dados em RFCs e contribuí para mais de 450 releases em produção em micro-frontends.',
-        role: 'Front-end Engineer · 2020–2021',
-        tags: ['React', 'TypeScript', 'BFF', 'Micro-frontends', 'RFCs'],
-      },
-    },
     philosophyTitle: 'Como trabalho',
     pillars: [
       { title: 'Pensamento de produto', body: 'Entender usuários, problemas, restrições e contexto de negócio antes de escolher uma solução.' },
