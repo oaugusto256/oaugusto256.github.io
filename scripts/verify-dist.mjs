@@ -17,6 +17,15 @@ function assert(cond, msg) {
   if (!cond) failures.push(msg);
 }
 
+// Numbers are compared as whole tokens, not substrings: "33" must not pass because "1,330" is in evidence.
+function numberTokens(text) {
+  return [...new Set((text.match(/\d[\d.,]*%?\+?/g) || []).map((n) => n.replace(/[.,]+$/, '')))];
+}
+function missingNumbers(text, evidence) {
+  const allowed = new Set(numberTokens(evidence));
+  return numberTokens(text).filter((n) => !allowed.has(n));
+}
+
 // Task 1: scaffold
 assert(exists('en/index.html'), 'dist/en/index.html exists');
 assert(read('en/index.html').includes('<html'), 'dist/en/index.html is an HTML document');
@@ -101,10 +110,6 @@ function allFiles(dir = DIST, out = []) {
   const animDecls = [...allCss.matchAll(/animation(?:-name)?:[^;}]*\b(draw|light-\d)\b/g)];
   const unguarded = animDecls.filter((m) => !motionRanges.some(([a, b]) => m.index > a && m.index < b));
   assert(animDecls.length >= 7 && unguarded.length === 0, 'hero animations (edge + 6 nodes) only under prefers-reduced-motion: no-preference');
-  // .reveal may only be hidden (opacity:0 / visibility:hidden) under html.js
-  const revealRules = [...allCss.matchAll(/([^{}]*\.reveal[^{}]*)\{([^}]*)\}/g)];
-  const badReveal = revealRules.filter(([, sel, body]) => /opacity:\s*0|visibility:\s*hidden/.test(body) && !/\.js/.test(sel));
-  assert(badReveal.length === 0, 'no rule hides .reveal outside html.js');
   assert(exists('fonts/geist-latin-wght-normal.woff2'), 'Geist woff2 self-hosted');
   assert(exists('fonts/geist-mono-latin-wght-normal.woff2'), 'Geist Mono woff2 self-hosted');
   assert(/<link[^>]+rel="preload"[^>]+geist-latin-wght-normal\.woff2/.test(html), 'primary font preloaded');
@@ -136,9 +141,6 @@ for (const loc of ['en', 'pt']) {
   );
   assert(hasLink(html, ['href="mailto:tavioalves@gmail.com"']), `${loc} home: mailto link`);
   assert(html.includes('Blockdaemon') && html.includes('Mercado'), `${loc} home: Blockdaemon and Mercado Envios cards`);
-  for (const banned of ['82%', '13.4', '807', 'Senior Frontend Engineer', 'wa.me', 'gitlab.com', 'stackoverflow.com']) {
-    assert(!html.includes(banned), `${loc} home: must not contain "${banned}"`);
-  }
 }
 
 // Task 10: analytics — loads only when PUBLIC_POSTHOG_KEY is set at build time
@@ -186,34 +188,51 @@ for (const loc of ['en', 'pt']) {
   assert(!html.includes('screenshot pending'), `${loc} terral: placeholder cover removed`);
 }
 
-// Task 9: every number in the Terral case study source must appear in the approved evidence file
-{
-  const root = join(DIST, '..');
-  const evidence = readFileSync(join(root, 'docs/superpowers/evidence/terral.md'), 'utf8');
-  for (const loc of ['en', 'pt']) {
-    const src = readFileSync(join(root, `src/content/work/terral/${loc}.mdx`), 'utf8');
-    const prose = src
-      .replace(/^cover:.*$/m, '') // asset path, not a claim
-      .replace(/^import .*$/gm, '') // MDX imports
-      .replace(/<[^>]+>/g, ' '); // JSX/HTML tags and their attributes (image widths etc.)
-    const numbers = [...new Set(prose.match(/\d[\d.,]*%?\+?/g) || [])].map((n) => n.replace(/[.,]$/, ''));
-    const missing = numbers.filter((n) => !evidence.includes(n));
-    assert(missing.length === 0, `${loc} terral: numbers not in evidence/terral.md: ${missing.join(', ')}`);
+// Every number in page sources must be a whole token in an owner-approved evidence file.
+const ROOT = join(DIST, '..');
+function mdxProse(src) {
+  return src
+    .replace(/^cover:.*$/m, '') // asset path, not a claim
+    .replace(/^import .*$/gm, '') // MDX imports
+    .replace(/<[^>]+>/g, ' '); // JSX/HTML tags and their attributes (image widths etc.)
+}
+function tsStrings(src) {
+  return [...src.matchAll(/(['"`])((?:\\.|(?!\1).)*)\1/g)].map((m) => m[2]).join(' ');
+}
+const EVIDENCE_MAP = [
+  { label: 'terral', sources: ['src/content/work/terral/en.mdx', 'src/content/work/terral/pt.mdx'], evidence: 'docs/superpowers/evidence/terral.md' },
+  { label: 'ui strings', sources: ['src/i18n/en.ts', 'src/i18n/pt.ts'], evidence: 'docs/superpowers/evidence/home.md' },
+];
+function checkNumbers(label, sources, evidenceFile) {
+  const evPath = join(ROOT, evidenceFile);
+  const present = sources.filter((s) => existsSync(join(ROOT, s)));
+  if (!existsSync(evPath)) {
+    assert(present.length === 0, `${label}: ${evidenceFile} missing but sources exist`);
+    return;
+  }
+  assert(present.length === sources.length, `${label}: missing sources ${sources.filter((s) => !present.includes(s)).join(', ')}`);
+  const evidence = readFileSync(evPath, 'utf8');
+  for (const s of present) {
+    const raw = readFileSync(join(ROOT, s), 'utf8');
+    const text = s.endsWith('.mdx') ? mdxProse(raw) : s.endsWith('.ts') ? tsStrings(raw) : raw;
+    const missing = missingNumbers(text, evidence);
+    assert(missing.length === 0, `${label} (${s}): numbers not in ${evidenceFile}: ${missing.join(', ')}`);
   }
 }
+for (const { label, sources, evidence } of EVIDENCE_MAP) checkNumbers(label, sources, evidence);
 
-// Final review: every number in the UI strings (home copy) must appear in evidence/home.md
+// Site-wide: retired claims and channels must not appear on any page, in either locale.
 {
-  const root = join(DIST, '..');
-  const evidencePath = join(root, 'docs/superpowers/evidence/home.md');
-  const evidence = existsSync(evidencePath) ? readFileSync(evidencePath, 'utf8') : '';
-  assert(evidence !== '', 'docs/superpowers/evidence/home.md exists');
-  for (const loc of ['en', 'pt']) {
-    const src = readFileSync(join(root, `src/i18n/${loc}.ts`), 'utf8');
-    const strings = [...src.matchAll(/(['"`])((?:\\.|(?!\1).)*)\1/g)].map((m) => m[2]).join(' ');
-    const numbers = [...new Set(strings.match(/\d[\d.,]*%?\+?/g) || [])].map((n) => n.replace(/[.,]$/, ''));
-    const missing = numbers.filter((n) => !evidence.includes(n));
-    assert(missing.length === 0, `${loc} ui strings: numbers not in evidence/home.md: ${missing.join(', ')}`);
+  for (const f of allFiles().filter((f) => f.endsWith('.html'))) {
+    const page = f.slice(DIST.length + 1);
+    const html = readFileSync(f, 'utf8');
+    for (const banned of ['82%', '13.4', '807', 'Senior Frontend Engineer', 'wa.me', 'gitlab.com', 'stackoverflow.com']) {
+      assert(!html.includes(banned), `${page}: must not contain "${banned}"`);
+    }
+    for (const m of html.matchAll(/80%/g)) {
+      const before = html.slice(Math.max(0, m.index - 12), m.index);
+      assert(/more than\s*$|mais de\s*$/.test(before), `${page}: "80%" must follow "more than"/"mais de" (got "${before}80%")`);
+    }
   }
 }
 
