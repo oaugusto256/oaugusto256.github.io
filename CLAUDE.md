@@ -6,7 +6,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 Personal portfolio: a bilingual (EN/PT) Astro static site, live at https://oaugusto256.github.io/.
 
-**Deploy:** `master` is production. Every push to `master` runs `.github/workflows/deploy.yml` (build → verify → `upload-pages-artifact` → `deploy-pages`); GitHub Pages source is "GitHub Actions" (switched from legacy branch deploy at cutover, 2026-11-23). Repo variables `PUBLIC_POSTHOG_KEY` / `PUBLIC_POSTHOG_HOST` feed the build; unset means no analytics. Work on a branch and open a PR into `master`; CI and a Cloudflare Worker branch preview run on the PR. Rollback: revert on `master` via PR (or set Pages back to legacy `master` `/`).
+**Deploy:** `main` is production (renamed from `master`, 2026-11-23). Every push to `main` runs `.github/workflows/deploy.yml` (build → verify → `upload-pages-artifact` → `deploy-pages`); GitHub Pages source is "GitHub Actions" (switched from legacy branch deploy at cutover, 2026-11-23). Repo variables `PUBLIC_POSTHOG_KEY` / `PUBLIC_POSTHOG_HOST` feed the build; unset means no analytics. Work on a branch and open a PR into `main`; CI and a Cloudflare Worker branch preview run on the PR. Rollback: revert on `main` via PR.
 
 Design spec: `docs/superpowers/specs/2026-11-22-portfolio-redesign-design.md`. Plans: `docs/superpowers/plans/`.
 

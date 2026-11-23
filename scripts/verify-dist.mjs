@@ -376,7 +376,7 @@ assert(aboutBlock(readFileSync(join(ROOT, 'src/i18n/en.ts'), 'utf8')) !== '', 's
   assert(/\.media[^{]*img[^{]*\{[^}]*aspect-ratio:\s*16\s*\/\s*9[^}]*\}/.test(css) && /\.media[^{]*img[^{]*\{[^}]*object-fit:\s*cover/.test(css), 'project card images: 16/9 frame with object-fit: cover');
 }
 
-// Repo hygiene: local Worker runtime state must never be committed (it would reach master at cutover).
+// Repo hygiene: local Worker runtime state must never be committed (it would be deployed from main).
 assert(execSync('git ls-files .wrangler', { cwd: ROOT }).toString().trim() === '', 'no tracked files under .wrangler/');
 
 // Site-wide: retired claims and channels must not appear on any page, in either locale.

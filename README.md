@@ -10,6 +10,6 @@ npm run dev
 npm run check && npm run lint && npm run build && npm run verify
 ```
 
-Live at https://oaugusto256.github.io/. Every push to `master` builds and deploys the site to GitHub Pages
+Live at https://oaugusto256.github.io/. Every push to `main` builds and deploys the site to GitHub Pages
 (`.github/workflows/deploy.yml`, Pages source "GitHub Actions"). Pull requests run CI (`ci.yml`) and get a Cloudflare
 Worker preview.
