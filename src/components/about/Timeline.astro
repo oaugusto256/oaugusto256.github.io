@@ -1,0 +1,84 @@
+---
+import { experience } from '../../data/experience';
+import { localePath, useT, type Locale } from '../../i18n/utils';
+
+interface Props {
+  locale: Locale;
+  /** Roles to skip (e.g. the current role, shown separately). */
+  skip?: number;
+}
+
+const { locale, skip = 0 } = Astro.props;
+const t = useT(locale);
+const roles = experience.slice(skip);
+---
+
+<ol class="timeline">
+  {
+    roles.map((role) => (
+      <li class="role">
+        <p class="period mono">{role.period[locale]}</p>
+        <div>
+          <h3>
+            {role.title[locale]} · {role.url ? <a href={role.url}>{role.company}</a> : role.company}
+          </h3>
+          <p class="place mono">{role.place[locale]}</p>
+          <p class="summary">{role.summary[locale]}</p>
+          {role.caseStudy && (
+            <p class="case mono">
+              <a href={localePath(locale, `/work/${role.caseStudy}/`)} data-event="project_card_click" data-project={role.caseStudy}>
+                {t.home.readCase}
+              </a>
+            </p>
+          )}
+        </div>
+      </li>
+    ))
+  }
+</ol>
+
+<style>
+  .timeline {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+  .role {
+    display: grid;
+    grid-template-columns: 14rem 1fr;
+    gap: var(--space-2) var(--space-8);
+    padding-block: var(--space-6);
+    border-top: 1px solid var(--color-border);
+  }
+  h3 {
+    font-size: var(--step-1);
+    margin-bottom: var(--space-1);
+  }
+  h3 a {
+    text-underline-offset: 0.2em;
+  }
+  .period,
+  .place {
+    color: var(--color-muted);
+    font-size: var(--step--1);
+  }
+  .place {
+    margin-bottom: var(--space-3);
+  }
+  .summary {
+    max-width: 40em;
+    color: var(--color-muted);
+  }
+  .case {
+    margin-top: var(--space-3);
+    font-size: var(--step--1);
+  }
+  .case a {
+    color: var(--color-accent);
+  }
+  @media (max-width: 47.99rem) {
+    .role {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

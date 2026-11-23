@@ -1,0 +1,81 @@
+---
+title: Blockdaemon
+summary: 'Checkout e assinaturas self-service, a atualização do design system e um primeiro carregamento mais rápido para uma plataforma de infraestrutura blockchain institucional.'
+role: 'Engenheiro Front-end, depois Engenheiro Front-end Sênior'
+period: 'julho de 2021 – abril de 2026'
+stack: ['React', 'TypeScript', 'Mantine', 'React Query', 'Stripe', 'Okta', 'Contentful', 'WalletConnect', 'Playwright', 'Cypress']
+links:
+  - label: app.blockdaemon.com
+    url: https://app.blockdaemon.com
+cover: ../../../assets/work/blockdaemon/checkout.jpg
+coverAlt: 'Página de assinatura da API Suite da Blockdaemon: plano atual, cota mensal, data de renovação e cobrança mensal no topo, e abaixo os pacotes disponíveis, cada um com o que inclui e o preço inicial'
+order: 2
+locale: pt
+---
+
+import { Image } from 'astro:assets';
+import bundleSplit from '../../../assets/work/blockdaemon/bundle-split.svg';
+import apiKeys from '../../../assets/work/blockdaemon/api-keys.jpg';
+
+## Problema e contexto
+
+A Blockdaemon opera infraestrutura blockchain para instituições: nodes, staking e APIs. O app.blockdaemon.com é onde os clientes implantam e monitoram essa infraestrutura, gerenciam o acesso às APIs e pagam por ela. Ele reúne checkout com Stripe, conexão de carteiras (WalletConnect, MetaMask), KYB com Sumsub, feature toggles e um painel de administração.
+
+É um único app React de página única, e grande. Ao longo dos anos, novos produtos foram entrando nele, sobre uma biblioteca de componentes que ficava para trás e um bundle de entrada que não parava de crescer.
+
+## Papel
+
+Engenheiro Front-end a partir de julho de 2021, Engenheiro Front-end Sênior de março de 2024 até abril de 2026. O time tinha cerca de três engenheiros front-end e três back-end. Trabalhei com produto, design e QA, fiz entrevistas técnicas e mentorei engenheiros júnior e pleno.
+
+## Decisões de produto e técnicas
+
+**Checkout e assinaturas self-service.** Liderei de ponta a ponta os fluxos de checkout e assinatura de nodes e da API Suite: escolher e trocar de plano, faturamento e ajustes manuais para administradores. O Stripe cuida do pagamento; o app cuida da experiência em volta dele: o cliente vê o plano atual, a cota e as cobranças antes de mudar qualquer coisa.
+
+**Um design system no Mantine v8.** Liderei a atualização do design system da Blockdaemon do Mantine v6 para o v8, junto com uma nova identidade visual criada por uma agência de design externa: temas, sobrescritas de componentes, design tokens, temas claro e escuro, e documentação com padrões de uso e exemplos ao vivo. Ele é usado em todos os produtos web da Blockdaemon. A estimativa era de cerca de dois meses; entregamos em menos de um, com poucas mudanças incompatíveis para os times que o usam, e antes de ferramentas de IA para código fazerem parte do nosso fluxo.
+
+<figure>
+  <Image src={apiKeys} alt="Página de autenticação da API Suite da Blockdaemon no tema escuro: tabela de chaves de API com status, segurança, data de criação, expiração, produtos, limites de uso e a chave mascarada" widths={[720, 1080, 1408]} sizes="(min-width: 768px) 44rem, 100vw" />
+  <figcaption>Chaves de API na API Suite, tema escuro.</figcaption>
+</figure>
+
+**Outros trabalhos no caminho.**
+- Dashboards de staking com gráficos, filtros e modais sobre dados de protocolo em tempo real.
+- Um construtor de formulários que gera os formulários de acesso à API de staking a partir de JSON schemas: uma nova integração pede um schema, não uma tela nova.
+- Onboarding refeito com Okta, e Contentful integrado para páginas guiadas por conteúdo.
+- Testes de integração com Playwright e Cypress nas jornadas mais importantes.
+- A migração do React 17 para o React 19.
+- Já como sênior, a liderança de um novo produto, Portfolio: integração de carteiras, verificação de ativos on-chain e visibilidade de rendimentos.
+
+## Abordagem
+
+**Um primeiro carregamento mais rápido.** Depurando, percebi quanto JavaScript a main thread precisava processar antes de o app ficar utilizável. O Lighthouse e o Chrome DevTools mostraram o motivo: um único bundle de entrada carregava todas as áreas do app. Liderei o trabalho de dividi-lo por rota, carregar funcionalidades com imports dinâmicos e fazer prefetch do que o usuário provavelmente vai abrir em seguida. O bundle de entrada de JavaScript ficou mais de 80% menor.
+
+<figure>
+  <Image src={bundleSplit} alt="Diagrama: antes, um único bundle de entrada com todas as áreas do app; depois, uma entrada pequena com o shell e o roteador carrega primeiro e cada rota (checkout, staking, API suite, nodes, portfolio) chega como um chunk próprio" />
+  <figcaption>Antes: um único bundle de entrada com todas as áreas do app. Depois: um shell pequeno carrega primeiro e cada rota chega como um chunk próprio.</figcaption>
+</figure>
+
+**Atualizações junto com o trabalho de produto.** As atualizações do Mantine e do React aconteceram enquanto novas funcionalidades continuavam saindo. O objetivo era o mínimo de mudanças incompatíveis para os times que constroem em cima, com a documentação escrita como parte da atualização.
+
+## Desafios e trade-offs
+
+- **Entrada menor, mais requisições.** Dividir por rota significa mais chunks pela rede. O prefetch mantém a navegação rápida sem colocar tudo de volta no primeiro carregamento.
+- **Velocidade da atualização contra quebras.** Migrar rápido para o Mantine v8 importava, mas não quebrar os produtos construídos sobre ele também. Documentação e exemplos ao vivo saíram junto com a atualização, não depois.
+- **Self-service com saída de emergência.** O checkout permite que o cliente gerencie o plano sozinho, e os ajustes de administrador cobrem os casos que um fluxo self-service não resolve.
+
+## Resultados e evidências
+
+- Bundle de entrada de JavaScript reduzido em mais de 80%, medido com Lighthouse e Chrome DevTools.
+- Design system no Mantine v8, estimado em cerca de dois meses e entregue em menos de um, com documentação e exemplos ao vivo.
+- Checkout e assinaturas self-service para nodes e para a API Suite, no ar em app.blockdaemon.com.
+- React 17 para React 19 em todo o app.
+
+## Aprendizados
+
+- **Medir antes de dividir.** O profiler mostrou onde estava o custo; sem ele, o code splitting seria chute.
+- **Atualizar um design system é lançar um produto.** Os times que o usam são os usuários. Documentação e exemplos decidem se eles adotam.
+- **Testes tornam grandes atualizações rotina.** Testes de integração nas jornadas críticas é o que permite a um time migrar de versão principal com confiança.
+
+## Links
+
+- [app.blockdaemon.com](https://app.blockdaemon.com)

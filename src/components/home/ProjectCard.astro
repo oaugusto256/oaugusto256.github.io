@@ -13,14 +13,17 @@ interface Props {
   image?: ImageMetadata;
   imageAlt?: string;
   emphasis: 'primary' | 'secondary';
+  /** Heading level for the title: 3 under a section h2 (home), 2 directly under a page h1. */
+  headingLevel?: 2 | 3;
 }
 
-const { slug, title, summary, role, tags, href, linkLabel, image, imageAlt, emphasis } = Astro.props;
+const { slug, title, summary, role, tags, href, linkLabel, image, imageAlt, emphasis, headingLevel = 3 } = Astro.props;
+const Heading = headingLevel === 2 ? 'h2' : 'h3';
 ---
 
 <article class:list={['card', emphasis]}>
   <div class="body">
-    <h3>
+    <Heading class="title">
       {
         href ? (
           <a href={href} data-event="project_card_click" data-project={slug}>
@@ -30,7 +33,7 @@ const { slug, title, summary, role, tags, href, linkLabel, image, imageAlt, emph
           title
         )
       }
-    </h3>
+    </Heading>
     <p class="role mono">{role}</p>
     <p class="summary">{summary}</p>
     <ul class="tags mono">
@@ -41,7 +44,7 @@ const { slug, title, summary, role, tags, href, linkLabel, image, imageAlt, emph
   {
     image && (
       <div class="media">
-        <Image src={image} alt={imageAlt ?? ''} widths={[480, 800, 1200]} sizes="(min-width: 768px) 58vw, 100vw" />
+        <Image src={image} alt={imageAlt ?? ''} {...(image.format === 'svg' ? {} : { widths: [480, 800, 1200], sizes: '(min-width: 768px) 58vw, 100vw' })} />
       </div>
     )
   }
@@ -62,23 +65,23 @@ const { slug, title, summary, role, tags, href, linkLabel, image, imageAlt, emph
     border-top: 1px solid var(--color-border);
     padding-top: var(--space-6);
   }
-  h3 {
+  .title {
     font-size: var(--step-4);
     margin-bottom: var(--space-2);
   }
-  .secondary h3 {
+  .secondary .title {
     font-size: var(--step-3);
   }
-  h3 a {
+  .title a {
     text-decoration: none;
   }
   /* Whole card is clickable via the heading link; focus ring stays on the link. */
-  h3 a::after {
+  .title a::after {
     content: '';
     position: absolute;
     inset: 0;
   }
-  .card:has(a):hover h3 a {
+  .card:has(a):hover .title a {
     text-decoration: underline;
     text-decoration-thickness: 2px;
   }
@@ -105,9 +108,14 @@ const { slug, title, summary, role, tags, href, linkLabel, image, imageAlt, emph
   .secondary .more {
     color: var(--color-muted);
   }
+  /* One frame for every card image (screenshots ~2:1, diagrams 16:9, Terral 16:10). */
   .media :global(img) {
+    display: block;
     width: 100%;
     height: auto;
+    aspect-ratio: 16 / 9;
+    object-fit: cover;
+    object-position: top left;
     border-radius: var(--radius-media);
     border: 1px solid var(--color-border);
   }

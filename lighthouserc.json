@@ -5,8 +5,12 @@
       "url": [
         "/en/index.html",
         "/pt/index.html",
+        "/en/work/index.html",
         "/en/work/terral/index.html",
-        "/pt/work/terral/index.html"
+        "/pt/work/blockdaemon/index.html",
+        "/en/work/mercado-envios/index.html",
+        "/en/about/index.html",
+        "/pt/contact/index.html"
       ],
       "numberOfRuns": 3
     },

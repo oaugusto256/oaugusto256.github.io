@@ -1,0 +1,62 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="900" viewBox="0 0 1600 900" font-family="ui-monospace, 'Geist Mono', Menlo, monospace" font-size="22">
+  <rect width="1600" height="900" fill="#202226"/>
+  <defs>
+    <marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#8fa9f0"/></marker>
+    <marker id="m" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#a2a6ad"/></marker>
+  </defs>
+
+  <!-- before: one entry bundle -->
+  <text x="120" y="150" fill="#a2a6ad">before</text>
+  <rect x="120" y="180" width="420" height="560" rx="12" fill="none" stroke="#4a4e56" stroke-width="2"/>
+  <g stroke="#4a4e56" stroke-width="2">
+    <line x1="150" y1="260" x2="510" y2="260"/>
+    <line x1="150" y1="340" x2="510" y2="340"/>
+    <line x1="150" y1="420" x2="510" y2="420"/>
+    <line x1="150" y1="500" x2="510" y2="500"/>
+    <line x1="150" y1="580" x2="510" y2="580"/>
+    <line x1="150" y1="660" x2="510" y2="660"/>
+  </g>
+  <g fill="#a2a6ad">
+    <text x="150" y="235">checkout</text>
+    <text x="150" y="315">staking</text>
+    <text x="150" y="395">api suite</text>
+    <text x="150" y="475">nodes</text>
+    <text x="150" y="555">portfolio</text>
+    <text x="150" y="635">settings</text>
+    <text x="150" y="715">…</text>
+  </g>
+  <text x="120" y="790" fill="#e9eae6" font-family="'Geist', system-ui, sans-serif" font-size="30" font-weight="600">entry.js</text>
+  <text x="120" y="828" fill="#a2a6ad">everything, on first load</text>
+
+  <line x1="600" y1="460" x2="760" y2="460" stroke="#a2a6ad" stroke-width="2" marker-end="url(#m)"/>
+
+  <!-- after: small entry + route chunks -->
+  <text x="820" y="150" fill="#a2a6ad">after</text>
+  <rect x="820" y="390" width="250" height="140" rx="12" fill="#2447a8" stroke="#8fa9f0" stroke-width="2"/>
+  <text x="846" y="455" fill="#e9eae6" font-family="'Geist', system-ui, sans-serif" font-size="30" font-weight="600">entry.js</text>
+  <text x="846" y="492" fill="#e9eae6">shell + router</text>
+
+  <g fill="none" stroke="#8fa9f0" stroke-width="2" marker-end="url(#a)">
+    <path d="M1070 420 C1140 420 1120 230 1200 230"/>
+    <path d="M1070 445 C1150 445 1120 340 1200 340"/>
+    <path d="M1070 460 L1200 460"/>
+    <path d="M1070 475 C1150 475 1120 580 1200 580"/>
+    <path d="M1070 500 C1140 500 1120 690 1200 690"/>
+  </g>
+  <g fill="none" stroke="#4a4e56" stroke-width="2">
+    <rect x="1210" y="195" width="270" height="70" rx="10"/>
+    <rect x="1210" y="305" width="270" height="70" rx="10"/>
+    <rect x="1210" y="425" width="270" height="70" rx="10"/>
+    <rect x="1210" y="545" width="270" height="70" rx="10"/>
+    <rect x="1210" y="655" width="270" height="70" rx="10"/>
+  </g>
+  <g fill="#e9eae6">
+    <text x="1236" y="238">/checkout</text>
+    <text x="1236" y="348">/staking</text>
+    <text x="1236" y="468">/api-suite</text>
+    <text x="1236" y="588">/nodes</text>
+    <text x="1236" y="698">/portfolio</text>
+  </g>
+  <text x="820" y="790" fill="#e9eae6" font-family="'Geist', system-ui, sans-serif" font-size="30" font-weight="600">route chunks</text>
+  <text x="820" y="828" fill="#a2a6ad">loaded on navigation, prefetched on intent</text>
+</svg>

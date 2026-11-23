@@ -27,3 +27,6 @@ pnpm-debug.log*
 .superpowers/
 # lighthouse
 .lighthouseci/
+
+# wrangler local runtime state
+.wrangler/

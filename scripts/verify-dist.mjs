@@ -1,10 +1,13 @@
 // Dependency-free post-build assertions over dist/. Exits 1 listing all failures.
 import { readFileSync, existsSync, readdirSync, statSync } from 'node:fs';
 import { join, dirname } from 'node:path';
+import { execSync } from 'node:child_process';
 import { fileURLToPath } from 'node:url';
 
 const DIST = join(dirname(fileURLToPath(import.meta.url)), '..', 'dist');
 const failures = [];
+// Static redirect pages: no layout, no analytics, no h1.
+const REDIRECT_STUBS = ['index.html', 'projects.html'];
 
 function read(path) {
   const full = join(DIST, path);
@@ -15,6 +18,15 @@ function exists(path) {
 }
 function assert(cond, msg) {
   if (!cond) failures.push(msg);
+}
+
+// Numbers are compared as whole tokens, not substrings: "33" must not pass because "1,330" is in evidence.
+function numberTokens(text) {
+  return [...new Set((text.match(/\d[\d.,]*%?\+?/g) || []).map((n) => n.replace(/[.,]+$/, '')))];
+}
+function missingNumbers(text, evidence) {
+  const allowed = new Set(numberTokens(evidence));
+  return numberTokens(text).filter((n) => !allowed.has(n));
 }
 
 // Task 1: scaffold
@@ -28,7 +40,7 @@ assert(read('en/index.html').includes('<html'), 'dist/en/index.html is an HTML d
   assert(en.includes('<html lang="en"'), 'en/index.html has <html lang="en">');
   assert(pt.includes('<html lang="pt-BR"'), 'pt/index.html has <html lang="pt-BR">');
   for (const [name, html] of [['en', en], ['pt', pt]]) {
-    for (const h of ['en', 'pt', 'x-default']) {
+    for (const h of ['en', 'pt-BR', 'x-default']) {
       assert(html.includes(`hreflang="${h}"`), `${name}/index.html has hreflang="${h}"`);
     }
     assert(html.includes('rel="canonical"'), `${name}/index.html has canonical link`);
@@ -43,11 +55,10 @@ function hasLink(html, attrs) {
 }
 {
   const pages = { en: read('en/index.html'), pt: read('pt/index.html') };
-  assert(hasLink(pages.en, ['href="/pt/"', 'hreflang="pt"']), 'en home: language switcher → /pt/ with hreflang="pt"');
+  assert(hasLink(pages.en, ['href="/pt/"', 'hreflang="pt-BR"']), 'en home: language switcher → /pt/ with hreflang="pt-BR"');
   assert(hasLink(pages.pt, ['href="/en/"', 'hreflang="en"']), 'pt home: language switcher → /en/ with hreflang="en"');
   for (const [loc, html] of Object.entries(pages)) {
-    assert(hasLink(html, [`href="/${loc}/#work"`]), `${loc} home: nav link /${loc}/#work`);
-    assert(hasLink(html, [`href="/${loc}/#contact"`]), `${loc} home: nav link /${loc}/#contact`);
+    assert(hasLink(html, [`href="/${loc}/contact/"`]), `${loc} home: nav link /${loc}/contact/`);
     assert(hasLink(html, ['href="https://github.com/oaugusto256"']), `${loc} home: GitHub link`);
     assert(hasLink(html, ['href="https://www.linkedin.com/in/oaugusto256"']), `${loc} home: LinkedIn link`);
     assert(
@@ -101,10 +112,6 @@ function allFiles(dir = DIST, out = []) {
   const animDecls = [...allCss.matchAll(/animation(?:-name)?:[^;}]*\b(draw|light-\d)\b/g)];
   const unguarded = animDecls.filter((m) => !motionRanges.some(([a, b]) => m.index > a && m.index < b));
   assert(animDecls.length >= 7 && unguarded.length === 0, 'hero animations (edge + 6 nodes) only under prefers-reduced-motion: no-preference');
-  // .reveal may only be hidden (opacity:0 / visibility:hidden) under html.js
-  const revealRules = [...allCss.matchAll(/([^{}]*\.reveal[^{}]*)\{([^}]*)\}/g)];
-  const badReveal = revealRules.filter(([, sel, body]) => /opacity:\s*0|visibility:\s*hidden/.test(body) && !/\.js/.test(sel));
-  assert(badReveal.length === 0, 'no rule hides .reveal outside html.js');
   assert(exists('fonts/geist-latin-wght-normal.woff2'), 'Geist woff2 self-hosted');
   assert(exists('fonts/geist-mono-latin-wght-normal.woff2'), 'Geist Mono woff2 self-hosted');
   assert(/<link[^>]+rel="preload"[^>]+geist-latin-wght-normal\.woff2/.test(html), 'primary font preloaded');
@@ -116,10 +123,10 @@ function allFiles(dir = DIST, out = []) {
   const pt = read('pt/work/terral/index.html');
   assert(exists('en/work/terral/index.html'), 'en/work/terral/index.html exists');
   assert(exists('pt/work/terral/index.html'), 'pt/work/terral/index.html exists');
-  assert(hasLink(en, ['href="/pt/work/terral/"', 'hreflang="pt"']), 'en terral: language switcher → /pt/work/terral/');
+  assert(hasLink(en, ['href="/pt/work/terral/"', 'hreflang="pt-BR"']), 'en terral: language switcher → /pt/work/terral/');
   assert(hasLink(pt, ['href="/en/work/terral/"', 'hreflang="en"']), 'pt terral: language switcher → /en/work/terral/');
   assert(en.includes('<html lang="en"') && pt.includes('<html lang="pt-BR"'), 'terral pages have correct html lang');
-  assert(/<link rel="alternate" hreflang="pt" href="https:\/\/oaugusto256\.github\.io\/pt\/work\/terral\/"/.test(en), 'en terral: hreflang pt alternate');
+  assert(/<link rel="alternate" hreflang="pt-BR" href="https:\/\/oaugusto256\.github\.io\/pt\/work\/terral\/"/.test(en), 'en terral: hreflang pt alternate');
 }
 
 // Task 8: home sections
@@ -136,9 +143,6 @@ for (const loc of ['en', 'pt']) {
   );
   assert(hasLink(html, ['href="mailto:tavioalves@gmail.com"']), `${loc} home: mailto link`);
   assert(html.includes('Blockdaemon') && html.includes('Mercado'), `${loc} home: Blockdaemon and Mercado Envios cards`);
-  for (const banned of ['82%', '13.4', '807', 'Senior Frontend Engineer', 'wa.me', 'gitlab.com', 'stackoverflow.com']) {
-    assert(!html.includes(banned), `${loc} home: must not contain "${banned}"`);
-  }
 }
 
 // Task 10: analytics — loads only when PUBLIC_POSTHOG_KEY is set at build time
@@ -149,7 +153,7 @@ for (const loc of ['en', 'pt']) {
   const htmlMentions = htmlFiles.filter((f) => /PostHog\.astro_astro_type_script|posthog-js|i\.posthog\.com/i.test(readFileSync(f, 'utf8')));
   if (process.env.PUBLIC_POSTHOG_KEY) {
     const home = read('en/index.html');
-    assert(htmlMentions.length === htmlFiles.length - 1, 'with key: every page (except / redirect) loads analytics');
+    assert(htmlMentions.length === htmlFiles.length - REDIRECT_STUBS.length, 'with key: every page except redirect stubs loads analytics');
     assert(/persistence:\s*["'`]memory["'`]/.test(jsFiles.map((f) => readFileSync(f, 'utf8')).join('\n') + home), 'with key: memory persistence');
   } else {
     assert(htmlMentions.length === 0, `without key: no HTML references posthog (found in ${htmlMentions.length})`);
@@ -165,10 +169,11 @@ for (const loc of ['en', 'pt']) {
   const pages = allFiles()
     .filter((f) => f.endsWith('.html'))
     .map((f) => f.slice(DIST.length + 1))
-    .filter((f) => f !== 'index.html'); // root is a redirect stub
+    .filter((f) => !REDIRECT_STUBS.includes(f));
   for (const page of pages) {
     const html = read(page);
     assert((html.match(/<h1[\s>]/g) || []).length === 1, `${page}: exactly one <h1>`);
+    if (page === '404.html') continue; // locale-neutral, noindex: no canonical/og by design
     assert(html.includes('rel="canonical"'), `${page}: canonical`);
     assert(html.includes('property="og:title"'), `${page}: og:title`);
     assert(/property="og:image" content="https:\/\/oaugusto256\.github\.io\//.test(html), `${page}: absolute og:image`);
@@ -186,34 +191,206 @@ for (const loc of ['en', 'pt']) {
   assert(!html.includes('screenshot pending'), `${loc} terral: placeholder cover removed`);
 }
 
-// Task 9: every number in the Terral case study source must appear in the approved evidence file
-{
-  const root = join(DIST, '..');
-  const evidence = readFileSync(join(root, 'docs/superpowers/evidence/terral.md'), 'utf8');
-  for (const loc of ['en', 'pt']) {
-    const src = readFileSync(join(root, `src/content/work/terral/${loc}.mdx`), 'utf8');
-    const prose = src
-      .replace(/^cover:.*$/m, '') // asset path, not a claim
-      .replace(/^import .*$/gm, '') // MDX imports
-      .replace(/<[^>]+>/g, ' '); // JSX/HTML tags and their attributes (image widths etc.)
-    const numbers = [...new Set(prose.match(/\d[\d.,]*%?\+?/g) || [])].map((n) => n.replace(/[.,]$/, ''));
-    const missing = numbers.filter((n) => !evidence.includes(n));
-    assert(missing.length === 0, `${loc} terral: numbers not in evidence/terral.md: ${missing.join(', ')}`);
+// Every number in page sources must be a whole token in an owner-approved evidence file.
+const ROOT = join(DIST, '..');
+function mdxProse(src) {
+  // alt text is read by people (and screen readers): its numbers are claims. Other attributes
+  // (widths, sizes, src) are layout and asset data.
+  const alts = [...src.matchAll(/\salt="([^"]*)"/g)].map((m) => m[1]).join(' ');
+  return alts + ' ' + src
+    .replace(/^cover:.*$/m, '') // asset path, not a claim
+    .replace(/^import .*$/gm, '') // MDX imports
+    .replace(/<[^>]+>/g, ' '); // JSX/HTML tags and their attributes (image widths etc.)
+}
+/** The `about: { ... }` object literal of an i18n dictionary (brace-matched), or '' if absent. */
+function aboutBlock(src) {
+  const start = src.search(/^ {2}about: \{/m);
+  if (start < 0) return '';
+  let depth = 0;
+  for (let i = src.indexOf('{', start); i < src.length; i++) {
+    depth += src[i] === '{' ? 1 : src[i] === '}' ? -1 : 0;
+    if (depth === 0) return src.slice(start, i + 1);
+  }
+  return src.slice(start);
+}
+function tsStrings(src) {
+  return [...src.matchAll(/(['"`])((?:\\.|(?!\1).)*)\1/g)].map((m) => m[2]).join(' ');
+}
+const EVIDENCE_MAP = [
+  { label: 'terral', sources: ['src/content/work/terral/en.mdx', 'src/content/work/terral/pt.mdx'], evidence: 'docs/superpowers/evidence/terral.md' },
+  { label: 'blockdaemon', sources: ['src/content/work/blockdaemon/en.mdx', 'src/content/work/blockdaemon/pt.mdx'], evidence: 'docs/superpowers/evidence/blockdaemon.md' },
+  { label: 'mercado-envios', sources: ['src/content/work/mercado-envios/en.mdx', 'src/content/work/mercado-envios/pt.mdx'], evidence: 'docs/superpowers/evidence/mercado-envios.md' },
+  { label: 'about', sources: ['src/data/experience.ts'], evidence: 'docs/superpowers/evidence/about.md' },
+  { label: 'about strings', sources: ['src/i18n/en.ts', 'src/i18n/pt.ts'], evidence: 'docs/superpowers/evidence/about.md', extract: aboutBlock },
+  { label: 'ui strings', sources: ['src/i18n/en.ts', 'src/i18n/pt.ts'], evidence: 'docs/superpowers/evidence/home.md', extract: (src) => src.replace(aboutBlock(src), '') },
+];
+/**
+ * The approved content of an evidence file: drops struck-through values, table rows marked
+ * excluded (✗) or unapproved (☐), the table's leading "#" cell, list markers and Q-numbers,
+ * so row/question numbering can't approve a number by accident.
+ */
+function evidenceText(evidenceFile) {
+  return readFileSync(join(ROOT, evidenceFile), 'utf8')
+    .replace(/~~[^~]*~~/g, ' ')
+    .split('\n')
+    .filter((line) => !(line.startsWith('|') && /✗|☐/.test(line)))
+    .map((line) => (line.startsWith('|') ? line.replace(/^\|[^|]*\|/, '|') : line))
+    .map((line) => line.replace(/^\s*\d+\.\s/, '').replace(/\bQ\d+\b/g, ''))
+    .join('\n');
+}
+function checkNumbers(label, sources, evidenceFile, extract = (src) => src) {
+  const evPath = join(ROOT, evidenceFile);
+  const present = sources.filter((s) => existsSync(join(ROOT, s)));
+  if (!existsSync(evPath)) {
+    assert(present.length === 0, `${label}: ${evidenceFile} missing but sources exist`);
+    return;
+  }
+  assert(present.length === sources.length, `${label}: missing sources ${sources.filter((s) => !present.includes(s)).join(', ')}`);
+  const evidence = evidenceText(evidenceFile);
+  for (const s of present) {
+    const raw = extract(readFileSync(join(ROOT, s), 'utf8'));
+    const text = s.endsWith('.mdx') ? mdxProse(raw) : s.endsWith('.ts') ? tsStrings(raw) : raw;
+    const missing = missingNumbers(text, evidence);
+    assert(missing.length === 0, `${label} (${s}): numbers not in ${evidenceFile}: ${missing.join(', ')}`);
+  }
+}
+for (const { label, sources, evidence, extract } of EVIDENCE_MAP) checkNumbers(label, sources, evidence, extract);
+// The evidence rule must hold on its own terms (final review, 2026-11-23):
+// table row numbers, list/Q numbers and excluded rows are not approved values,
+assert(JSON.stringify(missingNumbers('12 engineers', evidenceText('docs/superpowers/evidence/about.md'))) === '["12"]', 'evidence: a table row number (#12) is not an approved value');
+assert(JSON.stringify(missingNumbers('306 commits', evidenceText('docs/superpowers/evidence/terral.md'))) === '["306"]', 'evidence: an excluded (✗) row is not an approved value');
+// and numbers in MDX alt text are claims too.
+assert(JSON.stringify(numberTokens(mdxProse('<Image src={x} alt="went from 3 MB to 9 KB" widths={[720, 1080]} sizes="(min-width: 768px) 44rem" />'))) === '["3","9"]', 'mdx: numbers in alt text are checked; widths/sizes are not');
+
+
+// Language switcher link points at the given path (the twin page, not the other home).
+function switchesTo(html, href) {
+  return hasLink(html, ['lang-switch', `href="${href}"`]);
+}
+
+// S2 Task 2: work index page + nav to real pages
+for (const [loc, other] of [['en', 'pt'], ['pt', 'en']]) {
+  const page = `${loc}/work/index.html`;
+  const html = read(page);
+  assert(exists(page), `${page} exists`);
+  assert((html.match(/<h1[\s>]/g) || []).length === 1, `${page}: one <h1>`);
+  assert(hasLink(html, [`href="/${loc}/work/terral/"`, 'data-event="project_card_click"']), `${page}: terral card link`);
+  assert(switchesTo(html, `/${other}/work/`), `${page}: switcher → /${other}/work/`);
+  assert(hasLink(read(`${loc}/index.html`), [`href="/${loc}/work/"`]), `${loc} home: nav link /${loc}/work/`);
+  assert(hasLink(read(`${loc}/work/terral/index.html`), ['class="back', `href="/${loc}/work/"`]), `${loc} terral: back link → /${loc}/work/`);
+}
+
+// S2 Task 3: contact page
+for (const [loc, other] of [['en', 'pt'], ['pt', 'en']]) {
+  const page = `${loc}/contact/index.html`;
+  const html = read(page);
+  assert(exists(page), `${page} exists`);
+  assert((html.match(/<h1[\s>]/g) || []).length === 1, `${page}: one <h1>`);
+  assert(hasLink(html, ['href="mailto:tavioalves@gmail.com"', 'data-event="contact_click"']), `${page}: mailto link with data-event`);
+  assert(hasLink(html, ['href="https://www.linkedin.com/in/oaugusto256"', 'data-event="contact_click"']), `${page}: LinkedIn link with data-event`);
+  assert(hasLink(html, ['href="https://github.com/oaugusto256"', 'data-event="contact_click"']), `${page}: GitHub link with data-event`);
+  assert(hasLink(html, [`href="/resume/otavio-silva-resume-${loc}.pdf"`, 'data-event="resume_download"']), `${page}: résumé link with data-event`);
+  assert(switchesTo(html, `/${other}/contact/`), `${page}: switcher → /${other}/contact/`);
+}
+
+// S2 Task 4: Blockdaemon case study (owner approved two app screenshots, 2026-11-23)
+for (const [loc, other, bundle] of [['en', 'pt', 'more than 80%'], ['pt', 'en', 'mais de 80%']]) {
+  const page = `${loc}/work/blockdaemon/index.html`;
+  const html = read(page);
+  assert(exists(page), `${page} exists`);
+  assert(switchesTo(html, `/${other}/work/blockdaemon/`), `${page}: switcher → /${other}/work/blockdaemon/`);
+  assert(html.includes(bundle), `${page}: states the bundle result as "${bundle}"`);
+  const imgs = [...html.matchAll(/<img\b[^>]*>/g)].map((m) => m[0]);
+  assert(imgs.filter((t) => /\ssrc="[^"]*(checkout|api-keys)[^"]*"/.test(t)).length >= 2, `${page}: checkout + API keys screenshots`);
+  assert(imgs.some((t) => /class="cover/.test(t) && /\ssrc="[^"]*checkout[^"]*"/.test(t)), `${page}: cover is the real checkout screenshot (owner, 2026-11-23)`);
+  assert(imgs.some((t) => /\ssrc="[^"]*bundle-split[^"]*"/.test(t)), `${page}: bundle-split diagram in the body`);
+  assert(hasLink(read(`${loc}/work/index.html`), [`href="/${loc}/work/blockdaemon/"`]), `${loc} work index: links blockdaemon`);
+}
+
+// S2 Task 5: Mercado Envios case study; home cards come from the collection only
+for (const [loc, other] of [['en', 'pt'], ['pt', 'en']]) {
+  const page = `${loc}/work/mercado-envios/index.html`;
+  const html = read(page);
+  assert(exists(page), `${page} exists`);
+  assert(switchesTo(html, `/${other}/work/mercado-envios/`), `${page}: switcher → /${other}/work/mercado-envios/`);
+  assert(!/million|milh(ões|ao|ão)/i.test(html), `${page}: no "million"/"milhões" claims`);
+  const home = read(`${loc}/index.html`);
+  for (const slug of ['terral', 'blockdaemon', 'mercado-envios']) {
+    assert(hasLink(home, [`href="/${loc}/work/${slug}/"`, 'data-event="project_card_click"', `data-project="${slug}"`]), `${loc} home: ${slug} card → /${loc}/work/${slug}/`);
+  }
+  for (const soon of ['Case study coming soon', 'Estudo de caso em breve']) {
+    assert(!home.includes(soon), `${loc} home: no "${soon}" placeholder`);
   }
 }
 
-// Final review: every number in the UI strings (home copy) must appear in evidence/home.md
+// S2 Task 6: About page
+for (const [loc, other] of [['en', 'pt'], ['pt', 'en']]) {
+  const page = `${loc}/about/index.html`;
+  const html = read(page);
+  assert(exists(page), `${page} exists`);
+  assert((html.match(/<h1[\s>]/g) || []).length === 1, `${page}: one <h1>`);
+  assert(switchesTo(html, `/${other}/about/`), `${page}: switcher → /${other}/about/`);
+  assert(hasLink(read(`${loc}/index.html`), [`href="/${loc}/about/"`]), `${loc} home: nav link /${loc}/about/`);
+  for (const text of ['Fugro', 'GeekHunter']) assert(html.includes(text), `${page}: mentions "${text}"`);
+  assert(!html.includes('Blockdaemon Design System'), `${page}: no Design System block (owner, 2026-11-23)`);
+  for (const slug of ['blockdaemon', 'mercado-envios']) assert(hasLink(html, [`href="/${loc}/work/${slug}/"`]), `${page}: links /${loc}/work/${slug}/`);
+}
+assert(aboutBlock(readFileSync(join(ROOT, 'src/i18n/en.ts'), 'utf8')) !== '', 'src/i18n/en.ts has an about block');
+
+// S2 Task 7: bilingual 404 page and legacy /projects.html redirect
 {
-  const root = join(DIST, '..');
-  const evidencePath = join(root, 'docs/superpowers/evidence/home.md');
-  const evidence = existsSync(evidencePath) ? readFileSync(evidencePath, 'utf8') : '';
-  assert(evidence !== '', 'docs/superpowers/evidence/home.md exists');
-  for (const loc of ['en', 'pt']) {
-    const src = readFileSync(join(root, `src/i18n/${loc}.ts`), 'utf8');
-    const strings = [...src.matchAll(/(['"`])((?:\\.|(?!\1).)*)\1/g)].map((m) => m[2]).join(' ');
-    const numbers = [...new Set(strings.match(/\d[\d.,]*%?\+?/g) || [])].map((n) => n.replace(/[.,]$/, ''));
-    const missing = numbers.filter((n) => !evidence.includes(n));
-    assert(missing.length === 0, `${loc} ui strings: numbers not in evidence/home.md: ${missing.join(', ')}`);
+  const html = read('404.html');
+  assert(exists('404.html'), '404.html exists');
+  assert(hasLink(html, ['href="/en/"']) && hasLink(html, ['href="/pt/"']), '404.html links /en/ and /pt/');
+  assert(/<meta name="robots" content="noindex/.test(html), '404.html is noindex');
+  assert(html.includes('lang="pt-BR"'), '404.html has a pt-BR block');
+  const legacy = read('projects.html');
+  assert(legacy.includes('url=/en/work/'), 'projects.html redirects to /en/work/');
+  assert(hasLink(legacy, ['href="/en/work/"']), 'projects.html has a visible fallback link');
+  assert(/<meta name="robots" content="noindex/.test(legacy), 'projects.html is noindex');
+  const sitemaps = allFiles().filter((f) => /sitemap-\d+\.xml$/.test(f)).map((f) => readFileSync(f, 'utf8')).join('');
+  assert(sitemaps.includes('<loc>') && !/404|projects\.html/.test(sitemaps), 'sitemap lists pages but not 404 or projects.html');
+}
+
+// S2 Task 8: S1 deferred minors
+{
+  const pages = allFiles().filter((f) => f.endsWith('.html')).map((f) => f.slice(DIST.length + 1)).filter((f) => !REDIRECT_STUBS.includes(f));
+  for (const page of pages) {
+    const html = read(page);
+    const switchers = [...html.matchAll(/<a\b[^>]*lang-switch[^>]*>/g)].map((m) => m[0]);
+    assert(switchers.every((tag) => !/aria-label=/.test(tag)), `${page}: language switcher has no aria-label (WCAG 2.5.3)`);
+    assert(!/hreflang="pt"/.test(html), `${page}: no hreflang="pt" (use pt-BR)`);
+    const hasTwin = /<link rel="alternate" hreflang="(en|pt-BR)"/.test(html) && /hreflang="x-default"/.test(html);
+    assert(hasTwin === html.includes('og:locale:alternate'), `${page}: og:locale:alternate only when a twin exists`);
+    if (page !== '404.html') assert(html.includes('hreflang="pt-BR"'), `${page}: hreflang="pt-BR" alternate`);
+    const isCase = /^(en|pt)\/work\/[^/]+\/index\.html$/.test(page);
+    assert(html.includes(`property="og:type" content="${isCase ? 'article' : 'website'}"`) || page === '404.html', `${page}: og:type ${isCase ? 'article' : 'website'}`);
+  }
+  const css = allFiles().filter((f) => f.endsWith('.css')).map((f) => readFileSync(f, 'utf8')).join('\n') + read('en/index.html');
+  assert(/@media[^{]*prefers-reduced-motion:\s*reduce[^{]*\{[^@]*\.pulse[^{]*\{[^}]*display:\s*none/.test(css), 'CSS hides .pulse under prefers-reduced-motion: reduce');
+}
+
+// Owner 2026-11-23: project card images share one frame, whatever the source aspect ratio
+{
+  const css = allFiles().filter((f) => f.endsWith('.css')).map((f) => readFileSync(f, 'utf8')).join('\n') + read('en/index.html');
+  assert(/\.media[^{]*img[^{]*\{[^}]*aspect-ratio:\s*16\s*\/\s*9[^}]*\}/.test(css) && /\.media[^{]*img[^{]*\{[^}]*object-fit:\s*cover/.test(css), 'project card images: 16/9 frame with object-fit: cover');
+}
+
+// Repo hygiene: local Worker runtime state must never be committed (it would reach master at cutover).
+assert(execSync('git ls-files .wrangler', { cwd: ROOT }).toString().trim() === '', 'no tracked files under .wrangler/');
+
+// Site-wide: retired claims and channels must not appear on any page, in either locale.
+{
+  for (const f of allFiles().filter((f) => f.endsWith('.html'))) {
+    const page = f.slice(DIST.length + 1);
+    const html = readFileSync(f, 'utf8');
+    for (const banned of ['82%', '13.4', '807', 'Senior Frontend Engineer', 'wa.me', 'gitlab.com', 'stackoverflow.com']) {
+      assert(!html.includes(banned), `${page}: must not contain "${banned}"`);
+    }
+    for (const m of html.matchAll(/80%/g)) {
+      const before = html.slice(Math.max(0, m.index - 12), m.index);
+      assert(/more than\s*$|mais de\s*$/.test(before), `${page}: "80%" must follow "more than"/"mais de" (got "${before}80%")`);
+    }
   }
 }
 

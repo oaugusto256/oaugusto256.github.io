@@ -130,6 +130,12 @@ const nodes = [
    * length / 580 → 0, 16.9, 26.6, 43.4, 53.1, 70%. Without motion the
    * diagram stays static as styled above.
    */
+  /* Reduced motion: no dot at all (a static one would sit on the "problem" label). */
+  @media (prefers-reduced-motion: reduce) {
+    .pulse {
+      display: none;
+    }
+  }
   @property --lit {
     syntax: '<number>';
     inherits: true;

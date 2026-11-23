@@ -15,21 +15,19 @@ const bySlug = new Map(entries.map((e) => [slugOf(e), e]));
 
 const cards = featured.map(({ slug, emphasis }) => {
   const entry = bySlug.get(slug);
-  if (entry) {
-    return {
-      slug,
-      emphasis,
-      title: entry.data.title,
-      summary: entry.data.summary,
-      role: entry.data.role,
-      tags: entry.data.stack.slice(0, 5),
-      href: localePath(locale, `/work/${slug}/`),
-      image: entry.data.cover,
-      imageAlt: entry.data.coverAlt,
-    };
-  }
-  const p = t.projects[slug as keyof typeof t.projects];
-  return { slug, emphasis, ...p };
+  // Fail the build loudly rather than render a dead-end card.
+  if (!entry) throw new Error(`SelectedWork: featured slug "${slug}" has no ${locale} entry in src/content/work/`);
+  return {
+    slug,
+    emphasis,
+    title: entry.data.title,
+    summary: entry.data.summary,
+    role: entry.data.role,
+    tags: entry.data.stack.slice(0, 5),
+    href: localePath(locale, `/work/${slug}/`),
+    image: entry.data.cover,
+    imageAlt: entry.data.coverAlt,
+  };
 });
 const [primary, ...rest] = cards;
 ---
@@ -37,9 +35,9 @@ const [primary, ...rest] = cards;
 <section id="work" class="section" aria-labelledby="work-title">
   <div class="container">
     <h2 id="work-title">{t.workTitle}</h2>
-    {primary && <ProjectCard {...primary} linkLabel={primary.href ? t.readCase : t.caseSoon} />}
+    {primary && <ProjectCard {...primary} linkLabel={t.readCase} />}
     <div class="rest">
-      {rest.map((c) => <ProjectCard {...c} linkLabel={c.href ? t.readCase : t.caseSoon} />)}
+      {rest.map((c) => <ProjectCard {...c} linkLabel={t.readCase} />)}
     </div>
   </div>
 </section>

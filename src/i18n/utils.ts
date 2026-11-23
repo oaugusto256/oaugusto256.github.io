@@ -24,13 +24,6 @@ export function localePath(locale: Locale, path: string): string {
   return clean ? `/${locale}/${clean}/` : `/${locale}/`;
 }
 
-/** Replace the first path segment (the locale) with `target`. */
-export function swapLocale(pathname: string, target: Locale): string {
-  const parts = pathname.split('/').filter(Boolean);
-  if (parts.length && (locales as readonly string[]).includes(parts[0])) parts.shift();
-  return localePath(target, parts.join('/'));
-}
-
 export function isLocale(value: unknown): value is Locale {
   return typeof value === 'string' && (locales as readonly string[]).includes(value);
 }

@@ -1,0 +1,21 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import ContactBlock from '../../components/home/ContactBlock.astro';
+import { localePath, locales, otherLocale, useT, type Locale } from '../../i18n/utils';
+
+export function getStaticPaths() {
+  return locales.map((locale) => ({ params: { locale } }));
+}
+
+const locale = Astro.params.locale as Locale;
+const t = useT(locale);
+---
+
+<BaseLayout
+  locale={locale}
+  title={t.contactPage.metaTitle}
+  description={t.contactPage.metaDescription}
+  alternate={localePath(otherLocale(locale), '/contact/')}
+>
+  <ContactBlock locale={locale} headingLevel={1} />
+</BaseLayout>

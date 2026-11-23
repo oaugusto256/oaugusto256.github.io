@@ -1,5 +1,5 @@
 ---
-import { localePath, otherLocale, useT, type Locale } from '../../i18n/utils';
+import { htmlLang, localePath, otherLocale, useT, type Locale } from '../../i18n/utils';
 
 interface Props {
   locale: Locale;
@@ -16,13 +16,12 @@ const href = alternate ?? localePath(target, '/');
 <a
   class="lang-switch mono"
   href={href}
-  hreflang={target}
-  lang={target === 'pt' ? 'pt-BR' : 'en'}
-  aria-label={tt.nav.switchLabel}
+  hreflang={htmlLang(target)}
+  lang={htmlLang(target)}
   data-event="language_switch"
   data-from={locale}
   data-to={target}
 >
-  {target.toUpperCase()}
+  {target.toUpperCase()}<span class="visually-hidden"> — {tt.nav.switchLabel}</span>
   {!alternate && <span class="lang-note">{tt.nav.notTranslated}</span>}
 </a>

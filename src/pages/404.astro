@@ -1,0 +1,76 @@
+---
+// Locale-neutral: GitHub Pages and the Worker serve this for any unknown path, in either language.
+import PostHog from '../components/analytics/PostHog.astro';
+import { person } from '../data/site';
+import '../styles/tokens.css';
+import '../styles/typography.css';
+import '../styles/global.css';
+---
+
+<!doctype html>
+<html lang="en" class="no-js">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <script is:inline>document.documentElement.classList.replace('no-js', 'js');</script>
+    <meta name="robots" content="noindex" />
+    <meta name="theme-color" content="#202226" />
+    <title>Page not found · Página não encontrada — Otavio Silva</title>
+    <meta name="description" content="This page does not exist. Esta página não existe." />
+    <link rel="icon" href="/favicon.ico" sizes="any" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/icons/favicon-32x32.png" />
+  </head>
+  <body>
+    <main id="main" class="on-dark">
+      <div class="container">
+        <a class="brand" href="/en/">{person.name}</a>
+        <p class="code mono" aria-hidden="true">404</p>
+        <section aria-labelledby="nf-en">
+          <h1 id="nf-en">Page not found</h1>
+          <p>This page doesn't exist or has moved.</p>
+          <p><a href="/en/">Go to the home page</a> · <a href="/en/work/">See my work</a></p>
+        </section>
+        <section lang="pt-BR" aria-labelledby="nf-pt">
+          <h2 id="nf-pt">Página não encontrada</h2>
+          <p>Esta página não existe ou mudou de endereço.</p>
+          <p><a href="/pt/">Ir para a página inicial</a> · <a href="/pt/work/">Ver meus projetos</a></p>
+        </section>
+      </div>
+    </main>
+    <PostHog />
+  </body>
+</html>
+
+<style>
+  main {
+    min-height: 100vh;
+    padding-block: var(--space-12) var(--space-20);
+  }
+  .brand {
+    display: inline-block;
+    font-weight: 600;
+    text-decoration: none;
+    color: inherit;
+    margin-bottom: var(--space-16);
+  }
+  .code {
+    color: var(--color-muted-dark);
+    margin-bottom: var(--space-4);
+  }
+  section {
+    max-width: 36em;
+    margin-bottom: var(--space-12);
+  }
+  h1,
+  h2 {
+    font-size: var(--step-5);
+    margin-bottom: var(--space-4);
+  }
+  p {
+    color: var(--color-muted-dark);
+    margin-bottom: var(--space-3);
+  }
+  a {
+    color: var(--color-accent-dark);
+  }
+</style>

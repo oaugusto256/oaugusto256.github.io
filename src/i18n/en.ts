@@ -5,6 +5,7 @@ export const en = {
   nav: {
     label: 'Main',
     work: 'Work',
+    about: 'About',
     contact: 'Contact',
     resume: 'Résumé',
     open: 'Open menu',
@@ -18,40 +19,46 @@ export const en = {
   },
   work: {
     caseStudy: 'Case study',
-    back: 'Back to selected work',
+    back: 'All work',
     role: 'Role',
     period: 'Period',
     stack: 'Stack',
     links: 'Links',
   },
+  workIndex: {
+    title: 'Work',
+    intro: 'Case studies from products I have built and shipped, from problem to production.',
+    metaTitle: 'Work — Otavio Silva',
+    metaDescription: 'Case studies by Otavio Silva, Product Engineer: product and engineering decisions, approach and results.',
+  },
+  contactPage: {
+    metaTitle: 'Contact — Otavio Silva',
+    metaDescription: 'Get in touch with Otavio Silva, Product Engineer in Florianópolis, Brazil: email, LinkedIn, GitHub and résumé.',
+  },
+  about: {
+    metaTitle: 'About — Otavio Silva',
+    metaDescription: 'Otavio Silva, Product Engineer in Florianópolis, Brazil: 10+ years building web products, most of them as a front-end engineer, now working end to end. Currently at Fugro.',
+    title: 'About',
+    intro: [
+      "I've spent 10+ years building web products, most of them as a front-end engineer: React and TypeScript, design systems, performance, checkout and subscription flows. I work at Fugro today, after Blockdaemon and Mercado Livre.",
+      'Over time my work has moved toward the product: owning a feature from the problem to production, including the APIs, infrastructure, deployment and measurement around it. On my own, I designed, built and run terral.surf, a surf forecast for Florianópolis, end to end.',
+      "That is the work I want more of: product engineering, from the user's problem to the numbers after launch. I use AI-assisted, agentic workflows (Claude Code, Codex, MCP) to move faster; the judgment and the quality bar stay mine.",
+    ],
+    nowTitle: 'Now',
+    timelineTitle: 'Experience',
+    educationTitle: 'Education',
+  },
   home: {
     role: 'Product Engineer',
     location: 'Florianópolis, Brazil',
     headline: 'I turn complex problems into thoughtful digital products.',
-    lede: "I'm a Product Engineer with 10+ years of experience building scalable software, crafting user experiences and solving complex engineering challenges. I combine strong frontend foundations with full-stack ownership, product thinking and AI-assisted workflows.",
+    lede: "I've built web products for 10+ years, most of them as a front-end engineer. Now I work end to end, as a product engineer: from the problem and the people who have it to the API, the deploy and the numbers, with AI-assisted workflows to move faster.",
     ctaWork: 'Explore selected work',
     ctaResume: 'View résumé',
     mapLabel: 'Diagram of how I work: from the problem, through users and a product decision, to building, shipping and measuring.',
     map: ['problem', 'users', 'decision', 'build', 'ship', 'measure'],
     workTitle: 'Selected work',
     readCase: 'Read the case study',
-    caseSoon: 'Case study coming soon',
-    projects: {
-      blockdaemon: {
-        title: 'Blockdaemon',
-        summary:
-          'Institutional blockchain infrastructure platform. I built checkout and subscription flows and staking dashboards, led the design system upgrade and the React 17 to 19 migration, and led a performance initiative that cut the JavaScript entry bundle by more than 80%.',
-        role: 'Front-end, then Senior Front-end Engineer · 2021–2026',
-        tags: ['React', 'TypeScript', 'Design systems', 'Web performance', 'Checkout'],
-      },
-      'mercado-envios': {
-        title: 'Mercado Envios',
-        summary:
-          "Internal warehouse tooling for Mercado Livre's logistics operation. I designed BFF services, documented data flows in RFCs and contributed to 450+ production releases across micro-frontends.",
-        role: 'Front-end Engineer · 2020–2021',
-        tags: ['React', 'TypeScript', 'BFF', 'Micro-frontends', 'RFCs'],
-      },
-    },
     philosophyTitle: 'How I work',
     pillars: [
       { title: 'Product thinking', body: 'Understand users, problems, constraints and business context before choosing a solution.' },

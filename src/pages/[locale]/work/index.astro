@@ -1,0 +1,68 @@
+---
+import BaseLayout from '../../../layouts/BaseLayout.astro';
+import ProjectCard from '../../../components/home/ProjectCard.astro';
+import { getWork, slugOf } from '../../../content/work';
+import { localePath, locales, otherLocale, useT, type Locale } from '../../../i18n/utils';
+
+export function getStaticPaths() {
+  return locales.map((locale) => ({ params: { locale } }));
+}
+
+const locale = Astro.params.locale as Locale;
+const t = useT(locale);
+const entries = await getWork(locale);
+---
+
+<BaseLayout
+  locale={locale}
+  title={t.workIndex.metaTitle}
+  description={t.workIndex.metaDescription}
+  alternate={localePath(otherLocale(locale), '/work/')}
+>
+  <section class="section" aria-labelledby="work-index-title">
+    <div class="container">
+      <h1 id="work-index-title">{t.workIndex.title}</h1>
+      <p class="intro">{t.workIndex.intro}</p>
+      <ul class="list">
+        {
+          entries.map((entry) => {
+            const slug = slugOf(entry);
+            return (
+              <li>
+                <ProjectCard
+                  slug={slug}
+                  emphasis="secondary"
+                  headingLevel={2}
+                  title={entry.data.title}
+                  summary={entry.data.summary}
+                  role={entry.data.role}
+                  tags={entry.data.stack.slice(0, 5)}
+                  href={localePath(locale, `/work/${slug}/`)}
+                  linkLabel={t.home.readCase}
+                />
+              </li>
+            );
+          })
+        }
+      </ul>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .section {
+    padding-block: var(--space-16) var(--space-20);
+  }
+  .intro {
+    color: var(--color-muted);
+    max-width: 34em;
+    margin-bottom: var(--space-12);
+  }
+  .list {
+    display: grid;
+    gap: var(--space-10);
+    list-style: none;
+    margin: 0;
+    padding: 0;
+  }
+</style>

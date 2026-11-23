@@ -2,6 +2,7 @@ name: CI
 
 on:
   push:
+    branches: [master, redesign]
   pull_request:
 
 permissions:
@@ -23,3 +24,8 @@ jobs:
       - run: npm run verify
       - name: Lighthouse CI
         run: npx --yes @lhci/cli@0.16.x autorun
+      # Exercise the with-analytics branch too (the key is a dummy; nothing is sent from CI).
+      - name: Build + verify with an analytics key
+        run: npm run build && npm run verify
+        env:
+          PUBLIC_POSTHOG_KEY: phc_ci_test
