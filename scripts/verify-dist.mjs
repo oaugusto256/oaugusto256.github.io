@@ -345,6 +345,12 @@ assert(aboutBlock(readFileSync(join(ROOT, 'src/i18n/en.ts'), 'utf8')) !== '', 's
   assert(/@media[^{]*prefers-reduced-motion:\s*reduce[^{]*\{[^@]*\.pulse[^{]*\{[^}]*display:\s*none/.test(css), 'CSS hides .pulse under prefers-reduced-motion: reduce');
 }
 
+// Owner 2026-11-23: project card images share one frame, whatever the source aspect ratio
+{
+  const css = allFiles().filter((f) => f.endsWith('.css')).map((f) => readFileSync(f, 'utf8')).join('\n') + read('en/index.html');
+  assert(/\.media[^{]*img[^{]*\{[^}]*aspect-ratio:\s*16\s*\/\s*9[^}]*\}/.test(css) && /\.media[^{]*img[^{]*\{[^}]*object-fit:\s*cover/.test(css), 'project card images: 16/9 frame with object-fit: cover');
+}
+
 // Site-wide: retired claims and channels must not appear on any page, in either locale.
 {
   for (const f of allFiles().filter((f) => f.endsWith('.html'))) {

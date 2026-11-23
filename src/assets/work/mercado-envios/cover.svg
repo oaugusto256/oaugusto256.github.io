@@ -55,7 +55,7 @@
   </g>
   <g fill="#a2a6ad">
     <text x="150" y="710">operator screen</text>
-    <text x="640" y="710">one API shaped for the screen</text>
+    <text x="640" y="710">an API for this screen</text>
     <text x="1130" y="710">Mercury</text>
   </g>
   <line x1="510" y1="675" x2="600" y2="675" stroke="#a2a6ad" stroke-width="2" marker-end="url(#m)"/>

@@ -108,9 +108,14 @@ const Heading = headingLevel === 2 ? 'h2' : 'h3';
   .secondary .more {
     color: var(--color-muted);
   }
+  /* One frame for every card image (screenshots ~2:1, diagrams 16:9, Terral 16:10). */
   .media :global(img) {
+    display: block;
     width: 100%;
     height: auto;
+    aspect-ratio: 16 / 9;
+    object-fit: cover;
+    object-position: top left;
     border-radius: var(--radius-media);
     border: 1px solid var(--color-border);
   }
