@@ -1,0 +1,71 @@
+---
+import { htmlLang, otherLocale, useT, type Locale } from '../i18n/utils';
+import Header from '../components/navigation/Header.astro';
+import Footer from '../components/layout/Footer.astro';
+import PostHog from '../components/analytics/PostHog.astro';
+import '../styles/tokens.css';
+import '../styles/typography.css';
+import '../styles/global.css';
+
+interface Props {
+  locale: Locale;
+  title: string;
+  description: string;
+  /** Path of this page in the other locale. Omit when no twin exists. */
+  alternate?: string;
+  ogImage?: string;
+  ogType?: 'website' | 'article';
+}
+
+const { locale, title, description, alternate, ogImage = '/og/default.png', ogType = 'website' } = Astro.props;
+const site = Astro.site ?? new URL('https://oaugusto256.github.io');
+const canonical = new URL(Astro.url.pathname.replace(/\/?$/, '/'), site).href;
+const other = otherLocale(locale);
+const alternateHref = alternate ? new URL(alternate, site).href : undefined;
+const enHref = locale === 'en' ? canonical : alternateHref;
+const ptHref = locale === 'pt' ? canonical : alternateHref;
+const t = useT(locale);
+const ogImageHref = new URL(ogImage, site).href;
+---
+
+<!doctype html>
+<html lang={htmlLang(locale)} class="no-js">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <script is:inline>document.documentElement.classList.replace('no-js', 'js');</script>
+    <link rel="preload" href="/fonts/geist-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin />
+    <meta name="theme-color" content="#202226" />
+    <title>{title}</title>
+    <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    {enHref && <link rel="alternate" hreflang="en" href={enHref} />}
+    {ptHref && <link rel="alternate" hreflang="pt-BR" href={ptHref} />}
+    {enHref && <link rel="alternate" hreflang="x-default" href={enHref} />}
+    <meta property="og:type" content={ogType} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:locale" content={locale === 'pt' ? 'pt_BR' : 'en_US'} />
+    {alternate && <meta property="og:locale:alternate" content={other === 'pt' ? 'pt_BR' : 'en_US'} />}
+    <meta property="og:image" content={ogImageHref} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <link rel="icon" href="/favicon.ico" sizes="any" />
+    <link rel="icon" type="image/png" sizes="32x32" href="/icons/favicon-32x32.png" />
+    <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png" />
+    <link rel="manifest" href="/icons/site.webmanifest" />
+  </head>
+  <body>
+    <a class="skip-link" href="#main">{t.a11y.skip}</a>
+    <Header locale={locale} alternate={alternate} />
+    <main id="main">
+      <slot />
+    </main>
+    <Footer locale={locale} />
+    <PostHog />
+  </body>
+</html>

@@ -1,14 +1,13 @@
 # Portfolio
 
-## What is it?
+Personal portfolio of Otavio Silva — Product Engineer, Florianópolis, Brazil.
 
-Simple portfolio to show some brief information about me and my social networks.
+Built with [Astro](https://astro.build) as a static, bilingual (EN/PT) site.
 
-## Feedbacks
+```bash
+npm install
+npm run dev
+npm run check && npm run lint && npm run build && npm run verify
+```
 
-I will be glad to listen any constructive feedback. Please, send an email to me: tavioalves@gmail.com
-
-# Design credits
-
-Ethereal by HTML5 UP
-html5up.net | @ajlkn
+The `master` branch still serves the previous site on GitHub Pages; the redesign lives on `redesign` until cutover.

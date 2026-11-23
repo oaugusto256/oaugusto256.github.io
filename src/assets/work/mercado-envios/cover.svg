@@ -1,0 +1,64 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="900" viewBox="0 0 1600 900" font-family="ui-monospace, 'Geist Mono', Menlo, monospace" font-size="22">
+  <rect width="1600" height="900" fill="#202226"/>
+  <defs>
+    <marker id="a" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#8fa9f0"/></marker>
+    <marker id="m" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" fill="#a2a6ad"/></marker>
+  </defs>
+
+  <!-- floor: packages land, get sorted, leave by route -->
+  <text x="120" y="130" fill="#a2a6ad">warehouse floor</text>
+  <g fill="none" stroke="#4a4e56" stroke-width="2">
+    <rect x="120" y="160" width="300" height="300" rx="12"/>
+    <rect x="1180" y="160" width="300" height="300" rx="12"/>
+  </g>
+  <g fill="#4a4e56">
+    <rect x="160" y="220" width="56" height="56" rx="6"/>
+    <rect x="236" y="220" width="56" height="56" rx="6"/>
+    <rect x="312" y="220" width="56" height="56" rx="6"/>
+    <rect x="198" y="296" width="56" height="56" rx="6"/>
+    <rect x="274" y="296" width="56" height="56" rx="6"/>
+  </g>
+  <text x="150" y="420" fill="#e9eae6">landing packages</text>
+
+  <rect x="620" y="220" width="360" height="180" rx="12" fill="#2447a8" stroke="#8fa9f0" stroke-width="2"/>
+  <text x="652" y="300" fill="#e9eae6" font-family="'Geist', system-ui, sans-serif" font-size="34" font-weight="600">sort</text>
+  <text x="652" y="344" fill="#e9eae6">the page I built</text>
+
+  <line x1="430" y1="310" x2="600" y2="310" stroke="#8fa9f0" stroke-width="2" marker-end="url(#a)"/>
+  <g fill="none" stroke="#8fa9f0" stroke-width="2" marker-end="url(#a)">
+    <path d="M980 270 C1080 270 1080 220 1170 220"/>
+    <path d="M980 310 L1170 310"/>
+    <path d="M980 350 C1080 350 1080 400 1170 400"/>
+  </g>
+  <g fill="none" stroke="#4a4e56" stroke-width="2">
+    <rect x="1210" y="195" width="240" height="50" rx="8"/>
+    <rect x="1210" y="285" width="240" height="50" rx="8"/>
+    <rect x="1210" y="375" width="240" height="50" rx="8"/>
+  </g>
+  <g fill="#e9eae6">
+    <text x="1232" y="228">route a</text>
+    <text x="1232" y="318">route b</text>
+    <text x="1232" y="408">route c</text>
+  </g>
+
+  <!-- stack: micro-frontend → BFF → WMS services -->
+  <text x="120" y="570" fill="#a2a6ad">behind the screen</text>
+  <g fill="none" stroke="#4a4e56" stroke-width="2">
+    <rect x="120" y="600" width="380" height="150" rx="12"/>
+    <rect x="1100" y="600" width="380" height="150" rx="12"/>
+  </g>
+  <rect x="610" y="600" width="380" height="150" rx="12" fill="none" stroke="#8fa9f0" stroke-width="2"/>
+  <g font-family="'Geist', system-ui, sans-serif" font-size="30" font-weight="600" fill="#e9eae6">
+    <text x="150" y="668">micro-frontend</text>
+    <text x="640" y="668">BFF</text>
+    <text x="1130" y="668">WMS services</text>
+  </g>
+  <g fill="#a2a6ad">
+    <text x="150" y="710">operator screen</text>
+    <text x="640" y="710">an API for this screen</text>
+    <text x="1130" y="710">Mercury</text>
+  </g>
+  <line x1="510" y1="675" x2="600" y2="675" stroke="#a2a6ad" stroke-width="2" marker-end="url(#m)"/>
+  <line x1="1000" y1="675" x2="1090" y2="675" stroke="#a2a6ad" stroke-width="2" marker-end="url(#m)"/>
+  <line x1="800" y1="410" x2="800" y2="590" stroke="#4a4e56" stroke-width="2" stroke-dasharray="6 8"/>
+</svg>

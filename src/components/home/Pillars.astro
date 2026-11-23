@@ -1,0 +1,61 @@
+---
+import { useT, type Locale } from '../../i18n/utils';
+
+interface Props {
+  locale: Locale;
+}
+
+const t = useT(Astro.props.locale).home;
+---
+
+<section id="philosophy" class="section" aria-labelledby="philosophy-title">
+  <div class="container">
+    <h2 id="philosophy-title">{t.philosophyTitle}</h2>
+    <dl>
+      {
+        t.pillars.map((p) => (
+          <div class="row">
+            <dt>{p.title}</dt>
+            <dd>{p.body}</dd>
+          </div>
+        ))
+      }
+    </dl>
+  </div>
+</section>
+
+<style>
+  .section {
+    padding-block: var(--space-16);
+  }
+  h2 {
+    margin-bottom: var(--space-8);
+  }
+  dl {
+    margin: 0;
+  }
+  .row {
+    display: grid;
+    grid-template-columns: 5fr 7fr;
+    gap: var(--space-10);
+    padding-block: var(--space-6);
+    border-top: 1px solid var(--color-border);
+  }
+  dt {
+    font-size: var(--step-2);
+    font-weight: 500;
+    letter-spacing: -0.01em;
+  }
+  dd {
+    margin: 0;
+    font-size: var(--step-1);
+    color: var(--color-muted);
+    max-width: 34em;
+  }
+  @media (max-width: 47.99rem) {
+    .row {
+      grid-template-columns: 1fr;
+      gap: var(--space-2);
+    }
+  }
+</style>

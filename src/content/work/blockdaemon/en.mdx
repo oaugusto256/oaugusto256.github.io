@@ -1,0 +1,81 @@
+---
+title: Blockdaemon
+summary: 'Self-serve checkout and subscriptions, a design system upgrade and a faster first load for an institutional blockchain infrastructure platform.'
+role: 'Front-end Engineer, then Senior Front-end Engineer'
+period: 'July 2021 – April 2026'
+stack: ['React', 'TypeScript', 'Mantine', 'React Query', 'Stripe', 'Okta', 'Contentful', 'WalletConnect', 'Playwright', 'Cypress']
+links:
+  - label: app.blockdaemon.com
+    url: https://app.blockdaemon.com
+cover: ../../../assets/work/blockdaemon/checkout.jpg
+coverAlt: 'Blockdaemon API Suite subscription page: the current plan, monthly quota, reset date and monthly charges at the top, then bundles to choose from, each with what it includes and its starting price'
+order: 2
+locale: en
+---
+
+import { Image } from 'astro:assets';
+import bundleSplit from '../../../assets/work/blockdaemon/bundle-split.svg';
+import apiKeys from '../../../assets/work/blockdaemon/api-keys.jpg';
+
+## Problem & context
+
+Blockdaemon runs blockchain infrastructure for institutions: nodes, staking and APIs. app.blockdaemon.com is where customers deploy and monitor that infrastructure, manage API access and pay for it. It brings together Stripe checkout, wallet connections (WalletConnect, MetaMask), KYB with Sumsub, feature toggles and an admin dashboard.
+
+It is one large single-page React app. Over the years, new products kept landing in it, on a component library that was falling behind and an entry bundle that kept growing.
+
+## Role
+
+Front-end Engineer from July 2021, Senior Front-end Engineer from March 2024 until April 2026. The team had about three front-end and three back-end engineers. I worked with product, design and QA, interviewed front-end candidates and mentored junior and mid-level engineers.
+
+## Product & technical decisions
+
+**Self-serve checkout and subscriptions.** I led the checkout and subscription flows for nodes and the API Suite end to end: choosing and changing plans, invoicing, and overrides for admins. Stripe handles payment; the app owns the experience around it: the customer sees their current plan, quota and charges before changing anything.
+
+**A design system on Mantine v8.** I led the upgrade of Blockdaemon's design system from Mantine v6 to v8, together with a new visual identity from an external design agency: theming, component overrides, design tokens, dark and light themes, and documentation with usage patterns and live examples. It is used across Blockdaemon's web products. We estimated about two months for the upgrade; it shipped in under a month, with few breaking changes for the teams using it, and before AI coding tools were part of our workflow.
+
+<figure>
+  <Image src={apiKeys} alt="Blockdaemon API Suite authentication page in the dark theme: a table of API keys with status, security, creation date, expiry, products, usage limits and a masked key" widths={[720, 1080, 1408]} sizes="(min-width: 768px) 44rem, 100vw" />
+  <figcaption>API keys in the API Suite, dark theme.</figcaption>
+</figure>
+
+**Other work along the way.**
+- Staking dashboards with charts, filters and modals over real-time protocol data.
+- A form builder that renders staking API access forms from JSON schemas, so new integrations need a schema, not a new screen.
+- Onboarding rebuilt on Okta, and Contentful integrated for content-driven pages.
+- Playwright and Cypress integration tests for the journeys that matter most.
+- The move from React 17 to React 19.
+- As a senior engineer, the lead on a new Portfolio product: wallet integration, on-chain asset verification and earnings visibility.
+
+## Approach
+
+**A faster first load.** While debugging, I noticed how much JavaScript the main thread had to get through before the app was usable. Lighthouse and Chrome DevTools showed why: one entry bundle carried every area of the app. I led the work to split it by route, load features with dynamic imports, and prefetch what users are likely to open next. The JavaScript entry bundle got more than 80% smaller.
+
+<figure>
+  <Image src={bundleSplit} alt="Diagram: before, one entry bundle holds every area of the app; after, a small entry with the shell and router loads first and each route (checkout, staking, API suite, nodes, portfolio) arrives as its own chunk" />
+  <figcaption>Before: one entry bundle with every area of the app. After: a small shell loads first and each route arrives as its own chunk.</figcaption>
+</figure>
+
+**Upgrades alongside product work.** The Mantine and React upgrades happened while new features kept shipping. The aim was minimal breaking changes for the teams building on top, with documentation written as part of the upgrade.
+
+## Challenges & trade-offs
+
+- **Smaller entry, more requests.** Splitting by route means more chunks over the network. Prefetching keeps navigation fast without putting everything back into the first load.
+- **Upgrade speed against breakage.** Moving to Mantine v8 quickly mattered, but so did not breaking the products built on it. Documentation and live examples shipped with the upgrade, not after it.
+- **Self-serve with an escape hatch.** Checkout lets customers manage plans on their own, and admin overrides cover the cases a self-serve flow can't.
+
+## Results & evidence
+
+- JavaScript entry bundle cut by more than 80%, measured with Lighthouse and Chrome DevTools.
+- Design system on Mantine v8, estimated at about two months and delivered in under one, with documentation and live examples.
+- Self-serve checkout and subscriptions for nodes and the API Suite, live at app.blockdaemon.com.
+- React 17 to React 19 across the app.
+
+## Learnings
+
+- **Measure before splitting.** The profiler showed where the cost was; without it, code splitting would have been guesswork.
+- **A design system upgrade is a product launch.** The teams using it are its users. Documentation and examples decide whether they adopt it.
+- **Tests make big upgrades routine.** Integration tests on the critical journeys are what let a team move to a new major version with confidence.
+
+## Links
+
+- [app.blockdaemon.com](https://app.blockdaemon.com)

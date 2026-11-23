@@ -1,0 +1,48 @@
+---
+title: Mercado Envios
+summary: "The screen warehouse operators use to sort landing packages in Mercury, Mercado Livre's warehouse management system, with the BFF behind it."
+role: 'Front-end Engineer'
+period: 'September 2020 – July 2021'
+stack: ['React', 'TypeScript', 'BFF', 'Micro-frontends', 'RFCs', 'Internal design system']
+links: []
+cover: ../../../assets/work/mercado-envios/cover.svg
+coverAlt: 'Diagram: landing packages on the warehouse floor go through the sort screen and leave by route; behind the screen, a micro-frontend talks to a BFF that talks to the Mercury WMS services'
+order: 3
+locale: en
+---
+
+## Problem & context
+
+Mercado Envios is Mercado Livre's logistics operation. Its warehouses run on Mercury, Mercado Livre's own warehouse management system (WMS), across fulfillment centers, cross-docking hubs and last-mile operations in Latin America. Operators on the floor work through Mercury's screens: inbound and outbound, inventory, and every step a package takes in between.
+
+When packages land at a warehouse, someone has to sort them before they can move on. That step needs a screen that is fast and clear for the people doing it all shift, across every country Mercury runs in.
+
+## Role
+
+Front-end Engineer from September 2020 to July 2021, on a team of three engineers, a tech lead and a manager.
+
+## What I built
+
+- **The landing-packages sort page.** I built the Mercury page operators use to sort landing packages, used across Latin America.
+- **The BFF behind it.** I helped create the backend-for-frontend that serves this page: one API shaped around what the screen needs, so the front end doesn't stitch together calls to several warehouse services.
+- **The RFC for it.** I documented the data flow of the landing-packages page in an RFC, so the team and the services it depended on could agree on the contract in writing.
+
+## Approach
+
+Mercury's front end is a set of high-availability micro-frontend applications, each shipping on its own. Over my time on the team I contributed to 450+ production releases across these applications, which have to stay up while warehouses operate.
+
+## Challenges & trade-offs
+
+- **A BFF is one more service to run.** It is worth it when the screen's needs differ from the services' shape: the page gets exactly the data it uses, and changes to the services stay behind one boundary.
+- **Write it down first.** An RFC slows the start a little and saves time later, because the discussion happens on the document instead of in review.
+
+## Results & evidence
+
+- The landing-packages sort page, used in Mercury across Latin America.
+- Its BFF, and an RFC documenting its data flow.
+- Contributions to 450+ production releases across Mercury's micro-frontends.
+
+## Learnings
+
+- **Design for the person on the floor.** Operators use the same screen all shift. Small delays and unclear states cost more there than anywhere else.
+- **Contracts before code.** Agreeing on the data flow in writing made building the page and its BFF the easy part.

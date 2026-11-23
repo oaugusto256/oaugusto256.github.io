@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://oaugusto256.github.io/sitemap-index.xml
