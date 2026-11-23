@@ -46,6 +46,15 @@ assert(read('en/index.html').includes('<html'), 'dist/en/index.html is an HTML d
     assert(html.includes('rel="canonical"'), `${name}/index.html has canonical link`);
   }
   assert(read('index.html').includes('url=/en/'), 'index.html redirects to /en/');
+  // No visible redirect flash: JS redirect in <head> before first paint, dark background,
+  // the fallback link only for no-JS visitors (owner report, 2026-11-23).
+  const root = read('index.html');
+  const head = root.split(/<body/i)[0];
+  assert(/location\.replace\(\s*['"`]\/en\//.test(head), 'index.html: location.replace to /en/ inside <head>');
+  assert(/<meta name="robots" content="noindex/.test(root) && /rel="canonical" href="https:\/\/oaugusto256\.github\.io\/en\/"/.test(root), 'index.html: noindex + canonical /en/');
+  const body = root.replace(/<noscript[\s\S]*?<\/noscript>/gi, '').split(/<body[^>]*>/i)[1] || '';
+  assert(!/Redirecting/i.test(body.replace(/<[^>]+>/g, '')), 'index.html: no visible "Redirecting" text outside <noscript>');
+  assert(/background(-color)?:\s*#202226/i.test(root), 'index.html: charcoal background (matches the hero)');
 }
 
 // Task 4: header, language switcher, footer
@@ -350,6 +359,7 @@ assert(aboutBlock(readFileSync(join(ROOT, 'src/i18n/en.ts'), 'utf8')) !== '', 's
   assert(/<meta name="robots" content="noindex/.test(legacy), 'projects.html is noindex');
   const sitemaps = allFiles().filter((f) => /sitemap-\d+\.xml$/.test(f)).map((f) => readFileSync(f, 'utf8')).join('');
   assert(sitemaps.includes('<loc>') && !/404|projects\.html/.test(sitemaps), 'sitemap lists pages but not 404 or projects.html');
+  assert(!sitemaps.includes('<loc>https://oaugusto256.github.io/</loc>'), 'sitemap does not list the / redirect stub');
 }
 
 // S2 Task 8: S1 deferred minors
