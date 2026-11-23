@@ -7,14 +7,14 @@ stack: ['React', 'TypeScript', 'Mantine', 'React Query', 'Stripe', 'Okta', 'Cont
 links:
   - label: app.blockdaemon.com
     url: https://app.blockdaemon.com
-cover: ../../../assets/work/blockdaemon/cover.svg
-coverAlt: 'Diagram: before, one entry bundle holds every area of the app; after, a small entry with the shell and router loads first and each route (checkout, staking, API suite, nodes, portfolio) arrives as its own chunk'
+cover: ../../../assets/work/blockdaemon/checkout.jpg
+coverAlt: 'Blockdaemon API Suite subscription page: the current plan, monthly quota, reset date and monthly charges at the top, then bundles to choose from, each with what it includes and its starting price'
 order: 2
 locale: en
 ---
 
 import { Image } from 'astro:assets';
-import checkout from '../../../assets/work/blockdaemon/checkout.jpg';
+import bundleSplit from '../../../assets/work/blockdaemon/bundle-split.svg';
 import apiKeys from '../../../assets/work/blockdaemon/api-keys.jpg';
 
 ## Problem & context
@@ -30,11 +30,6 @@ Front-end Engineer from July 2021, Senior Front-end Engineer from March 2024 unt
 ## Product & technical decisions
 
 **Self-serve checkout and subscriptions.** I led the checkout and subscription flows for nodes and the API Suite end to end: choosing and changing plans, invoicing, and overrides for admins. Stripe handles payment; the app owns the experience around it: the customer sees their current plan, quota and charges before changing anything.
-
-<figure>
-  <Image src={checkout} alt="Blockdaemon API Suite subscription page: the current plan, monthly quota, reset date and monthly charges at the top, then bundles to choose from, each with what it includes and its starting price" widths={[720, 1080, 1408]} sizes="(min-width: 768px) 44rem, 100vw" />
-  <figcaption>Configure your subscription: current plan and charges first, then what you can add.</figcaption>
-</figure>
 
 **A design system on Mantine v8.** I led the upgrade of Blockdaemon's design system from Mantine v6 to v8, together with a new visual identity from an external design agency: theming, component overrides, design tokens, dark and light themes, and documentation with usage patterns and live examples. It is used across Blockdaemon's web products. We estimated about two months for the upgrade; it shipped in under a month, with few breaking changes for the teams using it, and before AI coding tools were part of our workflow.
 
@@ -54,6 +49,11 @@ Front-end Engineer from July 2021, Senior Front-end Engineer from March 2024 unt
 ## Approach
 
 **A faster first load.** While debugging, I noticed how much JavaScript the main thread had to get through before the app was usable. Lighthouse and Chrome DevTools showed why: one entry bundle carried every area of the app. I led the work to split it by route, load features with dynamic imports, and prefetch what users are likely to open next. The JavaScript entry bundle got more than 80% smaller.
+
+<figure>
+  <Image src={bundleSplit} alt="Diagram: before, one entry bundle holds every area of the app; after, a small entry with the shell and router loads first and each route (checkout, staking, API suite, nodes, portfolio) arrives as its own chunk" />
+  <figcaption>Before: one entry bundle with every area of the app. After: a small shell loads first and each route arrives as its own chunk.</figcaption>
+</figure>
 
 **Upgrades alongside product work.** The Mantine and React upgrades happened while new features kept shipping. The aim was minimal breaking changes for the teams building on top, with documentation written as part of the upgrade.
 

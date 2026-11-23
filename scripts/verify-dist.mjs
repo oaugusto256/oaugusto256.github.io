@@ -276,7 +276,9 @@ for (const [loc, other, bundle] of [['en', 'pt', 'more than 80%'], ['pt', 'en', 
   assert(switchesTo(html, `/${other}/work/blockdaemon/`), `${page}: switcher → /${other}/work/blockdaemon/`);
   assert(html.includes(bundle), `${page}: states the bundle result as "${bundle}"`);
   const imgs = [...html.matchAll(/<img\b[^>]*>/g)].map((m) => m[0]);
-  assert(imgs.filter((t) => /checkout|api-keys/.test(t)).length >= 2, `${page}: checkout + API keys screenshots`);
+  assert(imgs.filter((t) => /\ssrc="[^"]*(checkout|api-keys)[^"]*"/.test(t)).length >= 2, `${page}: checkout + API keys screenshots`);
+  assert(imgs.some((t) => /class="cover/.test(t) && /\ssrc="[^"]*checkout[^"]*"/.test(t)), `${page}: cover is the real checkout screenshot (owner, 2026-11-23)`);
+  assert(imgs.some((t) => /\ssrc="[^"]*bundle-split[^"]*"/.test(t)), `${page}: bundle-split diagram in the body`);
   assert(hasLink(read(`${loc}/work/index.html`), [`href="/${loc}/work/blockdaemon/"`]), `${loc} work index: links blockdaemon`);
 }
 
@@ -304,7 +306,8 @@ for (const [loc, other] of [['en', 'pt'], ['pt', 'en']]) {
   assert((html.match(/<h1[\s>]/g) || []).length === 1, `${page}: one <h1>`);
   assert(switchesTo(html, `/${other}/about/`), `${page}: switcher → /${other}/about/`);
   assert(hasLink(read(`${loc}/index.html`), [`href="/${loc}/about/"`]), `${loc} home: nav link /${loc}/about/`);
-  for (const text of ['Fugro', 'GeekHunter', 'Design System']) assert(html.includes(text), `${page}: mentions "${text}"`);
+  for (const text of ['Fugro', 'GeekHunter']) assert(html.includes(text), `${page}: mentions "${text}"`);
+  assert(!html.includes('Blockdaemon Design System'), `${page}: no Design System block (owner, 2026-11-23)`);
   for (const slug of ['blockdaemon', 'mercado-envios']) assert(hasLink(html, [`href="/${loc}/work/${slug}/"`]), `${page}: links /${loc}/work/${slug}/`);
 }
 assert(aboutBlock(readFileSync(join(ROOT, 'src/i18n/en.ts'), 'utf8')) !== '', 'src/i18n/en.ts has an about block');

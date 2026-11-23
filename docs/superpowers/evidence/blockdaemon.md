@@ -40,7 +40,7 @@ Numbers visible inside the screenshots (plan prices, quotas, dates in the owner'
 
 **Design system.** Built on Mantine 8 with a new visual identity from an external design agency; theming, component overrides, design tokens, dark/light themes, documentation (Storybook); used across Blockdaemon web products. (old JSON)
 
-**Screenshots.** `src/assets/work/blockdaemon/checkout.jpg` (API Suite → Configure Your Subscription) and `api-keys.jpg` (API Suite → Authentication; key value masked by the app). Captured 2026-11-23 from the owner's workspace, cursor cropped out.
+**Screenshots.** `src/assets/work/blockdaemon/checkout.jpg` (API Suite → Configure Your Subscription; the case-study cover, owner request 2026-11-23) and `api-keys.jpg` (API Suite → Authentication; key value masked by the app). Captured 2026-11-23 from the owner's workspace, cursor cropped out. The bundle diagram (`bundle-split.svg`) sits in the Approach section.
 
 ## Owner answers (2026-11-23)
 

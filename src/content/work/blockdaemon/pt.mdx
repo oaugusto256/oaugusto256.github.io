@@ -7,14 +7,14 @@ stack: ['React', 'TypeScript', 'Mantine', 'React Query', 'Stripe', 'Okta', 'Cont
 links:
   - label: app.blockdaemon.com
     url: https://app.blockdaemon.com
-cover: ../../../assets/work/blockdaemon/cover.svg
-coverAlt: 'Diagrama: antes, um único bundle de entrada com todas as áreas do app; depois, uma entrada pequena com o shell e o roteador carrega primeiro e cada rota (checkout, staking, API suite, nodes, portfolio) chega como um chunk próprio'
+cover: ../../../assets/work/blockdaemon/checkout.jpg
+coverAlt: 'Página de assinatura da API Suite da Blockdaemon: plano atual, cota mensal, data de renovação e cobrança mensal no topo, e abaixo os pacotes disponíveis, cada um com o que inclui e o preço inicial'
 order: 2
 locale: pt
 ---
 
 import { Image } from 'astro:assets';
-import checkout from '../../../assets/work/blockdaemon/checkout.jpg';
+import bundleSplit from '../../../assets/work/blockdaemon/bundle-split.svg';
 import apiKeys from '../../../assets/work/blockdaemon/api-keys.jpg';
 
 ## Problema e contexto
@@ -30,11 +30,6 @@ Engenheiro Front-end a partir de julho de 2021, Engenheiro Front-end Sênior de 
 ## Decisões de produto e técnicas
 
 **Checkout e assinaturas self-service.** Liderei de ponta a ponta os fluxos de checkout e assinatura de nodes e da API Suite: escolher e trocar de plano, faturamento e ajustes manuais para administradores. O Stripe cuida do pagamento; o app cuida da experiência em volta dele: o cliente vê o plano atual, a cota e as cobranças antes de mudar qualquer coisa.
-
-<figure>
-  <Image src={checkout} alt="Página de assinatura da API Suite da Blockdaemon: plano atual, cota mensal, data de renovação e cobrança mensal no topo, e abaixo os pacotes disponíveis, cada um com o que inclui e o preço inicial" widths={[720, 1080, 1408]} sizes="(min-width: 768px) 44rem, 100vw" />
-  <figcaption>Configurar a assinatura: primeiro o plano atual e as cobranças, depois o que dá para adicionar.</figcaption>
-</figure>
 
 **Um design system no Mantine v8.** Liderei a atualização do design system da Blockdaemon do Mantine v6 para o v8, junto com uma nova identidade visual criada por uma agência de design externa: temas, sobrescritas de componentes, design tokens, temas claro e escuro, e documentação com padrões de uso e exemplos ao vivo. Ele é usado em todos os produtos web da Blockdaemon. A estimativa era de cerca de dois meses; entregamos em menos de um, com poucas mudanças incompatíveis para os times que o usam, e antes de ferramentas de IA para código fazerem parte do nosso fluxo.
 
@@ -54,6 +49,11 @@ Engenheiro Front-end a partir de julho de 2021, Engenheiro Front-end Sênior de 
 ## Abordagem
 
 **Um primeiro carregamento mais rápido.** Depurando, percebi quanto JavaScript a main thread precisava processar antes de o app ficar utilizável. O Lighthouse e o Chrome DevTools mostraram o motivo: um único bundle de entrada carregava todas as áreas do app. Liderei o trabalho de dividi-lo por rota, carregar funcionalidades com imports dinâmicos e fazer prefetch do que o usuário provavelmente vai abrir em seguida. O bundle de entrada de JavaScript ficou mais de 80% menor.
+
+<figure>
+  <Image src={bundleSplit} alt="Diagrama: antes, um único bundle de entrada com todas as áreas do app; depois, uma entrada pequena com o shell e o roteador carrega primeiro e cada rota (checkout, staking, API suite, nodes, portfolio) chega como um chunk próprio" />
+  <figcaption>Antes: um único bundle de entrada com todas as áreas do app. Depois: um shell pequeno carrega primeiro e cada rota chega como um chunk próprio.</figcaption>
+</figure>
 
 **Atualizações junto com o trabalho de produto.** As atualizações do Mantine e do React aconteceram enquanto novas funcionalidades continuavam saindo. O objetivo era o mínimo de mudanças incompatíveis para os times que constroem em cima, com a documentação escrita como parte da atualização.
 
