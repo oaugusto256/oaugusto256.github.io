@@ -55,7 +55,6 @@ function hasLink(html, attrs) {
   assert(hasLink(pages.en, ['href="/pt/"', 'hreflang="pt"']), 'en home: language switcher → /pt/ with hreflang="pt"');
   assert(hasLink(pages.pt, ['href="/en/"', 'hreflang="en"']), 'pt home: language switcher → /en/ with hreflang="en"');
   for (const [loc, html] of Object.entries(pages)) {
-    assert(hasLink(html, [`href="/${loc}/#work"`]), `${loc} home: nav link /${loc}/#work`);
     assert(hasLink(html, [`href="/${loc}/#contact"`]), `${loc} home: nav link /${loc}/#contact`);
     assert(hasLink(html, ['href="https://github.com/oaugusto256"']), `${loc} home: GitHub link`);
     assert(hasLink(html, ['href="https://www.linkedin.com/in/oaugusto256"']), `${loc} home: LinkedIn link`);
@@ -220,6 +219,23 @@ function checkNumbers(label, sources, evidenceFile) {
   }
 }
 for (const { label, sources, evidence } of EVIDENCE_MAP) checkNumbers(label, sources, evidence);
+
+// Language switcher link points at the given path (the twin page, not the other home).
+function switchesTo(html, href) {
+  return hasLink(html, ['lang-switch', `href="${href}"`]);
+}
+
+// S2 Task 2: work index page + nav to real pages
+for (const [loc, other] of [['en', 'pt'], ['pt', 'en']]) {
+  const page = `${loc}/work/index.html`;
+  const html = read(page);
+  assert(exists(page), `${page} exists`);
+  assert((html.match(/<h1[\s>]/g) || []).length === 1, `${page}: one <h1>`);
+  assert(hasLink(html, [`href="/${loc}/work/terral/"`, 'data-event="project_card_click"']), `${page}: terral card link`);
+  assert(switchesTo(html, `/${other}/work/`), `${page}: switcher → /${other}/work/`);
+  assert(hasLink(read(`${loc}/index.html`), [`href="/${loc}/work/"`]), `${loc} home: nav link /${loc}/work/`);
+  assert(hasLink(read(`${loc}/work/terral/index.html`), ['class="back', `href="/${loc}/work/"`]), `${loc} terral: back link → /${loc}/work/`);
+}
 
 // Site-wide: retired claims and channels must not appear on any page, in either locale.
 {

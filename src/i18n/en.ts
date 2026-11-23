@@ -18,11 +18,17 @@ export const en = {
   },
   work: {
     caseStudy: 'Case study',
-    back: 'Back to selected work',
+    back: 'All work',
     role: 'Role',
     period: 'Period',
     stack: 'Stack',
     links: 'Links',
+  },
+  workIndex: {
+    title: 'Work',
+    intro: 'Case studies from products I have built and shipped, from problem to production.',
+    metaTitle: 'Work — Otavio Silva',
+    metaDescription: 'Case studies by Otavio Silva, Product Engineer: product and engineering decisions, approach and results.',
   },
   home: {
     role: 'Product Engineer',

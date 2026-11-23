@@ -20,11 +20,17 @@ export const pt = {
   },
   work: {
     caseStudy: 'Estudo de caso',
-    back: 'Voltar aos trabalhos',
+    back: 'Todos os projetos',
     role: 'Papel',
     period: 'Período',
     stack: 'Stack',
     links: 'Links',
+  },
+  workIndex: {
+    title: 'Projetos',
+    intro: 'Estudos de caso de produtos que construí e lancei, do problema à produção.',
+    metaTitle: 'Projetos — Otavio Silva',
+    metaDescription: 'Estudos de caso de Otavio Silva, Product Engineer: decisões de produto e engenharia, abordagem e resultados.',
   },
   home: {
     role: 'Product Engineer',

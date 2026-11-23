@@ -6,7 +6,8 @@
         "/en/index.html",
         "/pt/index.html",
         "/en/work/terral/index.html",
-        "/pt/work/terral/index.html"
+        "/pt/work/terral/index.html",
+        "/en/work/index.html"
       ],
       "numberOfRuns": 3
     },
