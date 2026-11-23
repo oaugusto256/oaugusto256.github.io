@@ -8,6 +8,6 @@
     "directory": "./dist",
     // /pt/work/terral → /pt/work/terral/ (directory-format build)
     "html_handling": "auto-trailing-slash",
-    "not_found_handling": "none"
+    "not_found_handling": "404-page"
   }
 }

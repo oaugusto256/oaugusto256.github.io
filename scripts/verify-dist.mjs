@@ -5,6 +5,8 @@ import { fileURLToPath } from 'node:url';
 
 const DIST = join(dirname(fileURLToPath(import.meta.url)), '..', 'dist');
 const failures = [];
+// Static redirect pages: no layout, no analytics, no h1.
+const REDIRECT_STUBS = ['index.html', 'projects.html'];
 
 function read(path) {
   const full = join(DIST, path);
@@ -150,7 +152,7 @@ for (const loc of ['en', 'pt']) {
   const htmlMentions = htmlFiles.filter((f) => /PostHog\.astro_astro_type_script|posthog-js|i\.posthog\.com/i.test(readFileSync(f, 'utf8')));
   if (process.env.PUBLIC_POSTHOG_KEY) {
     const home = read('en/index.html');
-    assert(htmlMentions.length === htmlFiles.length - 1, 'with key: every page (except / redirect) loads analytics');
+    assert(htmlMentions.length === htmlFiles.length - REDIRECT_STUBS.length, 'with key: every page except redirect stubs loads analytics');
     assert(/persistence:\s*["'`]memory["'`]/.test(jsFiles.map((f) => readFileSync(f, 'utf8')).join('\n') + home), 'with key: memory persistence');
   } else {
     assert(htmlMentions.length === 0, `without key: no HTML references posthog (found in ${htmlMentions.length})`);
@@ -166,10 +168,11 @@ for (const loc of ['en', 'pt']) {
   const pages = allFiles()
     .filter((f) => f.endsWith('.html'))
     .map((f) => f.slice(DIST.length + 1))
-    .filter((f) => f !== 'index.html'); // root is a redirect stub
+    .filter((f) => !REDIRECT_STUBS.includes(f));
   for (const page of pages) {
     const html = read(page);
     assert((html.match(/<h1[\s>]/g) || []).length === 1, `${page}: exactly one <h1>`);
+    if (page === '404.html') continue; // locale-neutral, noindex: no canonical/og by design
     assert(html.includes('rel="canonical"'), `${page}: canonical`);
     assert(html.includes('property="og:title"'), `${page}: og:title`);
     assert(/property="og:image" content="https:\/\/oaugusto256\.github\.io\//.test(html), `${page}: absolute og:image`);
@@ -305,6 +308,21 @@ for (const [loc, other] of [['en', 'pt'], ['pt', 'en']]) {
   for (const slug of ['blockdaemon', 'mercado-envios']) assert(hasLink(html, [`href="/${loc}/work/${slug}/"`]), `${page}: links /${loc}/work/${slug}/`);
 }
 assert(aboutBlock(readFileSync(join(ROOT, 'src/i18n/en.ts'), 'utf8')) !== '', 'src/i18n/en.ts has an about block');
+
+// S2 Task 7: bilingual 404 page and legacy /projects.html redirect
+{
+  const html = read('404.html');
+  assert(exists('404.html'), '404.html exists');
+  assert(hasLink(html, ['href="/en/"']) && hasLink(html, ['href="/pt/"']), '404.html links /en/ and /pt/');
+  assert(/<meta name="robots" content="noindex/.test(html), '404.html is noindex');
+  assert(html.includes('lang="pt-BR"'), '404.html has a pt-BR block');
+  const legacy = read('projects.html');
+  assert(legacy.includes('url=/en/work/'), 'projects.html redirects to /en/work/');
+  assert(hasLink(legacy, ['href="/en/work/"']), 'projects.html has a visible fallback link');
+  assert(/<meta name="robots" content="noindex/.test(legacy), 'projects.html is noindex');
+  const sitemaps = allFiles().filter((f) => /sitemap-\d+\.xml$/.test(f)).map((f) => readFileSync(f, 'utf8')).join('');
+  assert(sitemaps.includes('<loc>') && !/404|projects\.html/.test(sitemaps), 'sitemap lists pages but not 404 or projects.html');
+}
 
 // Site-wide: retired claims and channels must not appear on any page, in either locale.
 {
