@@ -202,6 +202,21 @@ for (const loc of ['en', 'pt']) {
   }
 }
 
+// Final review: every number in the UI strings (home copy) must appear in evidence/home.md
+{
+  const root = join(DIST, '..');
+  const evidencePath = join(root, 'docs/superpowers/evidence/home.md');
+  const evidence = existsSync(evidencePath) ? readFileSync(evidencePath, 'utf8') : '';
+  assert(evidence !== '', 'docs/superpowers/evidence/home.md exists');
+  for (const loc of ['en', 'pt']) {
+    const src = readFileSync(join(root, `src/i18n/${loc}.ts`), 'utf8');
+    const strings = [...src.matchAll(/(['"`])((?:\\.|(?!\1).)*)\1/g)].map((m) => m[2]).join(' ');
+    const numbers = [...new Set(strings.match(/\d[\d.,]*%?\+?/g) || [])].map((n) => n.replace(/[.,]$/, ''));
+    const missing = numbers.filter((n) => !evidence.includes(n));
+    assert(missing.length === 0, `${loc} ui strings: numbers not in evidence/home.md: ${missing.join(', ')}`);
+  }
+}
+
 if (failures.length) {
   console.error(`verify-dist: ${failures.length} failure(s)`);
   for (const f of failures) console.error(`  ✗ ${f}`);
