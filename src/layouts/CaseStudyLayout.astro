@@ -15,6 +15,8 @@ const { locale, entry, alternate } = Astro.props;
 const { title, summary, role, period, stack, links, cover, coverAlt } = entry.data;
 const t = useT(locale);
 const slug = slugOf(entry);
+// SVG covers are vector: no responsive widths to generate.
+const coverSizing = cover.format === 'svg' ? {} : { widths: [640, 960, 1280, 1600], sizes: '(min-width: 1240px) 1240px, 100vw' };
 ---
 
 <BaseLayout locale={locale} title={`${title} — ${t.work.caseStudy} · Otavio Silva`} description={summary} alternate={alternate}>
@@ -49,7 +51,7 @@ const slug = slugOf(entry);
       </div>
     </header>
     <div class="container">
-      <Image class="cover" src={cover} alt={coverAlt} widths={[640, 960, 1280, 1600]} sizes="(min-width: 1240px) 1240px, 100vw" loading="eager" />
+      <Image class="cover" src={cover} alt={coverAlt} {...coverSizing} loading="eager" />
       <div class="prose">
         <slot />
       </div>

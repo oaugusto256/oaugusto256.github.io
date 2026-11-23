@@ -200,6 +200,7 @@ function tsStrings(src) {
 }
 const EVIDENCE_MAP = [
   { label: 'terral', sources: ['src/content/work/terral/en.mdx', 'src/content/work/terral/pt.mdx'], evidence: 'docs/superpowers/evidence/terral.md' },
+  { label: 'blockdaemon', sources: ['src/content/work/blockdaemon/en.mdx', 'src/content/work/blockdaemon/pt.mdx'], evidence: 'docs/superpowers/evidence/blockdaemon.md' },
   { label: 'ui strings', sources: ['src/i18n/en.ts', 'src/i18n/pt.ts'], evidence: 'docs/superpowers/evidence/home.md' },
 ];
 function checkNumbers(label, sources, evidenceFile) {
@@ -248,6 +249,18 @@ for (const [loc, other] of [['en', 'pt'], ['pt', 'en']]) {
   assert(hasLink(html, ['href="https://github.com/oaugusto256"', 'data-event="contact_click"']), `${page}: GitHub link with data-event`);
   assert(hasLink(html, [`href="/resume/otavio-silva-resume-${loc}.pdf"`, 'data-event="resume_download"']), `${page}: résumé link with data-event`);
   assert(switchesTo(html, `/${other}/contact/`), `${page}: switcher → /${other}/contact/`);
+}
+
+// S2 Task 4: Blockdaemon case study (owner approved two app screenshots, 2026-11-23)
+for (const [loc, other, bundle] of [['en', 'pt', 'more than 80%'], ['pt', 'en', 'mais de 80%']]) {
+  const page = `${loc}/work/blockdaemon/index.html`;
+  const html = read(page);
+  assert(exists(page), `${page} exists`);
+  assert(switchesTo(html, `/${other}/work/blockdaemon/`), `${page}: switcher → /${other}/work/blockdaemon/`);
+  assert(html.includes(bundle), `${page}: states the bundle result as "${bundle}"`);
+  const imgs = [...html.matchAll(/<img\b[^>]*>/g)].map((m) => m[0]);
+  assert(imgs.filter((t) => /checkout|api-keys/.test(t)).length >= 2, `${page}: checkout + API keys screenshots`);
+  assert(hasLink(read(`${loc}/work/index.html`), [`href="/${loc}/work/blockdaemon/"`]), `${loc} work index: links blockdaemon`);
 }
 
 // Site-wide: retired claims and channels must not appear on any page, in either locale.

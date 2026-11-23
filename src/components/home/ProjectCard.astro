@@ -44,7 +44,7 @@ const Heading = headingLevel === 2 ? 'h2' : 'h3';
   {
     image && (
       <div class="media">
-        <Image src={image} alt={imageAlt ?? ''} widths={[480, 800, 1200]} sizes="(min-width: 768px) 58vw, 100vw" />
+        <Image src={image} alt={imageAlt ?? ''} {...(image.format === 'svg' ? {} : { widths: [480, 800, 1200], sizes: '(min-width: 768px) 58vw, 100vw' })} />
       </div>
     )
   }
