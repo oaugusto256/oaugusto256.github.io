@@ -7,7 +7,9 @@
         "/pt/index.html",
         "/en/work/terral/index.html",
         "/pt/work/terral/index.html",
-        "/en/work/index.html"
+        "/en/work/index.html",
+        "/pt/work/blockdaemon/index.html",
+        "/en/about/index.html"
       ],
       "numberOfRuns": 3
     },

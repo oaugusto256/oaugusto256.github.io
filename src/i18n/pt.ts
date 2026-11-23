@@ -7,6 +7,7 @@ export const pt = {
   nav: {
     label: 'Principal',
     work: 'Trabalhos',
+    about: 'Sobre',
     contact: 'Contato',
     resume: 'Currículo',
     open: 'Abrir menu',
@@ -35,6 +36,22 @@ export const pt = {
   contactPage: {
     metaTitle: 'Contato — Otavio Silva',
     metaDescription: 'Fale com Otavio Silva, Product Engineer em Florianópolis, Brasil: e-mail, LinkedIn, GitHub e currículo.',
+  },
+  about: {
+    metaTitle: 'Sobre — Otavio Silva',
+    metaDescription: 'Otavio Silva é Product Engineer em Florianópolis, com mais de 10 anos construindo produtos web: hoje na Fugro, antes na Blockdaemon e no Mercado Livre.',
+    title: 'Sobre',
+    intro: [
+      'Sou Product Engineer com mais de 10 anos de experiência construindo produtos web. Minha base é React e TypeScript, e cuido do full stack em volta: APIs, infraestrutura, deploy e medição.',
+      'Hoje trabalho na Fugro, depois de passar pela Blockdaemon e pelo Mercado Livre. Por conta própria, projetei, construí e mantenho o terral.surf, uma previsão de surf para Florianópolis.',
+      'Uso fluxos de trabalho com IA e agentes (Claude Code, Codex, MCP) para ir mais rápido. O julgamento e o padrão de qualidade continuam comigo.',
+    ],
+    nowTitle: 'Agora',
+    timelineTitle: 'Experiência',
+    educationTitle: 'Formação',
+    designSystemTitle: 'Blockdaemon Design System',
+    designSystemBody:
+      'O design system interno da Blockdaemon, construído sobre o Mantine 8 com uma nova identidade visual criada por uma agência de design externa. Liderei a atualização do Mantine v6 para o v8: temas, sobrescritas de componentes, design tokens, temas claro e escuro, e documentação com padrões de uso e exemplos ao vivo. Ele é usado em todos os produtos web da Blockdaemon.',
   },
   home: {
     role: 'Product Engineer',

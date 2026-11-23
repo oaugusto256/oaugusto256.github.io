@@ -5,6 +5,7 @@ export const en = {
   nav: {
     label: 'Main',
     work: 'Work',
+    about: 'About',
     contact: 'Contact',
     resume: 'Résumé',
     open: 'Open menu',
@@ -33,6 +34,22 @@ export const en = {
   contactPage: {
     metaTitle: 'Contact — Otavio Silva',
     metaDescription: 'Get in touch with Otavio Silva, Product Engineer in Florianópolis, Brazil: email, LinkedIn, GitHub and résumé.',
+  },
+  about: {
+    metaTitle: 'About — Otavio Silva',
+    metaDescription: 'Otavio Silva is a Product Engineer in Florianópolis, Brazil, with 10+ years building web products: currently at Fugro, previously Blockdaemon and Mercado Livre.',
+    title: 'About',
+    intro: [
+      "I'm a Product Engineer with 10+ years of experience building web products. My foundation is React and TypeScript, and I own the full stack around it: APIs, infrastructure, deployment and measurement.",
+      'I work at Fugro today, after Blockdaemon and Mercado Livre. On my own, I designed, built and run terral.surf, a surf forecast for Florianópolis.',
+      'I use AI-assisted, agentic workflows (Claude Code, Codex, MCP) to move faster. The judgment and the quality bar stay mine.',
+    ],
+    nowTitle: 'Now',
+    timelineTitle: 'Experience',
+    educationTitle: 'Education',
+    designSystemTitle: 'Blockdaemon Design System',
+    designSystemBody:
+      "Blockdaemon's internal design system, built on Mantine 8 with a new visual identity from an external design agency. I led its upgrade from Mantine v6 to v8: theming, component overrides, design tokens, dark and light themes, and documentation with usage patterns and live examples. It is used across Blockdaemon's web products.",
   },
   home: {
     role: 'Product Engineer',

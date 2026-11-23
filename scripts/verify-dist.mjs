@@ -195,6 +195,17 @@ function mdxProse(src) {
     .replace(/^import .*$/gm, '') // MDX imports
     .replace(/<[^>]+>/g, ' '); // JSX/HTML tags and their attributes (image widths etc.)
 }
+/** The `about: { ... }` object literal of an i18n dictionary (brace-matched), or '' if absent. */
+function aboutBlock(src) {
+  const start = src.search(/^ {2}about: \{/m);
+  if (start < 0) return '';
+  let depth = 0;
+  for (let i = src.indexOf('{', start); i < src.length; i++) {
+    depth += src[i] === '{' ? 1 : src[i] === '}' ? -1 : 0;
+    if (depth === 0) return src.slice(start, i + 1);
+  }
+  return src.slice(start);
+}
 function tsStrings(src) {
   return [...src.matchAll(/(['"`])((?:\\.|(?!\1).)*)\1/g)].map((m) => m[2]).join(' ');
 }
@@ -202,9 +213,11 @@ const EVIDENCE_MAP = [
   { label: 'terral', sources: ['src/content/work/terral/en.mdx', 'src/content/work/terral/pt.mdx'], evidence: 'docs/superpowers/evidence/terral.md' },
   { label: 'blockdaemon', sources: ['src/content/work/blockdaemon/en.mdx', 'src/content/work/blockdaemon/pt.mdx'], evidence: 'docs/superpowers/evidence/blockdaemon.md' },
   { label: 'mercado-envios', sources: ['src/content/work/mercado-envios/en.mdx', 'src/content/work/mercado-envios/pt.mdx'], evidence: 'docs/superpowers/evidence/mercado-envios.md' },
-  { label: 'ui strings', sources: ['src/i18n/en.ts', 'src/i18n/pt.ts'], evidence: 'docs/superpowers/evidence/home.md' },
+  { label: 'about', sources: ['src/data/experience.ts'], evidence: 'docs/superpowers/evidence/about.md' },
+  { label: 'about strings', sources: ['src/i18n/en.ts', 'src/i18n/pt.ts'], evidence: 'docs/superpowers/evidence/about.md', extract: aboutBlock },
+  { label: 'ui strings', sources: ['src/i18n/en.ts', 'src/i18n/pt.ts'], evidence: 'docs/superpowers/evidence/home.md', extract: (src) => src.replace(aboutBlock(src), '') },
 ];
-function checkNumbers(label, sources, evidenceFile) {
+function checkNumbers(label, sources, evidenceFile, extract = (src) => src) {
   const evPath = join(ROOT, evidenceFile);
   const present = sources.filter((s) => existsSync(join(ROOT, s)));
   if (!existsSync(evPath)) {
@@ -214,13 +227,13 @@ function checkNumbers(label, sources, evidenceFile) {
   assert(present.length === sources.length, `${label}: missing sources ${sources.filter((s) => !present.includes(s)).join(', ')}`);
   const evidence = readFileSync(evPath, 'utf8');
   for (const s of present) {
-    const raw = readFileSync(join(ROOT, s), 'utf8');
+    const raw = extract(readFileSync(join(ROOT, s), 'utf8'));
     const text = s.endsWith('.mdx') ? mdxProse(raw) : s.endsWith('.ts') ? tsStrings(raw) : raw;
     const missing = missingNumbers(text, evidence);
     assert(missing.length === 0, `${label} (${s}): numbers not in ${evidenceFile}: ${missing.join(', ')}`);
   }
 }
-for (const { label, sources, evidence } of EVIDENCE_MAP) checkNumbers(label, sources, evidence);
+for (const { label, sources, evidence, extract } of EVIDENCE_MAP) checkNumbers(label, sources, evidence, extract);
 
 // Language switcher link points at the given path (the twin page, not the other home).
 function switchesTo(html, href) {
@@ -279,6 +292,19 @@ for (const [loc, other] of [['en', 'pt'], ['pt', 'en']]) {
     assert(!home.includes(soon), `${loc} home: no "${soon}" placeholder`);
   }
 }
+
+// S2 Task 6: About page
+for (const [loc, other] of [['en', 'pt'], ['pt', 'en']]) {
+  const page = `${loc}/about/index.html`;
+  const html = read(page);
+  assert(exists(page), `${page} exists`);
+  assert((html.match(/<h1[\s>]/g) || []).length === 1, `${page}: one <h1>`);
+  assert(switchesTo(html, `/${other}/about/`), `${page}: switcher → /${other}/about/`);
+  assert(hasLink(read(`${loc}/index.html`), [`href="/${loc}/about/"`]), `${loc} home: nav link /${loc}/about/`);
+  for (const text of ['Fugro', 'GeekHunter', 'Design System']) assert(html.includes(text), `${page}: mentions "${text}"`);
+  for (const slug of ['blockdaemon', 'mercado-envios']) assert(hasLink(html, [`href="/${loc}/work/${slug}/"`]), `${page}: links /${loc}/work/${slug}/`);
+}
+assert(aboutBlock(readFileSync(join(ROOT, 'src/i18n/en.ts'), 'utf8')) !== '', 'src/i18n/en.ts has an about block');
 
 // Site-wide: retired claims and channels must not appear on any page, in either locale.
 {

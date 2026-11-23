@@ -1,0 +1,128 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Timeline from '../../components/about/Timeline.astro';
+import { education, experience } from '../../data/experience';
+import { localePath, locales, otherLocale, useT, type Locale } from '../../i18n/utils';
+
+export function getStaticPaths() {
+  return locales.map((locale) => ({ params: { locale } }));
+}
+
+const locale = Astro.params.locale as Locale;
+const t = useT(locale);
+const a = t.about;
+const [now] = experience;
+---
+
+<BaseLayout locale={locale} title={a.metaTitle} description={a.metaDescription} alternate={localePath(otherLocale(locale), '/about/')}>
+  <section class="head on-dark" aria-labelledby="about-title">
+    <div class="container">
+      <p class="eyebrow mono">{t.home.role} · {t.home.location}</p>
+      <h1 id="about-title">{a.title}</h1>
+      <div class="intro">
+        {a.intro.map((p) => <p>{p}</p>)}
+      </div>
+    </div>
+  </section>
+
+  <section class="section" aria-labelledby="now-title">
+    <div class="container two">
+      <h2 id="now-title">{a.nowTitle}</h2>
+      <div>
+        <h3>{now.title[locale]} · {now.url ? <a href={now.url}>{now.company}</a> : now.company}</h3>
+        <p class="meta mono">{now.period[locale]} · {now.place[locale]}</p>
+        <p class="body">{now.summary[locale]}</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" aria-labelledby="experience-title">
+    <div class="container">
+      <h2 id="experience-title">{a.timelineTitle}</h2>
+      <Timeline locale={locale} skip={1} />
+    </div>
+  </section>
+
+  <section class="section" aria-labelledby="ds-title">
+    <div class="container">
+      <h2 id="ds-title">{a.designSystemTitle}</h2>
+      <p class="body">{a.designSystemBody}</p>
+    </div>
+  </section>
+
+  <section class="section last" aria-labelledby="education-title">
+    <div class="container two">
+      <h2 id="education-title">{a.educationTitle}</h2>
+      <ul class="education">
+        {
+          education.map((e) => (
+            <li>
+              <h3>{e.name[locale]}</h3>
+              <p class="meta mono">
+                {e.school} · {e.year}
+              </p>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </section>
+</BaseLayout>
+
+<style>
+  .head {
+    padding-block: var(--space-16) var(--space-20);
+  }
+  .eyebrow {
+    font-size: var(--step--1);
+    margin-bottom: var(--space-4);
+  }
+  .intro {
+    max-width: 38em;
+    margin-top: var(--space-8);
+    font-size: var(--step-1);
+    color: var(--color-muted-dark);
+  }
+  .intro p + p {
+    margin-top: var(--space-4);
+  }
+  .section {
+    padding-block: var(--space-16) 0;
+  }
+  .section.last {
+    padding-bottom: var(--space-20);
+  }
+  h2 {
+    margin-bottom: var(--space-6);
+  }
+  h3 {
+    font-size: var(--step-1);
+    margin-bottom: var(--space-1);
+  }
+  .two {
+    display: grid;
+    grid-template-columns: 14rem 1fr;
+    gap: var(--space-2) var(--space-8);
+  }
+  .meta {
+    color: var(--color-muted);
+    font-size: var(--step--1);
+    margin-bottom: var(--space-3);
+  }
+  .body {
+    max-width: 40em;
+    color: var(--color-muted);
+  }
+  .education {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    gap: var(--space-6);
+  }
+  @media (max-width: 47.99rem) {
+    .two {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>
