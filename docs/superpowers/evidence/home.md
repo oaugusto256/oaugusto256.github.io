@@ -4,8 +4,7 @@ Source for every number in the home-page copy (`src/i18n/en.ts`, `src/i18n/pt.ts
 All rows come from the owner's own résumé (Google Doc "otavio-resume", edited by the
 owner's instruction on 2026-11-22; exported as `public/resume/otavio-silva-resume-en.pdf`).
 
-Status: sourced from the owner-authored résumé; awaiting the owner's explicit sign-off
-on this file (S1 review, PR #2).
+Status: approved by the owner on 2026-11-23 (S1 review, PR #2).
 
 ## Approved numbers
 
